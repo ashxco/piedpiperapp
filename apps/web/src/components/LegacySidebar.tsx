@@ -4,7 +4,8 @@ import { Spinner } from "~/components/ui/spinner";
 import {
   ArchiveIcon,
   ArrowUpDownIcon,
-  ChevronRightIcon,
+  FolderIcon,
+  FolderOpenIcon,
   FolderPlusIcon,
   Globe2Icon,
   GripVerticalIcon,
@@ -22,7 +23,6 @@ import {
   useLinkedThreadPullRequest,
 } from "./ThreadStatusIndicators";
 import { EnvironmentMachineIcon } from "./EnvironmentMachineIcon";
-import { ProjectFavicon } from "./ProjectFavicon";
 import { useAtomValue } from "@effect/atom-react";
 import { autoAnimate } from "@formkit/auto-animate";
 import React, { useCallback, useEffect, memo, useMemo, useRef, useState } from "react";
@@ -1147,7 +1147,7 @@ const SidebarProjectThreadList = memo(function SidebarProjectThreadList(
       >
         <SidebarMenuSub
           ref={attachThreadListAutoAnimateRef}
-          className="mx-0.5 my-0 w-full translate-x-0 overflow-hidden sm:mx-1"
+          className="m-0 w-full translate-x-0 overflow-hidden"
         >
           {shouldShowThreadPanel && showEmptyThreadState ? (
             <SidebarMenuSubItem className="w-full" data-thread-selection-safe>
@@ -2538,6 +2538,7 @@ const SidebarProjectItem = memo(function SidebarProjectItem(props: SidebarProjec
       <div className="group/project-header relative">
         <SidebarMenuButton
           ref={isManualProjectSorting ? dragHandleProps?.setActivatorNodeRef : undefined}
+          aria-expanded={projectExpanded}
           className={isManualProjectSorting ? "cursor-grab active:cursor-grabbing" : undefined}
           {...(isManualProjectSorting && dragHandleProps ? dragHandleProps.attributes : {})}
           {...(isManualProjectSorting && dragHandleProps ? dragHandleProps.listeners : {})}
@@ -2550,33 +2551,23 @@ const SidebarProjectItem = memo(function SidebarProjectItem(props: SidebarProjec
             <Tooltip>
               <TooltipTrigger
                 render={
-                  <span
-                    aria-label={projectStatus.label}
-                    className={`-ml-0.5 relative inline-flex size-3.5 shrink-0 items-center justify-center ${projectStatus.colorClass}`}
-                  />
+                  <span className="sidebar-project-folder" aria-label={projectStatus.label} />
                 }
               >
-                <span className="absolute inset-0 flex items-center justify-center transition-opacity duration-150 group-hover/project-header:opacity-0">
-                  <span
-                    className={`size-[9px] rounded-full ${projectStatus.dotClass} ${
-                      projectStatus.pulse ? "animate-status-pulse" : ""
-                    }`}
-                  />
-                </span>
-                <ChevronRightIcon className="absolute inset-0 m-auto size-3.5 text-icon-muted opacity-0 transition-opacity duration-150 group-hover/project-header:opacity-100" />
+                <FolderIcon aria-hidden="true" />
+                <span
+                  className={`sidebar-project-status ${projectStatus.dotClass} ${
+                    projectStatus.pulse ? "animate-status-pulse" : ""
+                  }`}
+                />
               </TooltipTrigger>
               <TooltipPopup side="top">{projectStatus.label}</TooltipPopup>
             </Tooltip>
           ) : (
-            <ChevronRightIcon
-              className={`-ml-0.5 size-3.5 shrink-0 text-muted-foreground/70 transition-transform duration-150 ${
-                projectExpanded ? "rotate-90" : ""
-              }`}
-            />
+            <span className="sidebar-project-folder" aria-hidden="true">
+              {projectExpanded ? <FolderOpenIcon /> : <FolderIcon />}
+            </span>
           )}
-          <span className="flex shrink-0">
-            <ProjectFavicon project={project} />
-          </span>
           <span className="flex min-w-0 flex-1 items-center gap-2">
             <span className="truncate text-sm font-medium text-sidebar-foreground/90">
               {project.displayName}

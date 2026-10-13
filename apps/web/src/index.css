@@ -2540,7 +2540,7 @@ code {
   height: 28px;
   font-size: 13px;
   font-weight: 400;
-  padding-left: 56px;
+  padding-left: 36px;
   color: color-mix(in srgb, var(--foreground) 90%, transparent);
 }
 [data-app-sidebar] [data-sidebar="menu-button"]:hover,
@@ -2586,7 +2586,7 @@ code {
   gap: 2px;
 }
 [data-app-sidebar] .group\/project-header [data-sidebar="menu-button"] {
-  gap: 6px;
+  gap: 8px;
 }
 [data-app-sidebar] .group\/project-header [data-sidebar="menu-button"] > svg {
   margin-left: 0;
@@ -2618,7 +2618,7 @@ code {
 /* drag handle */
 @utility project-chat-drag-handle {
   position: absolute;
-  left: 32px;
+  left: 12px;
   width: 16px;
   height: 16px;
   display: grid;
@@ -2688,7 +2688,7 @@ code {
   }
   [data-app-sidebar] [data-sidebar="menu-sub"] {
     border-left: 0;
-    padding-left: 0;
+    padding-inline: 0;
     margin-inline: 0;
     gap: 2px;
   }
@@ -3143,4 +3143,27 @@ body:has([data-native-glass="true"]),
     + div {
     border-top-left-radius: var(--pp-content-radius);
   }
+}
+
+.sidebar-project-folder {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--pp-muted);
+}
+.sidebar-project-folder > svg {
+  width: 16px;
+  height: 16px;
+}
+.sidebar-project-status {
+  position: absolute;
+  right: -2px;
+  bottom: -1px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
 }
