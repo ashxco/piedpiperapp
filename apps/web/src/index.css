@@ -2705,7 +2705,7 @@ body:has([data-native-glass="true"]),
 [data-native-glass="true"] {
   --pp-pane-alpha: 0.18;
   --pp-rail-alpha: 0.16;
-  background: transparent;
+  background: color-mix(in srgb, var(--pp-frame) 16%, transparent);
 }
 .dark [data-native-glass="true"] {
   --pp-pane: #101016;
@@ -2716,8 +2716,18 @@ body:has([data-native-glass="true"]),
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
+/* One continuous frame tint avoids a double-painted seam above the rail. */
+[data-native-glass="true"] .app-navigation-rail {
+  background: transparent;
+}
 [data-native-glass="true"]::before {
-  background: color-mix(in srgb, var(--pp-frame) 18%, transparent);
+  background: transparent;
+}
+@media (min-width: 768px) {
+  [data-native-glass="true"] [data-app-sidebar] {
+    border-top-left-radius: 14px;
+    clip-path: inset(0 -8px -8px 0 round 14px 0 0 0);
+  }
 }
 @media (prefers-reduced-transparency: reduce) {
   [data-native-glass="true"],
