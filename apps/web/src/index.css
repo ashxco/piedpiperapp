@@ -2707,6 +2707,10 @@ body:has([data-native-glass="true"]),
   --pp-rail-alpha: 0.16;
   background: transparent;
 }
+.dark [data-native-glass="true"] {
+  --pp-pane: #101016;
+  --pp-pane-alpha: 0.48;
+}
 [data-native-glass="true"] .app-navigation-rail,
 [data-native-glass="true"] [data-app-sidebar] > [data-slot="sidebar-inner"] {
   -webkit-backdrop-filter: none;
@@ -2716,7 +2720,8 @@ body:has([data-native-glass="true"]),
   background: color-mix(in srgb, var(--pp-frame) 18%, transparent);
 }
 @media (prefers-reduced-transparency: reduce) {
-  [data-native-glass="true"] {
+  [data-native-glass="true"],
+  .dark [data-native-glass="true"] {
     --pp-pane-alpha: 1;
     --pp-rail-alpha: 1;
   }
