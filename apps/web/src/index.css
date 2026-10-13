@@ -2495,7 +2495,7 @@ code {
 /* ---------- pane header ---------- */
 @utility app-pane-header {
   height: 48px;
-  padding: 0 20px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2654,11 +2654,11 @@ code {
   }
   [data-pied-piper-shell] [data-app-sidebar] .app-pane-header {
     height: 48px;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding: 0 16px;
   }
   [data-pied-piper-shell] [data-sidebar-brand-probe] {
-    --workspace-titlebar-content-left: 20px;
+    --workspace-titlebar-content-left: 16px;
+    padding-right: 52px;
   }
   [data-pied-piper-shell] [data-sidebar-utility-menu] {
     display: none;

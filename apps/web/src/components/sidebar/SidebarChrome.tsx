@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, ChartNoAxesColumnIcon, SettingsIcon } from "lucide-react";
+import { ArrowLeftIcon, ChartNoAxesColumnIcon, SearchIcon, SettingsIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { memo, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
@@ -11,6 +11,8 @@ import {
   useEnvironmentStageLabel,
 } from "../SidebarStageBackdrop";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { CommandDialogTrigger } from "../ui/command";
 import {
   SidebarFooter,
   SidebarMenu,
@@ -41,7 +43,7 @@ export const SidebarChromeHeader = memo(function SidebarChromeHeader({
       : null;
 
   return (
-    // The titlebar row, not a padded SidebarHeader: it aligns to the window controls.
+    // Keep the brand and search control on one evenly inset header row.
     <div
       className={cn(
         "app-pane-header relative flex h-[var(--workspace-topbar-height)] shrink-0 flex-row items-center gap-2 pr-3",
@@ -58,7 +60,7 @@ export const SidebarChromeHeader = memo(function SidebarChromeHeader({
       </div>
       {/* One visible line: the pill wraps onto the clipped second line once it no longer fits.
           The padding keeps the brand's focus ring inside the clip. */}
-      <div className="relative z-10 flex h-8 min-w-0 flex-1 flex-wrap content-start items-center gap-x-2 overflow-hidden py-0.5">
+      <div className="relative z-10 flex h-7 min-w-0 flex-1 flex-wrap content-start items-center gap-x-2 overflow-hidden py-0.5">
         <SidebarBrand />
         {pillLabel ? (
           <div className="ml-1 flex h-7 items-center">
@@ -67,6 +69,20 @@ export const SidebarChromeHeader = memo(function SidebarChromeHeader({
             </Badge>
           </div>
         ) : null}
+      </div>
+      <div className="relative z-10 hidden shrink-0 md:block [-webkit-app-region:no-drag]">
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <CommandDialogTrigger
+                render={<Button size="icon-sm" variant="ghost-muted" aria-label="Search chats" />}
+              />
+            }
+          >
+            <SearchIcon />
+          </TooltipTrigger>
+          <TooltipPopup side="bottom">Search chats</TooltipPopup>
+        </Tooltip>
       </div>
     </div>
   );

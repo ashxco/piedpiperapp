@@ -3173,7 +3173,7 @@ const SidebarProjectsContent = memo(function SidebarProjectsContent(
                 <span>New chat</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
+            <SidebarMenuItem className="md:hidden">
               <CommandDialogTrigger
                 render={<SidebarMenuButton data-testid="command-palette-trigger" />}
               >
