@@ -1088,6 +1088,7 @@ import {
   FileIcon,
   BotIcon,
   CircleAlertIcon,
+  CheckIcon,
   PaperclipIcon,
   PencilRulerIcon,
   PlayIcon,
@@ -1307,8 +1308,6 @@ const ComposerFooterModeControls = memo(function ComposerFooterModeControls(prop
 
   return (
     <>
-      <ComposerControlSeparator size={size} />
-
       <Tooltip>
         <Select
           open={open}
@@ -1320,6 +1319,7 @@ const ComposerFooterModeControls = memo(function ComposerFooterModeControls(prop
             render={
               <ComposerSelectControl
                 data-composer-shortcut="composer.mode"
+                className="composer-toolbar-pill"
                 size={size}
                 aria-label="Runtime mode"
               />
@@ -1328,26 +1328,27 @@ const ComposerFooterModeControls = memo(function ComposerFooterModeControls(prop
             <ComposerControlIcon icon={RuntimeModeIcon} size={size} />
             <SelectValue data-composer-control-label>{runtimeModeOption.label}</SelectValue>
           </TooltipTrigger>
-          <SelectPopup alignItemWithTrigger={false} {...composerFloatingLayerProps}>
+          <SelectPopup
+            variant="composer"
+            side="top"
+            sideOffset={8}
+            alignItemWithTrigger={false}
+            {...composerFloatingLayerProps}
+          >
+            <div className="composer-dropdown-heading">Permissions</div>
             {props.runtimeModeOptions.map((option) => {
               const OptionIcon = option.icon;
               return (
-                <SelectItem
-                  key={option.mode}
-                  value={option.mode}
-                  hideIndicator
-                  className="min-w-64"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <div className="grid min-w-0 flex-1 gap-0.5">
-                      <span className="inline-flex items-center gap-1.5 font-medium text-foreground">
-                        <OptionIcon className="size-3.5 shrink-0 text-muted-foreground" />
-                        {option.label}
-                      </span>
-                      <span className="text-muted-foreground text-xs leading-4">
-                        {option.description}
-                      </span>
+                <SelectItem key={option.mode} value={option.mode} variant="composer" hideIndicator>
+                  <div className="composer-permission-option">
+                    <OptionIcon className="composer-permission-icon" />
+                    <div className="composer-permission-copy">
+                      <span>{option.label}</span>
+                      <small>{option.description}</small>
                     </div>
+                    {props.runtimeMode === option.mode ? (
+                      <CheckIcon className="size-3.5 shrink-0" aria-hidden="true" />
+                    ) : null}
                   </div>
                 </SelectItem>
               );

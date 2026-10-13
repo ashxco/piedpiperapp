@@ -446,6 +446,7 @@ export const TraitsMenuContent = memo(function TraitsMenuContentImpl({
     const otherSelects = selectDescriptors.filter((descriptor) => descriptor !== reasoning);
     return (
       <div className="model-config-panel">
+        <div className="composer-dropdown-heading">Model &amp; reasoning</div>
         <div className="model-config-heading">
           <div className="model-config-options">
             {otherSelects.map((descriptor) => (

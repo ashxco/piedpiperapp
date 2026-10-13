@@ -109,6 +109,7 @@ function SelectPopup({
   alignOffset = 0,
   alignItemWithTrigger = true,
   matchTriggerWidth = true,
+  variant = "default",
   anchor,
   ...props
 }: SelectPrimitive.Popup.Props & {
@@ -118,6 +119,7 @@ function SelectPopup({
   alignOffset?: SelectPrimitive.Positioner.Props["alignOffset"];
   alignItemWithTrigger?: SelectPrimitive.Positioner.Props["alignItemWithTrigger"];
   matchTriggerWidth?: boolean;
+  variant?: "default" | "composer";
   anchor?: SelectPrimitive.Positioner.Props["anchor"];
 }) {
   return (
@@ -133,7 +135,10 @@ function SelectPopup({
         sideOffset={sideOffset}
       >
         <SelectPrimitive.Popup
-          className="origin-(--transform-origin) rounded-lg text-foreground outline-none"
+          className={cn(
+            "origin-(--transform-origin) rounded-lg text-foreground outline-none",
+            variant === "composer" && "composer-dropdown",
+          )}
           data-slot="select-popup"
           {...props}
         >
@@ -147,10 +152,15 @@ function SelectPopup({
             className={cn(
               "dropdown-glass relative h-full rounded-lg shadow-[0_16px_40px_-18px_rgb(0_0_0/55%)] dark:shadow-[0_18px_44px_-18px_rgb(0_0_0/80%)]",
               matchTriggerWidth && "min-w-(--anchor-width)",
+              variant === "composer" && "composer-dropdown-surface",
             )}
           >
             <SelectPrimitive.List
-              className={cn("max-h-(--available-height) overflow-y-auto p-1", className)}
+              className={cn(
+                "max-h-(--available-height) overflow-y-auto p-1",
+                variant === "composer" && "composer-dropdown-list",
+                className,
+              )}
               data-slot="select-list"
             >
               {children}
@@ -172,14 +182,17 @@ function SelectItem({
   className,
   children,
   hideIndicator: _hideIndicator = false,
+  variant = "default",
   ...props
 }: SelectPrimitive.Item.Props & {
   hideIndicator?: boolean;
+  variant?: "default" | "composer";
 }) {
   return (
     <SelectPrimitive.Item
       className={cn(
         "flex min-h-8 in-data-[side=none]:min-w-[calc(var(--anchor-width)+1.25rem)] cursor-pointer items-center rounded-sm px-2 py-1 text-base outline-none data-selected:bg-foreground/[0.08] data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-64 sm:min-h-7 sm:text-sm [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        variant === "composer" && "composer-dropdown-option",
         className,
       )}
       data-slot="select-item"

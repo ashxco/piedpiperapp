@@ -2802,7 +2802,8 @@ body:has([data-native-glass="true"]),
 }
 
 /* Compact model configuration, with discrete provider-supported controls. */
-.model-control-pill {
+.composer-toolbar-pill {
+  height: 28px;
   gap: 6px;
   padding-inline: 10px;
   border-radius: 999px;
@@ -2810,12 +2811,16 @@ body:has([data-native-glass="true"]),
   color: var(--foreground);
   font-size: 12px;
   font-weight: 400;
-  transition: background-color 140ms ease;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
 }
-.model-control-pill:hover {
+.composer-toolbar-pill:hover,
+.composer-toolbar-pill[data-popup-open],
+.composer-toolbar-pill[data-pressed] {
   background: color-mix(in srgb, var(--foreground) 10%, transparent);
 }
-.model-control-pill svg {
+.composer-toolbar-pill svg {
   filter: grayscale(1);
   margin-inline: 0;
 }
@@ -2831,10 +2836,11 @@ body:has([data-native-glass="true"]),
 }
 .model-config-panel {
   width: 268px;
-  padding: 12px;
+  padding: 8px;
   animation: model-config-enter 160ms ease-out;
 }
 .model-config-heading {
+  padding: 4px 4px 0;
   display: grid;
   grid-template-columns: minmax(28px, 1fr) auto minmax(28px, 1fr);
   align-items: start;
@@ -2898,7 +2904,7 @@ body:has([data-native-glass="true"]),
 }
 .model-config-range-wrap {
   position: relative;
-  margin-top: 14px;
+  margin: 16px 6px 6px;
   height: 26px;
 }
 .model-config-range {
@@ -3058,4 +3064,63 @@ body:has([data-native-glass="true"]),
 
 .model-control-pill > span:first-child {
   gap: 6px;
+}
+
+/* Matching composer menus: quiet surfaces, shared rhythm and inset selection. */
+.composer-dropdown,
+.composer-dropdown-surface {
+  border-radius: 16px;
+}
+.composer-dropdown {
+  animation: model-config-enter 160ms ease-out;
+}
+.composer-dropdown-list {
+  width: 280px;
+  max-width: calc(100vw - 24px);
+  padding: 8px;
+}
+.composer-dropdown-heading {
+  padding: 6px 8px 10px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+}
+.composer-dropdown-option {
+  min-height: 58px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  transition: background-color 120ms ease;
+}
+.composer-permission-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.composer-permission-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--muted-foreground);
+}
+.composer-permission-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.composer-permission-copy small {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  line-height: 15px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .composer-dropdown {
+    animation: none;
+  }
+  .composer-toolbar-pill,
+  .composer-dropdown-option {
+    transition: none;
+  }
 }

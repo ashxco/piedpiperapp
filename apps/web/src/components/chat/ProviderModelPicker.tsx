@@ -222,7 +222,7 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
             data-speed={props.configurationSpeed}
             className={cn(
               "min-w-0 shrink justify-between whitespace-nowrap",
-              props.configurationPanel && "model-control-pill",
+              props.configurationPanel && "composer-toolbar-pill model-control-pill",
               props.compact
                 ? "max-w-42 shrink-0"
                 : !props.isComposerOwned && "max-w-48 sm:max-w-56",
@@ -307,6 +307,8 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
         </span>
       </PopoverTrigger>
       <PopoverPopup
+        variant={props.configurationPanel ? "composer" : "default"}
+        sideOffset={8}
         keepMounted={Boolean(props.configurationPanel)}
         sizeToContent={Boolean(props.configurationPanel)}
         style={
