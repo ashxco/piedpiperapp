@@ -2524,7 +2524,7 @@ code {
   transition: background-color 100ms ease;
 }
 [data-app-sidebar] [data-sidebar="menu-button"] {
-  height: 36px;
+  height: 30px;
   font-size: 13px;
   font-weight: 500;
 }
@@ -2534,7 +2534,7 @@ code {
   color: var(--sidebar-muted-foreground);
 }
 [data-app-sidebar] [data-sidebar="menu-sub-button"] {
-  height: 32px;
+  height: 28px;
   font-size: 13px;
   font-weight: 400;
   padding-left: 56px;
@@ -2568,13 +2568,16 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 32px;
-  margin: 4px 0;
+  min-height: 24px;
+  margin: 0 0 4px;
   padding: 0 12px;
   font-size: 12px;
   font-weight: 500;
   line-height: 16px;
-  color: var(--pp-muted);
+  color: #94949b;
+}
+[data-app-sidebar] [data-sidebar-section-heading] > span {
+  color: inherit;
 }
 [data-app-sidebar] [data-sidebar="menu"] {
   gap: 2px;
@@ -2593,8 +2596,20 @@ code {
 [data-app-sidebar] [data-sidebar="menu-sub-button"][data-active="true"] {
   color: var(--foreground);
 }
+[data-app-sidebar] [data-sidebar-section="actions"],
+[data-app-sidebar] [data-sidebar-section="projects"] {
+  padding: 0 8px 16px;
+}
 [data-app-sidebar] [data-recent-chats] {
-  margin-top: 12px;
+  margin: 0;
+  padding: 0 8px 8px;
+}
+.dark [data-app-sidebar] {
+  --foreground: #f4f4f5;
+  --sidebar-foreground: #f4f4f5;
+}
+[data-app-sidebar] [data-sidebar="menu-sub-button"] {
+  color: var(--foreground);
 }
 
 /* drag handle */
@@ -2677,7 +2692,7 @@ code {
     gap: 2px;
   }
   [data-app-sidebar] [data-recent-chats] [data-sidebar="menu-button"] {
-    height: 32px;
+    height: 28px;
     font-size: 13px;
     font-weight: 400;
   }

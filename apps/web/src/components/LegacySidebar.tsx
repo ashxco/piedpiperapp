@@ -3163,9 +3163,7 @@ const SidebarProjectsContent = memo(function SidebarProjectsContent(
   return (
     <SidebarContent
       fixedHeader={
-        // Lifted above the stage backdrop, whose fade bleeds below the
-        // header and would otherwise paint across the search row's outline.
-        <SidebarGroup className="z-[1]">
+        <SidebarGroup className="z-[1]" data-sidebar-section="actions">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => openCommandPalette({ open: "new-thread-in" })}>
@@ -3210,7 +3208,7 @@ const SidebarProjectsContent = memo(function SidebarProjectsContent(
         </SidebarGroup>
       ) : null}
       <LocalSecondaryStatus />
-      <SidebarGroup>
+      <SidebarGroup data-sidebar-section="projects">
         <div data-sidebar-section-heading="">
           <span className="text-xs font-medium text-sidebar-muted-foreground/80">Projects</span>
           <div className="flex items-center gap-1">
