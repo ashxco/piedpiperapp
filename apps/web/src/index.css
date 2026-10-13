@@ -647,19 +647,18 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
     background-color: color-mix(in oklab, var(--primary) 45%, transparent);
   }
   :root {
-    /* Keep the original Pied Piper artwork palettes as the defaults. Built-in
-       themes override them with their own pigments in the components layer. */
-    --stage-art-top: oklch(0.782169 0.123386 240.226);
-    --stage-art-mid: oklch(0.616111 0.195824 259.735);
-    --stage-art-bottom: oklch(0.441553 0.232394 265.474);
-    --stage-art-highlight: oklch(0.951597 0.037289 215.482);
-    --stage-art-secondary: oklch(0.794668 0.12136 235.46);
-    --stage-art-tertiary: oklch(0.678991 0.170261 275.365);
-    --stage-art-line: oklch(0.959666 0.029238 218.179);
-    --stage-art-celeste-highlight: oklch(0.968763 0.045822 196.42);
-    --stage-art-celeste-secondary: oklch(0.827395 0.126071 211.26);
+    /* Brand artwork follows the indigo palette; custom themes can override it. */
+    --stage-art-top: #c0b6ed;
+    --stage-art-mid: #8c7dc4;
+    --stage-art-bottom: #5c4c93;
+    --stage-art-highlight: #ece7ff;
+    --stage-art-secondary: #b9adea;
+    --stage-art-tertiary: #9a82cb;
+    --stage-art-line: #eee9ff;
+    --stage-art-celeste-highlight: #ece7ff;
+    --stage-art-celeste-secondary: #b9adea;
     --stage-art-violet-highlight: oklch(0.895381 0.053248 286.447);
-    --stage-art-grid-line: oklch(0.966822 0.01757 239.99);
+    --stage-art-grid-line: #d9d0f4;
     --stage-night-base-top: oklch(0.283792 0.117327 297.201);
     --stage-night-base-mid: oklch(0.227147 0.086086 277.99);
     --stage-night-base-bottom: oklch(0.200528 0.055699 261.216);
@@ -675,9 +674,9 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
     --stage-night-sparkle: oklch(0.880867 0.057747 269.011);
 
     @variant dark {
-      --stage-art-top: oklch(0.581473 0.149124 256.9);
-      --stage-art-mid: oklch(0.456509 0.159377 261.945);
-      --stage-art-bottom: oklch(0.291327 0.136578 267.649);
+      --stage-art-top: #7765ac;
+      --stage-art-mid: #51416f;
+      --stage-art-bottom: #2d233f;
     }
   }
 
@@ -852,7 +851,11 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
     }
   }
 
-  :is(html[data-theme-id="piedpiperapp-chat"], html[data-theme-id="ocean"], html[data-theme-id="iris"]) {
+  :is(
+    html[data-theme-id="piedpiperapp-chat"],
+    html[data-theme-id="ocean"],
+    html[data-theme-id="iris"]
+  ) {
     --stage-night-top: color-mix(in oklch, var(--stage-art-top) 38%, var(--stage-night-base-top));
     --stage-night-mid: color-mix(in oklch, var(--stage-art-mid) 38%, var(--stage-night-base-mid));
     --stage-night-bottom: color-mix(
@@ -1087,44 +1090,44 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
 :root {
   color-scheme: light;
   --radius: 0.625rem;
-  --background: var(--color-zinc-25);
-  --app-chrome-background: var(--background);
-  --toolbar-background: var(--app-chrome-background);
-  --toolbar-foreground: var(--foreground);
-  --toolbar-border: var(--border);
-  --toolbar-control: var(--popover);
-  --toolbar-control-foreground: var(--foreground);
-  --toolbar-control-hover: var(--accent);
-  --surface-raised: color-mix(in srgb, var(--card) 20%, transparent);
-  --foreground: var(--color-zinc-800);
-  --card: var(--color-white);
-  --card-foreground: var(--color-zinc-800);
-  --popover: var(--color-white);
-  --popover-foreground: var(--color-zinc-800);
-  --primary: oklch(0.488 0.217 264);
-  --primary-foreground: var(--color-white);
-  --secondary: var(--color-zinc-50);
-  --secondary-foreground: var(--color-zinc-800);
-  --muted: var(--color-zinc-50);
-  --muted-foreground: var(--color-zinc-500);
-  --placeholder: var(--muted-foreground);
-  --secondary-label: var(--muted-foreground);
-  --icon-muted: var(--muted-foreground);
-  --message-surface: var(--accent);
-  --message-foreground: var(--foreground);
-  --message-action: var(--primary);
-  --message-action-foreground: var(--primary-foreground);
-  --message-action-hover: color-mix(in srgb, var(--primary) 90%, var(--background));
-  --accent: var(--color-zinc-100);
-  --accent-foreground: var(--color-zinc-900);
+  --background: #f8f7fc;
+  --app-chrome-background: #f8f7fc;
+  --toolbar-background: #f8f7fc;
+  --toolbar-foreground: #28243d;
+  --toolbar-border: #e3e0ee;
+  --toolbar-control: #ffffff;
+  --toolbar-control-foreground: #28243d;
+  --toolbar-control-hover: #eeebf8;
+  --surface-raised: #f4f2fa;
+  --foreground: #28243d;
+  --card: #ffffff;
+  --card-foreground: #28243d;
+  --popover: #ffffff;
+  --popover-foreground: #28243d;
+  --primary: #6956c9;
+  --primary-foreground: #ffffff;
+  --secondary: #f1eef8;
+  --secondary-foreground: #28243d;
+  --muted: #f1eef8;
+  --muted-foreground: #716b85;
+  --placeholder: #716b85;
+  --secondary-label: #716b85;
+  --icon-muted: #716b85;
+  --message-surface: #eeebf8;
+  --message-foreground: #28243d;
+  --message-action: #6956c9;
+  --message-action-foreground: #ffffff;
+  --message-action-hover: #5946b6;
+  --accent: #eeebf8;
+  --accent-foreground: #302748;
   --error: var(--color-red-500);
   --error-foreground: var(--color-red-700);
   --tool-error-icon: var(--error);
   --error-surface: color-mix(in srgb, var(--error) 8%, transparent);
   --destructive: var(--error);
-  --border: var(--color-zinc-200);
-  --input: var(--color-zinc-300);
-  --ring: var(--primary);
+  --border: #e3e0ee;
+  --input: #cec8df;
+  --ring: #6956c9;
   --destructive-foreground: var(--error-foreground);
   --info: var(--color-blue-500);
   --info-foreground: var(--color-blue-700);
@@ -1133,112 +1136,87 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
   --warning: var(--color-amber-500);
   --warning-foreground: var(--color-amber-700);
   --warning-surface: color-mix(in srgb, var(--warning) 8%, transparent);
-  --update: var(--primary);
-  --update-foreground: var(--primary);
-  --update-surface: color-mix(in srgb, var(--update) 12%, transparent);
+  --update: #6956c9;
+  --update-foreground: #6956c9;
+  --update-surface: #eae5fa;
   /* Keep every sidebar primitive on the same light surface hierarchy, including
      portaled mobile sheets and settings navigation outside the app sidebar. */
-  --sidebar: var(--color-zinc-50);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-muted-foreground: var(--muted-foreground);
-  --sidebar-control-surface: var(--color-zinc-100);
-  --sidebar-row-hover: var(--color-zinc-25);
-  --sidebar-row-active: var(--color-white);
-  --sidebar-row-selected: var(--color-white);
-  --sidebar-border: var(--border);
+  --sidebar: #f1eef8;
+  --sidebar-foreground: #28243d;
+  --sidebar-muted-foreground: #716b85;
+  --sidebar-control-surface: #eae5f5;
+  --sidebar-row-hover: #eae5f5;
+  --sidebar-row-active: #ffffff;
+  --sidebar-row-selected: #e4def6;
+  --sidebar-border: #e3e0ee;
   --sidebar-stage-fade: var(--sidebar);
-  --code-background: color-mix(in srgb, var(--card) 90%, var(--background));
-  --code-foreground: var(--foreground);
-  --terminal-background: var(--background);
-  --terminal-foreground: var(--foreground);
-  --terminal-cursor: rgb(38 56 78);
-  --terminal-selection-background: rgb(37 63 99 / 20%);
+  --code-background: #ffffff;
+  --code-foreground: #28243d;
+  --terminal-background: #f8f7fc;
+  --terminal-foreground: #28243d;
+  --terminal-cursor: #6956c9;
+  --terminal-selection-background: #e4def6;
 
   @variant dark {
     color-scheme: dark;
-    /* Keep controls and floating surfaces close to the neutral-black canvas.
-       Borders and hover states provide separation without milky gray fills. */
-    --background: var(--color-neutral-950);
-    --surface-raised: color-mix(in srgb, var(--background) 97%, var(--color-white));
-    --foreground: var(--color-neutral-100);
-    --card: color-mix(in srgb, var(--background) 97%, var(--color-white));
-    --card-foreground: var(--color-neutral-100);
-    --popover: color-mix(in srgb, var(--background) 97%, var(--color-white));
-    --popover-foreground: var(--color-neutral-100);
-    --primary: oklch(0.571 0.21 264);
-    --secondary: --alpha(var(--color-white) / 3%);
-    --secondary-foreground: var(--color-neutral-100);
-    --muted: --alpha(var(--color-white) / 3%);
-    --muted-foreground: color-mix(in srgb, var(--color-neutral-500) 90%, var(--color-white));
-    --accent: --alpha(var(--color-white) / 4%);
-    --accent-foreground: var(--color-neutral-100);
+    --background: #13111c;
+    --app-chrome-background: #13111c;
+    --toolbar-background: #13111c;
+    --toolbar-foreground: #efecfa;
+    --toolbar-border: #302a42;
+    --toolbar-control: #1d192a;
+    --toolbar-control-foreground: #efecfa;
+    --toolbar-control-hover: #282239;
+    --surface-raised: #211c2f;
+    --foreground: #efecfa;
+    --card: #1b1726;
+    --card-foreground: #efecfa;
+    --popover: #211c2f;
+    --popover-foreground: #efecfa;
+    --primary: #b4a7ff;
+    --primary-foreground: #211936;
+    --secondary: #211c2f;
+    --secondary-foreground: #efecfa;
+    --muted: #211c2f;
+    --muted-foreground: #a59bb9;
+    --placeholder: #a59bb9;
+    --secondary-label: #a59bb9;
+    --icon-muted: #a59bb9;
+    --message-surface: #211c2f;
+    --message-foreground: #efecfa;
+    --message-action: #b4a7ff;
+    --message-action-foreground: #211936;
+    --message-action-hover: #c5baff;
+    --accent: #282239;
+    --accent-foreground: #efecfa;
+    --border: #302a42;
+    --input: #423853;
+    --ring: #b4a7ff;
+    --update: #b4a7ff;
+    --update-foreground: #c5baff;
+    --update-surface: #302648;
+    --sidebar: #090711;
+    --sidebar-foreground: #efecfa;
+    --sidebar-muted-foreground: #a59bb9;
+    --sidebar-control-surface: #1d192a;
+    --sidebar-row-hover: #211c2f;
+    --sidebar-row-active: #282239;
+    --sidebar-row-selected: #302648;
+    --sidebar-border: #302a42;
+    --code-background: #1b1726;
+    --code-foreground: #efecfa;
+    --terminal-background: #13111c;
+    --terminal-foreground: #efecfa;
+    --terminal-cursor: #c5baff;
+    --terminal-selection-background: #3d3359;
     --error: color-mix(in srgb, var(--color-red-500) 90%, var(--color-white));
     --error-foreground: var(--color-red-400);
     --tool-error-icon: #fca5a5;
     --error-surface: color-mix(in srgb, var(--error) 16%, transparent);
-    --border: --alpha(var(--color-white) / 6%);
-    --input: --alpha(var(--color-white) / 8%);
     --info-foreground: var(--color-blue-400);
     --success-foreground: var(--color-emerald-400);
     --warning-foreground: var(--color-amber-400);
     --warning-surface: color-mix(in srgb, var(--warning) 16%, transparent);
-    --update-foreground: var(--color-blue-400);
-    --update-surface: color-mix(in srgb, var(--update) 18%, transparent);
-    --sidebar: var(--card);
-    --sidebar-control-surface: var(--muted);
-    --sidebar-row-hover: var(--accent);
-    --sidebar-row-active: var(--accent);
-    --sidebar-row-selected: var(--muted);
-    --sidebar-stage-fade: var(--card);
-    --terminal-cursor: rgb(180 203 255);
-    --terminal-selection-background: rgb(180 203 255 / 25%);
-  }
-}
-
-/* Keep both sidebar implementations (default and legacy) on the same quiet
-   zinc hierarchy: zinc-50 navigation, zinc-25 hover, and white selected/raised
-   surfaces. */
-[data-app-sidebar] {
-  --background: var(--color-zinc-25);
-  --foreground: var(--color-zinc-800);
-  --card: var(--color-white);
-  --card-foreground: var(--color-zinc-800);
-  --accent: var(--color-zinc-100);
-  --accent-foreground: var(--color-zinc-900);
-  --muted: var(--color-zinc-50);
-  --muted-foreground: var(--color-zinc-500);
-  --border: var(--color-zinc-200);
-  --input: var(--color-zinc-300);
-  --sidebar: var(--color-zinc-50);
-  --sidebar-foreground: var(--color-zinc-800);
-  --sidebar-muted-foreground: var(--color-zinc-500);
-  --sidebar-control-surface: var(--color-zinc-100);
-  --sidebar-row-hover: var(--color-zinc-25);
-  --sidebar-row-active: var(--color-white);
-  --sidebar-row-selected: var(--color-white);
-  --sidebar-border: var(--color-zinc-200);
-  --sidebar-stage-fade: var(--sidebar);
-
-  @variant dark {
-    --background: #000;
-    --foreground: #f1f3f7;
-    --card: #000;
-    --card-foreground: var(--foreground);
-    --accent: #191a1d;
-    --accent-foreground: #f7f9ff;
-    --muted: #0a0a0a;
-    --muted-foreground: #a3a3a3;
-    --border: rgb(255 255 255 / 8%);
-    --input: rgb(255 255 255 / 18%);
-    --sidebar: var(--card);
-    --sidebar-foreground: var(--foreground);
-    --sidebar-muted-foreground: var(--muted-foreground);
-    --sidebar-control-surface: var(--muted);
-    --sidebar-row-hover: color-mix(in srgb, var(--contrast-foreground) 8%, transparent);
-    --sidebar-row-active: color-mix(in srgb, var(--contrast-foreground) 11%, transparent);
-    --sidebar-row-selected: color-mix(in srgb, var(--contrast-foreground) 7%, transparent);
-    --sidebar-border: var(--border);
-    --sidebar-stage-fade: var(--card);
   }
 }
 

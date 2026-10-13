@@ -165,31 +165,31 @@ describe("theme files", () => {
     },
   );
 
-  it("keeps stock dark controls in the neutral-black surface hierarchy", () => {
+  it("keeps stock dark controls in the indigo surface hierarchy", () => {
     expectThemeColors(getStandardThemeColors("dark"), {
-      canvas: "#0a0a0a",
-      surface: "#111111",
-      surfaceRaised: "#111111",
-      surfaceOverlay: "#111111",
-      toolbarControl: "#111111",
-      secondary: "#111111",
-      muted: "#111111",
-      accentSurface: "#141414",
+      canvas: "#13111c",
+      surface: "#1b1726",
+      surfaceRaised: "#211c2f",
+      surfaceOverlay: "#211c2f",
+      toolbarControl: "#1d192a",
+      secondary: "#211c2f",
+      muted: "#211c2f",
+      accentSurface: "#282239",
     });
   });
 
   it("keeps the stock sidebar and chat on distinct surfaces in both appearances", () => {
     expectThemeColors(getStandardThemeColors("light"), {
-      canvas: "#fcfcfc",
-      sidebar: "#fafafa",
+      canvas: "#f8f7fc",
+      sidebar: "#f1eef8",
       sidebarRowActive: "#ffffff",
-      messageSurface: "#f4f4f5",
+      messageSurface: "#eeebf8",
     });
     expectThemeColors(getStandardThemeColors("dark"), {
-      canvas: "#0a0a0a",
-      sidebar: "#000000",
-      sidebarRowActive: "#1a1b1b",
-      messageSurface: "#141414",
+      canvas: "#13111c",
+      sidebar: "#090711",
+      sidebarRowActive: "#282239",
+      messageSurface: "#211c2f",
     });
   });
 
@@ -523,7 +523,13 @@ describe("theme files", () => {
   });
 
   it("includes the dual-mode maintainer themes", () => {
-    for (const theme of [PIED_PIPER_CHAT_THEME, GROVE_THEME, OCEAN_THEME, EMBER_THEME, IRIS_THEME]) {
+    for (const theme of [
+      PIED_PIPER_CHAT_THEME,
+      GROVE_THEME,
+      OCEAN_THEME,
+      EMBER_THEME,
+      IRIS_THEME,
+    ]) {
       expect(getThemeDefinition(theme.id)).toBe(theme);
       expect(getThemeModes(theme)).toEqual(["light", "dark"]);
       expect(theme.sidebarArtwork).toBe(true);
@@ -1107,14 +1113,22 @@ describe("stored theme preferences", () => {
     // The dark-variant alias keeps its raw form: it still carries a mode hint.
     expect(canonicalThemePreference("piedpiperapp-chat-dark")).toBe("piedpiperapp-chat-dark");
     // A stored mix that predates the rename resolves to the new ids.
-    expect(parseThemeHalves(JSON.stringify({ light: "piedpiperapp-ocean", dark: "piedpiperapp-grove" }))).toEqual({
+    expect(
+      parseThemeHalves(JSON.stringify({ light: "piedpiperapp-ocean", dark: "piedpiperapp-grove" })),
+    ).toEqual({
       light: OCEAN_THEME.id,
       dark: GROVE_THEME.id,
     });
   });
 
   it("recognizes only preferences the runtime can render", () => {
-    for (const preference of ["light", "dark", "system", PIED_PIPER_CHAT_THEME.id, GROVE_THEME.id]) {
+    for (const preference of [
+      "light",
+      "dark",
+      "system",
+      PIED_PIPER_CHAT_THEME.id,
+      GROVE_THEME.id,
+    ]) {
       expect(isKnownThemePreference(preference)).toBe(true);
     }
     expect(isKnownThemePreference(`${GROVE_THEME.id}:dark`)).toBe(false);

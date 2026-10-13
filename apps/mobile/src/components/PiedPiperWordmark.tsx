@@ -8,7 +8,7 @@ export function PiedPiperWordmark(props: {
 }) {
   return (
     <Image
-      source={require("../../../../assets/brand/pied-piper-icon.png")}
+      source={require("../../../../assets/brand/pied-piper-indigo.png")}
       accessibilityLabel="Pied Piper"
       resizeMode="contain"
       style={{ height: props.height, width: props.height }}

@@ -1,5 +1,5 @@
 import type { SVGProps } from "react";
-import fluteMark from "../../../../assets/brand/pied-piper-icon.png";
+import fluteMark from "../../../../assets/brand/pied-piper-indigo.png";
 
 export function PiedPiperWordmark(props: SVGProps<SVGSVGElement>) {
   return (

@@ -20,14 +20,14 @@ const APP_BUNDLE_ID = isDevelopment
   ? `com.piedpiperapp.piedpiperapp.dev.${devBundleIdSuffix || "local"}`
   : "com.piedpiperapp.piedpiperapp";
 const APP_PROTOCOL_SCHEMES = isDevelopment ? ["piedpiperapp-dev"] : ["piedpiperapp"];
-const LAUNCHER_VERSION = 19;
+const LAUNCHER_VERSION = 20;
 const developmentMacIconPngPath = NodePath.join(
   repoRoot,
   "assets",
-  "dev",
-  "blueprint-macos-1024.png",
+  "brand",
+  "pied-piper-indigo.png",
 );
-const productionMacIconPngPath = NodePath.join(repoRoot, "assets", "prod", "black-macos-1024.png");
+const productionMacIconPngPath = developmentMacIconPngPath;
 // oxlint-disable-next-line piedpiperapp/no-global-process-runtime -- Standalone launcher script has no Effect runtime.
 const hostPlatform = NodeOS.platform();
 
@@ -271,7 +271,8 @@ export function resolveMacBundleInfoPlistStrings(executableName) {
     CFBundleIconFile: "icon.icns",
     NSScreenCaptureUsageDescription:
       "Pied Piper captures the active window when you use the snapshot shortcut.",
-    NSDocumentsFolderUsageDescription: "Pied Piper reads project files you open in the desktop app.",
+    NSDocumentsFolderUsageDescription:
+      "Pied Piper reads project files you open in the desktop app.",
   };
 }
 

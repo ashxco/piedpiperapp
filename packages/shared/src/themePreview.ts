@@ -1,4 +1,8 @@
-import type { ThemeAppearance } from "./themePalettes.js";
+import {
+  PIED_PIPER_LIGHT_THEME_COLORS,
+  PIED_PIPER_DARK_THEME_COLORS,
+  type ThemeAppearance,
+} from "./themePalettes.ts";
 
 export type ThemePreviewColors = Readonly<{
   canvas: string;
@@ -6,18 +10,18 @@ export type ThemePreviewColors = Readonly<{
   messageAction: string;
 }>;
 
-/** The standard Pied Piper artwork is not a built-in theme, so its preview colors live here. */
+/** Standard previews use the same palette as the running app. */
 export const STANDARD_THEME_PREVIEW_COLORS: Readonly<Record<ThemeAppearance, ThemePreviewColors>> =
   {
     light: {
-      canvas: "#fcfcfc",
-      accent: "#f4f4f5",
-      messageAction: "#4f46e5",
+      canvas: PIED_PIPER_LIGHT_THEME_COLORS.canvas,
+      accent: PIED_PIPER_LIGHT_THEME_COLORS.accentSurface,
+      messageAction: PIED_PIPER_LIGHT_THEME_COLORS.messageAction,
     },
     dark: {
-      canvas: "#0a0a0a",
-      accent: "#1c1c1f",
-      messageAction: "#8b9cff",
+      canvas: PIED_PIPER_DARK_THEME_COLORS.canvas,
+      accent: PIED_PIPER_DARK_THEME_COLORS.accentSurface,
+      messageAction: PIED_PIPER_DARK_THEME_COLORS.messageAction,
     },
   };
 

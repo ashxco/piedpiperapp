@@ -1,6 +1,8 @@
 # Brand icons
 
-The in-app 3D flute mark is `brand/pied-piper-icon.png`. Web and mobile headers pair it with the text “Pied Piper”. Keep `apps/web/public/pied-piper-icon.png` identical to that source for the web splash screen.
+The in-app 3D flute mark is `brand/pied-piper-indigo.png`. Web and mobile headers pair it with the text “Pied Piper”. Keep `apps/web/public/pied-piper-indigo.png` identical to that source for the web splash screen.
+
+The matching horizontal logo is `brand/pied-piper-logo.png`.
 
 The three Icon Composer projects are the source of truth for full application icons:
 
