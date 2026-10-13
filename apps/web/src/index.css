@@ -2346,22 +2346,21 @@ code {
   }
 }
 
-/* Sidebar visual design by Claude Code, Fable 5.1. */
+/* Neutral application frame with a quiet, inset navigation pane. */
 /* ---------- tokens ---------- */
 [data-pied-piper-shell] {
   --pp-rail-w: 48px;
   --pp-shell-top: 0px;
   --pp-glass-blur: 20px;
-  --pp-pane-alpha: 0.72;
-  --pp-rail-alpha: 0.86;
-  --pp-highlight: color-mix(in srgb, var(--foreground) 8%, transparent);
-  --pp-hairline: color-mix(in srgb, var(--border) 70%, transparent);
+  --pp-pane-alpha: 0.96;
+  --pp-frame: #302e2c;
+  --pp-pane: #242323;
+  --pp-rail-alpha: 0.96;
+  --pp-hairline: rgb(255 255 255 / 0.09);
   --pp-hover: color-mix(in srgb, var(--foreground) 4%, transparent);
   --pp-selected: color-mix(in srgb, var(--foreground) 7%, transparent);
   --pp-pressed: color-mix(in srgb, var(--foreground) 9%, transparent);
-  --pp-rail-selected: color-mix(in srgb, var(--primary) 14%, transparent);
-  --pp-ambient-a: color-mix(in srgb, var(--primary) 22%, transparent);
-  --pp-ambient-b: color-mix(in srgb, #6956c9 14%, transparent);
+  --pp-rail-selected: rgb(255 255 255 / 0.1);
   --pp-radius-row: 8px;
   --pp-radius-btn: 10px;
   position: relative;
@@ -2370,18 +2369,23 @@ code {
 }
 .light [data-pied-piper-shell],
 :root:not(.dark) [data-pied-piper-shell] {
-  --pp-pane-alpha: 0.78;
+  --pp-pane-alpha: 0.96;
+  --pp-frame: #e7e5e2;
+  --pp-pane: #f3f2f0;
+  --pp-hairline: rgb(0 0 0 / 0.1);
+  --pp-rail-selected: rgb(0 0 0 / 0.08);
   --pp-rail-alpha: 0.9;
-  --pp-highlight: rgb(255 255 255 / 0.7);
   --pp-selected: color-mix(in srgb, var(--foreground) 6%, transparent);
-  --pp-ambient-a: color-mix(in srgb, var(--primary) 16%, transparent);
-  --pp-ambient-b: color-mix(in srgb, #b4a7ff 18%, transparent);
 }
 [data-pied-piper-shell][data-desktop-shell="true"] {
   --pp-shell-top: var(--workspace-topbar-height, 52px);
 }
 
-/* still ambient light behind the glass */
+[data-pied-piper-shell][data-desktop-shell="true"] :is([data-chat-header], .app-workspace-header) {
+  background: var(--pp-frame);
+}
+
+/* A single neutral surface joins the native titlebar and navigation rail. */
 [data-pied-piper-shell]::before {
   content: "";
   position: fixed;
@@ -2389,17 +2393,14 @@ code {
   width: calc(var(--pp-rail-w) + var(--sidebar-width));
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(520px 420px at 6% 12%, var(--pp-ambient-a), transparent 70%),
-    radial-gradient(640px 520px at 28% 96%, var(--pp-ambient-b), transparent 72%), var(--background);
+  background: var(--pp-frame);
 }
 
 /* ---------- glass surfaces ---------- */
 .app-navigation-rail,
 [data-app-sidebar] > [data-slot="sidebar-inner"] {
-  -webkit-backdrop-filter: blur(var(--pp-glass-blur)) saturate(140%);
-  backdrop-filter: blur(var(--pp-glass-blur)) saturate(140%);
-  box-shadow: inset 1px 1px 0 0 var(--pp-highlight);
+  -webkit-backdrop-filter: blur(var(--pp-glass-blur));
+  backdrop-filter: blur(var(--pp-glass-blur));
 }
 @utility app-navigation-rail {
   position: relative;
@@ -2411,12 +2412,10 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: color-mix(in srgb, var(--sidebar) calc(var(--pp-rail-alpha) * 100%), transparent);
-  border-right: 1px solid var(--pp-hairline);
+  background: color-mix(in srgb, var(--pp-frame) calc(var(--pp-rail-alpha) * 100%), transparent);
 }
 [data-app-sidebar] > [data-slot="sidebar-inner"] {
-  padding-top: var(--pp-shell-top);
-  background: color-mix(in srgb, var(--sidebar) calc(var(--pp-pane-alpha) * 100%), transparent);
+  background: color-mix(in srgb, var(--pp-pane) calc(var(--pp-pane-alpha) * 100%), transparent);
   border-right: 1px solid var(--pp-hairline);
   color: var(--foreground);
 }
@@ -2425,18 +2424,18 @@ code {
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .app-navigation-rail,
   [data-app-sidebar] > [data-slot="sidebar-inner"] {
-    background: var(--sidebar);
+    background: var(--pp-pane);
   }
 }
 @media (prefers-reduced-transparency: reduce) {
   .app-navigation-rail,
   [data-app-sidebar] > [data-slot="sidebar-inner"] {
-    background: var(--sidebar);
+    background: var(--pp-pane);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
   [data-pied-piper-shell]::before {
-    background: var(--background);
+    background: var(--pp-frame);
   }
 }
 
@@ -2477,18 +2476,8 @@ code {
   background: var(--pp-pressed);
 }
 .app-rail-button[aria-pressed="true"] {
-  color: var(--primary);
+  color: var(--foreground);
   background: var(--pp-rail-selected);
-}
-.app-rail-button[aria-pressed="true"]::before {
-  content: "";
-  position: absolute;
-  left: -6px;
-  top: 10px;
-  width: 2px;
-  height: 16px;
-  border-radius: 1px;
-  background: var(--primary);
 }
 .app-rail-button:focus-visible,
 [data-sidebar="menu-button"]:focus-visible,
@@ -2508,15 +2497,6 @@ code {
   font-weight: 600;
   letter-spacing: 0.01em;
 }
-@utility app-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  box-shadow:
-    0 0 0 1px var(--pp-highlight),
-    0 1px 2px rgb(0 0 0 / 0.25);
-}
-
 /* ---------- rows ---------- */
 [data-app-sidebar] [data-sidebar="group-label"] {
   margin: 20px 0 6px;
@@ -2615,10 +2595,17 @@ code {
   [data-pied-piper-shell] [data-app-sidebar] {
     left: var(--pp-rail-w);
     width: var(--sidebar-width);
-    top: 0;
+    top: var(--pp-shell-top);
+    height: calc(100% - var(--pp-shell-top));
     font-size: 13px;
     line-height: 1.3;
     --workspace-titlebar-content-left: 0px;
+  }
+  [data-pied-piper-shell][data-desktop-shell="true"]
+    [data-app-sidebar]
+    > [data-slot="sidebar-inner"] {
+    border-top-left-radius: 14px;
+    overflow: hidden;
   }
   [data-pied-piper-shell] [data-collapsible="offcanvas"] [data-app-sidebar] {
     left: calc(var(--pp-rail-w) - var(--sidebar-width));
