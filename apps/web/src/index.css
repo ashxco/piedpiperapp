@@ -3122,3 +3122,23 @@ body:has([data-native-glass="true"]),
     transition: none;
   }
 }
+
+/* Collapsed desktop navigation keeps the title bar and rail in one glass frame. */
+@media (min-width: 768px) {
+  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
+    > [data-slot="sidebar-inset"]:has([data-chat-header]),
+  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
+    > [data-slot="sidebar-inset"]:has([data-chat-header])
+    > div,
+  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
+    [data-chat-header] {
+    background: transparent;
+  }
+  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
+    [data-chat-header]
+    + div {
+    overflow: hidden;
+    border-top-left-radius: 14px;
+    background: var(--background);
+  }
+}
