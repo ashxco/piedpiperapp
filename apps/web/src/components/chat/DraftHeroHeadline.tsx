@@ -1,15 +1,16 @@
 import type { DraftId } from "~/composerDraftStore";
 import { composerDraftHasUserContent, useComposerDraftStore } from "~/composerDraftStore";
-import { resolveEnvironmentMachineKind, type ScopedProjectRef } from "@piedpiperapp/contracts";
+import {
+  resolveEnvironmentMachineKind,
+  type EnvironmentId,
+  type ScopedProjectRef,
+} from "@piedpiperapp/contracts";
 import { scopedProjectKey, scopeProjectRef } from "@piedpiperapp/client-runtime/environment";
 import { isScratchProject } from "@piedpiperapp/client-runtime/state/projects";
-import { FolderPlusIcon } from "lucide-react";
-import { useAtomValue } from "@effect/atom-react";
+import { FolderIcon, FolderPlusIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { openCommandPalette } from "~/commandPaletteBus";
-import { shortcutLabelForCommand } from "~/keybindings";
-import { primaryServerKeybindingsAtom } from "~/state/server";
 import { useNewThreadHandler } from "~/hooks/useHandleNewThread";
 import { useScratchProject } from "~/hooks/useScratchProject";
 import { useClientSettings } from "~/hooks/useSettings";
@@ -39,12 +40,15 @@ import {
   useComboboxFilter,
 } from "../ui/combobox";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "../ui/tooltip";
-import { InlineButton } from "../ui/button";
+import { ComposerControl } from "./ComposerControl";
+import { BranchToolbarEnvironmentSelector } from "../BranchToolbarEnvironmentSelector";
+import type { EnvironmentOption } from "../BranchToolbar.logic";
 import { resolveProjectSettings } from "@piedpiperapp/shared/projectSettings";
 
 // Picker value for the "Add project" row; real entries are keyed by logical
 // project key.
 const ADD_PROJECT_VALUE = "add-project";
+const NO_PROJECT_VALUE = "no-project";
 
 interface PickerItem {
   readonly value: string;
@@ -77,7 +81,6 @@ export function DraftHeroHeadline({
   const openAddProject = useCallback(() => openCommandPalette({ open: "add-project" }), []);
   const { scratchEnvironmentId, scratchWorkspaceRootFor, openScratchProject } = useScratchProject();
   const openProjectDraft = useNewThreadHandler();
-  const keybindings = useAtomValue(primaryServerKeybindingsAtom);
 
   const environmentLabelById = useMemo(
     () =>
@@ -153,8 +156,7 @@ export function DraftHeroHeadline({
   const hasResolvedProject = activeProjectTitle !== null;
   const canChooseProject = projectPickerEntries.length > 0;
   const shouldShowProjectMenu = canChooseProject;
-  // The project that hosts threads without a project is not a row: the line
-  // under the headline is the way into it.
+  // The project-less home has a dedicated entry alongside ordinary projects.
   const menuEntries = useMemo(
     () =>
       projectPickerEntries.filter(
@@ -183,10 +185,13 @@ export function DraftHeroHeadline({
   // a project, so it only trails the unfiltered list.
   const pickerItems = useMemo<readonly PickerItem[]>(
     () => [
+      ...(scratchTargetEnvironmentId !== null
+        ? [{ value: NO_PROJECT_VALUE, label: "No project" }]
+        : []),
       ...menuEntries.map(({ group }) => ({ value: group.projectKey, label: group.displayName })),
       { value: ADD_PROJECT_VALUE, label: "Add project" },
     ],
-    [menuEntries],
+    [menuEntries, scratchTargetEnvironmentId],
   );
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerQuery, setPickerQuery] = useState("");
@@ -283,6 +288,10 @@ export function DraftHeroHeadline({
       onValueChange={(item) => {
         if (!item) return;
         setPickerOpen(false);
+        if (item.value === NO_PROJECT_VALUE) {
+          void startScratch();
+          return;
+        }
         if (item.value === ADD_PROJECT_VALUE) {
           openAddProject();
           return;
@@ -297,19 +306,16 @@ export function DraftHeroHeadline({
       <Tooltip>
         <TooltipTrigger
           render={
-            // The trigger's accessible name comes from its visible text (the
-            // project title) so the hero sentence reads naturally: an
-            // aria-label here would replace the title with an action phrase
-            // mid-sentence and baffle screen-reader users.
             <ComboboxTrigger
-              render={<InlineButton tone="picker" />}
+              render={<ComposerControl size="xs" />}
               data-draft-project-trigger=""
               className="pointer-events-auto max-w-64 align-baseline"
             />
           }
         >
+          <FolderIcon className="size-3.5" aria-hidden="true" />
           <span className="min-w-0 truncate">
-            {isScratchDraft ? "No project" : (activeProjectDisplayName ?? "Choose a project")}
+            {isScratchDraft ? "Choose project" : (activeProjectDisplayName ?? "Choose project")}
           </span>
         </TooltipTrigger>
         {activeProjectDisplayName && !isScratchDraft ? (
@@ -354,19 +360,12 @@ export function DraftHeroHeadline({
       </ComboboxPopup>
     </Combobox>
   ) : (
-    <button
-      type="button"
-      onClick={openAddProject}
-      className="pointer-events-auto inline cursor-pointer border-muted-foreground/35 border-b border-dotted text-muted-foreground/60 transition-colors hover:border-muted-foreground/60 hover:text-muted-foreground/80 focus-visible:rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-    >
-      {activeProjectTitle ?? "Add a project"}
+    <button type="button" onClick={openAddProject} className="draft-project-empty">
+      <FolderPlusIcon className="size-3.5" aria-hidden="true" />
+      {activeProjectTitle ?? "Choose project"}
     </button>
   );
 
-  // The composer hero is a sentence, so the heading's accessible name must be
-  // a complete sentence too. The project picker is a control rendered inline
-  // in the h1; without an explicit label its widget state bleeds into the
-  // announced phrase.
   const headingLabel = isScratchDraft
     ? "What should we work on?"
     : hasResolvedProject
@@ -375,56 +374,75 @@ export function DraftHeroHeadline({
         ? `${activeProjectDisplayName ?? "Choose a project"} to start`
         : "Add a project to start";
 
-  // One click out of the project, phrased as the alternative to the question
-  // above it. Focus moves to the project picker once this line has gone.
-  const noProjectShortcut = shortcutLabelForCommand(keybindings, "chat.newWithoutProject");
-  const orStartWithoutProject =
-    scratchWorkspaceRoot !== null && !isScratchDraft && (hasResolvedProject || canChooseProject) ? (
-      <Tooltip>
-        <TooltipTrigger
-          render={
-            <InlineButton
-              tone="muted"
-              className="pointer-events-auto"
-              onClick={() =>
-                void startScratch().then((started) => {
-                  if (started) {
-                    document.querySelector<HTMLElement>("[data-draft-project-trigger]")?.focus();
-                  }
-                })
-              }
-            />
-          }
-        >
-          or start without a project
-        </TooltipTrigger>
-        {noProjectShortcut ? <TooltipPopup side="bottom">{noProjectShortcut}</TooltipPopup> : null}
-      </Tooltip>
-    ) : null;
+  const availableMachines: EnvironmentOption[] = environments.flatMap((environment) => {
+    const project = isScratchDraft
+      ? projects.find(
+          (candidate) =>
+            candidate.environmentId === environment.environmentId && candidate.isScratch,
+        )
+      : activeProjectGroup?.memberProjectRefs.find(
+          (ref) => ref.environmentId === environment.environmentId,
+        );
+    if (
+      !project &&
+      (!isScratchDraft || scratchWorkspaceRootFor(environment.environmentId) === null)
+    )
+      return [];
+    return [
+      {
+        environmentId: environment.environmentId,
+        projectId: project ? ("projectId" in project ? project.projectId : project.id) : null,
+        label:
+          environment.environmentId === primaryEnvironmentId ? "This computer" : environment.label,
+        isPrimary: environment.environmentId === primaryEnvironmentId,
+        machine: resolveEnvironmentMachineKind(environment.serverConfig),
+      },
+    ];
+  });
+  const selectMachine = async (environmentId: EnvironmentId) => {
+    if (isScratchDraft) {
+      const project = await openScratchProject(environmentId);
+      if (project)
+        selectProject(
+          project,
+          deriveLogicalProjectKeyFromSettings(project, projectGroupingSettings),
+        );
+      return;
+    }
+    const ref = activeProjectGroup?.memberProjectRefs.find(
+      (candidate) => candidate.environmentId === environmentId,
+    );
+    const project =
+      ref &&
+      projects.find(
+        (candidate) => candidate.id === ref.projectId && candidate.environmentId === environmentId,
+      );
+    if (project) selectProject(project, activeProjectKey);
+  };
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
+    <div className="draft-composer-heading">
       <h1
         aria-label={headingLabel}
         className="w-full text-center font-normal text-2xl text-foreground tracking-tight sm:text-3xl"
       >
-        {isScratchDraft ? (
-          <>What should we work on?</>
-        ) : hasResolvedProject ? (
-          <>What should we build in {projectSelector}?</>
-        ) : canChooseProject ? (
-          <>{projectSelector} to start</>
-        ) : (
-          <>Add a project to start</>
-        )}
+        {isScratchDraft
+          ? "What should we work on?"
+          : hasResolvedProject
+            ? `What should we build in ${activeProjectDisplayName}?`
+            : "What should we build?"}
       </h1>
-      {/* Reserved whenever threads can skip a project, so the heading does not
-          move. Without a project, the picker moves here to choose one. */}
-      {scratchWorkspaceRoot === null ? null : (
-        <p className="mt-2 flex h-6 items-center text-sm">
-          {isScratchDraft ? projectSelector : orStartWithoutProject}
-        </p>
-      )}
+      <div className="draft-composer-context">
+        {projectSelector}
+        {activeProjectRef ? (
+          <BranchToolbarEnvironmentSelector
+            envLocked={false}
+            environmentId={activeProjectRef.environmentId}
+            availableEnvironments={availableMachines}
+            onEnvironmentChange={(environmentId) => void selectMachine(environmentId)}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

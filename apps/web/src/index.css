@@ -3224,3 +3224,45 @@ body:has([data-native-glass="true"]),
     transition: none;
   }
 }
+
+.draft-composer-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.draft-composer-heading h1 {
+  margin-bottom: 24px;
+}
+.draft-composer-context {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  min-height: 46px;
+  margin: 0 12px -10px;
+  padding: 8px 10px 18px;
+  border-radius: 16px 16px 0 0;
+  background: var(--accent);
+  color: var(--muted-foreground);
+}
+.draft-project-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.draft-composer-context [data-draft-project-trigger] {
+  gap: 6px;
+  color: var(--muted-foreground);
+}
+.draft-composer-context [data-composer-shortcut="composer.host"] {
+  gap: 6px;
+  color: var(--foreground);
+}
+.draft-composer-context [data-composer-shortcut="composer.host"] svg {
+  width: 14px;
+  height: 14px;
+}
