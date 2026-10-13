@@ -2806,7 +2806,7 @@ body:has([data-native-glass="true"]),
   gap: 6px;
   padding-inline: 10px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  background: transparent;
   color: var(--foreground);
   font-size: 12px;
   font-weight: 400;
@@ -2814,9 +2814,7 @@ body:has([data-native-glass="true"]),
     background-color 140ms ease,
     color 140ms ease;
 }
-.composer-toolbar-pill:hover,
-.composer-toolbar-pill[data-popup-open],
-.composer-toolbar-pill[data-pressed] {
+.composer-toolbar-pill:hover {
   background: color-mix(in srgb, var(--foreground) 10%, transparent);
 }
 .composer-toolbar-pill svg {
@@ -3022,9 +3020,8 @@ body:has([data-native-glass="true"]),
   color: var(--model-accent);
   background: rgb(76 154 255 / 12%);
 }
-.model-control-pill[data-speed="ultrafast"] {
+.model-control-pill[data-speed="ultrafast"]:hover {
   background: rgb(76 154 255 / 12%);
-  border-color: rgb(76 154 255 / 22%);
 }
 .model-control-pill[data-speed="ultrafast"] svg {
   filter: none;
