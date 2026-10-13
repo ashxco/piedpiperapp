@@ -816,8 +816,7 @@ const make = Effect.gen(function* () {
           yield* validateReusableThread(input, candidateThreadId);
         }
 
-        // A Scratch thread launched at the project root runs in a folder of its
-        // own. Only the first attempt claims one; a retry replays its create.
+        // Project-less threads share their managed home. A retry replays its create.
         const workspaceStrategy: ThreadLaunchWorkspaceStrategy =
           input.workspaceStrategy.type === "root" && Option.isNone(launchReceipt)
             ? Option.match(
@@ -932,7 +931,7 @@ const make = Effect.gen(function* () {
           projection.runs.some((run) => run.id === runId && run.status === "preparing");
         const shouldSchedule = runId === null ? Option.isNone(launchReceipt) : runIsPreparing;
         // A retried root launch prepares the folder its first attempt bound, so
-        // a Scratch thread keeps its own. Other root launches bind no folder.
+        // a project-less thread keeps its shared home. Other root launches bind no folder.
         const boundWorktreePath = projection.thread.worktreePath;
         const preparationStrategy: ThreadLaunchWorkspaceStrategy =
           Option.isSome(launchReceipt) &&

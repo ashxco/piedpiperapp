@@ -17,6 +17,7 @@ import * as Path from "effect/Path";
 import * as PlatformError from "effect/PlatformError";
 import * as Scope from "effect/Scope";
 
+import * as HostProcess from "@piedpiperapp/shared/HostProcess";
 import * as ServerConfig from "../config.ts";
 import * as GitManager from "../git/GitManager.ts";
 import * as GitWorkflow from "../git/GitWorkflowService.ts";
@@ -90,6 +91,7 @@ const layer = (baseDir: string, options?: HarnessOptions) =>
     Layer.provideMerge(SqlitePersistence.layerMemory),
     Layer.provideMerge(ServerSettings.layerTest()),
     Layer.provideMerge(ServerConfig.layerTest(baseDir, baseDir)),
+    Layer.provideMerge(Layer.succeed(HostProcess.HomeDirectory, baseDir)),
     Layer.provideMerge(NodeServices.layer),
   );
 
@@ -109,7 +111,9 @@ const withScratch = <A, E>(
 ) =>
   Effect.gen(function* () {
     const fileSystem = yield* FileSystem.FileSystem;
-    const baseDir = yield* fileSystem.makeTempDirectoryScoped({ prefix: "piedpiperapp-managed-folders-" });
+    const baseDir = yield* fileSystem.makeTempDirectoryScoped({
+      prefix: "piedpiperapp-managed-folders-",
+    });
     return yield* body({ baseDir }).pipe(Effect.provide(layer(baseDir, options)));
   }).pipe(Effect.scoped, Effect.provide(NodeServices.layer));
 
@@ -124,11 +128,11 @@ const requireRoot = Effect.gen(function* () {
   return Option.getOrThrow(yield* scratch.scratchRoot);
 });
 
-it.effect("offers a Scratch folder under the data dir when it is outside a checkout", () =>
+it.effect("offers a shared home in Documents when it is outside a checkout", () =>
   withScratch(({ baseDir }) =>
     Effect.gen(function* () {
       const path = yield* Path.Path;
-      assert.equal(yield* requireRoot, path.resolve(baseDir, "scratch"));
+      assert.equal(yield* requireRoot, path.resolve(baseDir, "Documents", "Pied Piper"));
     }),
   ),
 );
@@ -137,7 +141,9 @@ it.effect("offers nothing when the data dir sits inside a Git checkout", () =>
   Effect.gen(function* () {
     const fileSystem = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
-    const checkout = yield* fileSystem.makeTempDirectoryScoped({ prefix: "piedpiperapp-scratch-repo-" });
+    const checkout = yield* fileSystem.makeTempDirectoryScoped({
+      prefix: "piedpiperapp-scratch-repo-",
+    });
     yield* git(checkout, ["init", "--quiet"]);
     const baseDir = path.join(checkout, ".piedpiperapp");
     yield* fileSystem.makeDirectory(baseDir);
@@ -155,7 +161,7 @@ it.effect("offers a Scratch folder when Git is not installed", () =>
     ({ baseDir }) =>
       Effect.gen(function* () {
         const path = yield* Path.Path;
-        assert.equal(yield* requireRoot, path.resolve(baseDir, "scratch"));
+        assert.equal(yield* requireRoot, path.resolve(baseDir, "Documents", "Pied Piper"));
       }),
     {
       vcsProcess: Layer.succeed(VcsProcess.VcsProcess, {
@@ -231,56 +237,22 @@ it.effect("recreates the Scratch folder after it is deleted", () =>
   ),
 );
 
-it.effect("gives each Scratch thread its own folder, named from its message", () =>
+it.effect("keeps project-less threads in one shared folder", () =>
   withScratch(() =>
     Effect.gen(function* () {
       const scratch = yield* ManagedProjectFolders.ManagedProjectFolders;
       const fileSystem = yield* FileSystem.FileSystem;
-      const path = yield* Path.Path;
       const { projectId } = yield* scratch.ensureScratchProject;
       const root = yield* requireRoot;
-      const text = "Convert these PNGs to WebP, please!";
-      // Two ids with the same tail would collide on the short name.
-      const first = Option.getOrThrow(
-        yield* scratch.folderForThread({
+      for (const id of ["first", "second"]) {
+        const folder = yield* scratch.folderForThread({
           projectId,
-          threadId: ThreadId.make("thread:a:0123456789abcdef"),
-          text,
-        }),
-      );
-      const second = Option.getOrThrow(
-        yield* scratch.folderForThread({
-          projectId,
-          threadId: ThreadId.make("thread:b:0123456789abcdef"),
-          text,
-        }),
-      );
-
-      // Ids that normalize to the same characters take both of its names.
-      const third = Option.getOrThrow(
-        yield* scratch.folderForThread({
-          projectId,
-          threadId: ThreadId.make("thread:b0123456789abcdef"),
-          text,
-        }),
-      );
-
-      assert.equal(new Set([first, second, third]).size, 3);
-      for (const folder of [first, second, third]) {
-        assert.equal(path.dirname(folder), root);
-        assert.match(path.basename(folder), /^\d{4}-\d{2}-\d{2}-convert-these-pngs-to-webp-/);
-        assert.isTrue(yield* fileSystem.exists(folder));
+          threadId: ThreadId.make(id),
+          text: "A new conversation",
+        });
+        assert.equal(Option.getOrThrow(folder), root);
       }
-
-      const pasted = Option.getOrThrow(
-        yield* scratch.folderForThread({
-          projectId,
-          threadId: ThreadId.make("thread-pasted"),
-          text: `${"word ".repeat(10_000)}../../etc`,
-        }),
-      );
-      assert.equal(path.dirname(pasted), root);
-      assert.isAtMost(path.basename(pasted).length, 80);
+      assert.deepEqual(yield* fileSystem.readDirectory(root), []);
     }),
   ),
 );

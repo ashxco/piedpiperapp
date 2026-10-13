@@ -3167,3 +3167,60 @@ body:has([data-native-glass="true"]),
   height: 6px;
   border-radius: 50%;
 }
+
+.sidebar-recents-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+.sidebar-recents-toggle svg {
+  transition: transform 140ms ease;
+}
+.sidebar-recents-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition:
+    opacity 120ms ease,
+    background-color 120ms ease;
+}
+.sidebar-recents-heading:hover .sidebar-recents-new,
+.sidebar-recents-new:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sidebar-recents-new:hover {
+  background: var(--pp-hover);
+  color: var(--foreground);
+}
+.sidebar-recents-new:disabled {
+  cursor: default;
+}
+#sidebar-recent-chats[hidden] {
+  display: none;
+}
+.sidebar-recents-toggle:focus-visible,
+.sidebar-recents-new:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+@media (pointer: coarse) {
+  .sidebar-recents-new {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-recents-toggle svg,
+  .sidebar-recents-new {
+    transition: none;
+  }
+}

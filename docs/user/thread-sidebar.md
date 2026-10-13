@@ -23,13 +23,12 @@ list. It starts on your current machine; before sending, pick another machine
 from the machine menu to move it there. To move a draft into a project, pick the
 project in the heading.
 
-Each thread without a project works in its own folder under `~/.piedpiperapp/scratch` (the
-`scratch` folder of your Pied Piper data directory), named after its date, the first words
-of its first message, and a short id, like
-`2026-09-25-convert-these-pngs-to-webp-a1b2c3d4`. Deleting a thread keeps its
-folder, so the files the agent wrote stay until you delete them. Branch, worktree, and diff controls stay hidden because
-these folders are not Git repositories. This is unavailable when the data
-directory itself sits inside a Git checkout.
+On web and desktop, **Recents** lists chats without a project. Expand or collapse
+it with the chevron, and hover over its heading to reveal **New chat**.
+
+Threads without a project share `~/Documents/Pied Piper` on their environment's
+machine. The folder is created on first use. Deleting a chat keeps its files.
+This shared home must be outside a Git repository.
 
 ### Start in the background
 

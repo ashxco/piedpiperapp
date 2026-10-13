@@ -2611,7 +2611,7 @@ const SidebarProjectItem = memo(function SidebarProjectItem(props: SidebarProjec
         <Tooltip>
           <TooltipTrigger
             render={
-              <div className="pointer-events-none absolute top-[calc(50%+1px)] right-0.5 -translate-y-1/2 opacity-0 transition-opacity duration-150 max-sm:pointer-events-auto max-sm:opacity-100 group-hover/project-header:pointer-events-auto group-hover/project-header:opacity-100 group-focus-within/project-header:pointer-events-auto group-focus-within/project-header:opacity-100">
+              <div className="pointer-events-none absolute top-[calc(50%+1px)] right-0.5 -translate-y-1/2 opacity-0 transition-opacity duration-150 max-sm:pointer-events-auto max-sm:opacity-100 group-hover/project-header:pointer-events-auto group-hover/project-header:opacity-100 has-focus-visible:pointer-events-auto has-focus-visible:opacity-100">
                 <button
                   type="button"
                   aria-label={`Create new thread in ${project.displayName}`}
@@ -3397,7 +3397,7 @@ export default function LegacySidebar() {
   );
   const orderedProjects = useMemo(() => {
     return orderItemsByPreferredIds({
-      items: projects,
+      items: projects.filter((project) => project.isScratch !== true),
       preferredIds: projectOrder,
       getId: getProjectOrderKey,
       getPreferenceIds: (project) => [

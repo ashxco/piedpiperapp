@@ -1,9 +1,8 @@
 /**
- * ManagedProjectFolders - the project folders Pied Piper makes for the user under
- * its data dir, rather than ones the user picks:
+ * ManagedProjectFolders - the project folders Pied Piper makes for the user,
+ * rather than ones the user picks:
  *
- * - `<baseDir>/scratch`: the Scratch project ("No project"), with a folder of
- *   its own for each thread;
+ * - `~/Documents/Pied Piper`: the shared home for threads without a project;
  * - `<baseDir>/projects/<slug>`: projects started from just a name, each a new
  *   Git repository with a README, an icon, and a first commit.
  *
@@ -20,7 +19,6 @@ import { newProjectFolderName } from "@piedpiperapp/shared/path";
 import * as Cause from "effect/Cause";
 import * as Context from "effect/Context";
 import * as Crypto from "effect/Crypto";
-import * as DateTime from "effect/DateTime";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -31,6 +29,7 @@ import * as Path from "effect/Path";
 import * as PlatformError from "effect/PlatformError";
 import * as Schema from "effect/Schema";
 
+import * as HostProcess from "@piedpiperapp/shared/HostProcess";
 import * as ServerConfig from "../config.ts";
 import * as GitWorkflow from "../git/GitWorkflowService.ts";
 import * as GitVcsDriver from "../vcs/GitVcsDriver.ts";
@@ -105,8 +104,8 @@ export class ManagedProjectFolders extends Context.Service<
     /** Finds or creates the Scratch project and (re)creates its folder. */
     readonly ensureScratchProject: Effect.Effect<{ readonly projectId: ProjectId }, ScratchError>;
     /**
-     * Claims a fresh folder for a new thread in the Scratch project, named from
-     * the date, its first message, and its id. None for every other project.
+     * Returns the shared home for a thread without a project.
+     * None for every other project.
      */
     readonly folderForThread: (input: {
       readonly projectId: ProjectId;
@@ -133,18 +132,6 @@ export class ManagedProjectFolders extends Context.Service<
     >;
   }
 >()("piedpiperapp/project/ManagedProjectFolders") {}
-
-// Only [a-z0-9] reaches a folder name, so it stays one path segment, and the
-// words are capped so a pasted blob cannot outgrow a file name.
-const folderWords = (text: string) =>
-  text
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
-    .filter(Boolean)
-    .slice(0, 5)
-    .join("-")
-    .slice(0, 48)
-    .replace(/-+$/, "");
 
 // Tailwind 600 shades: dark enough for white initials on every hue.
 const ICON_BACKGROUNDS = [
@@ -271,17 +258,16 @@ const make = Effect.gen(function* () {
     }
   });
 
-  // Inside a checkout (a dev worktree's .piedpiperapp, a dotfiles home) the folder would
-  // inherit the repo's git status and checkpoints, so Scratch is offered only
-  // when the data dir is outside any work tree. With no Git installed nothing
-  // can see a checkout, so Scratch is offered. Probed once; other detection
-  // failures hide Scratch rather than failing callers. An interrupted probe
-  // invalidates the cache so the next caller probes again.
+  const homeDirectory = yield* HostProcess.HomeDirectory;
+  const scratchHome = path.join(homeDirectory, "Documents", "Pied Piper");
+  // Keep project-less chats outside repositories. Probe the home until their
+  // shared folder exists; the folder itself is created only on first use.
+  const probeDirectory = (yield* fileSystem.exists(scratchHome)) ? scratchHome : homeDirectory;
   const [probe, invalidate] = yield* Effect.cachedInvalidateWithTTL(
-    gitWorkflow.isRepository(config.baseDir).pipe(
+    gitWorkflow.isRepository(probeDirectory).pipe(
       Effect.catchIf(isGitMissing, () => Effect.succeed(false)),
       Effect.map((isRepository) =>
-        isRepository ? Option.none<string>() : Option.some(path.resolve(config.baseDir, "scratch")),
+        isRepository ? Option.none<string>() : Option.some(scratchHome),
       ),
       Effect.catchCause((cause) =>
         Cause.hasInterrupts(cause) ? Effect.interrupt : Effect.succeed(Option.none<string>()),
@@ -361,30 +347,8 @@ const make = Effect.gen(function* () {
     const root = yield* scratchRoot;
     if (Option.isNone(root)) return Option.none();
     if (!(yield* isScratchProject(input.projectId, root.value))) return Option.none();
-    const date = DateTime.formatIso(yield* DateTime.now).slice(0, 10);
-    const words = folderWords(input.text);
-    const id = input.threadId.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const folderFor = (idPart: string) =>
-      path.join(root.value, [date, words, idPart].filter(Boolean).join("-"));
     yield* makeScratchFolder(root.value);
-    const fullFolder = folderFor(id);
-    // Thread ids often share a prefix ("thread:..."), so the first name uses
-    // the id's tail. A taken short name falls back to the full id, which only
-    // this thread holds. Ids that normalize alike, or a launch retried without
-    // its receipt, can find the full name taken too, so later attempts add a
-    // fresh random suffix; the names never run out.
-    return yield* claimFreeFolder(
-      (attempt) =>
-        attempt === 1
-          ? Effect.succeed(Option.some(folderFor(id.slice(-8))))
-          : attempt === 2
-            ? Effect.succeed(Option.some(fullFolder))
-            : crypto.randomUUIDv4.pipe(
-                Effect.map((uuid) => Option.some(`${fullFolder}-${uuid.slice(0, 8)}`)),
-                Effect.mapError((cause) => new ScratchFolderError({ folder: fullFolder, cause })),
-              ),
-      (folder, cause) => new ScratchFolderError({ folder, cause }),
-    );
+    return root;
   });
 
   // Projects started from just a name live beside Scratch and worktrees, away
