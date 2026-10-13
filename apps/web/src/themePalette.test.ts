@@ -174,21 +174,21 @@ describe("theme files", () => {
       toolbarControl: "#242424",
       secondary: "#242424",
       muted: "#242424",
-      accentSurface: "#282239",
+      accentSurface: "#303030",
     });
   });
 
   it("keeps the stock sidebar and chat on distinct surfaces in both appearances", () => {
     expectThemeColors(getStandardThemeColors("light"), {
-      canvas: "#f8f7fc",
-      sidebar: "#f1eef8",
+      canvas: "#fafafa",
+      sidebar: "#f0f0f0",
       sidebarRowActive: "#ffffff",
-      messageSurface: "#eeebf8",
+      messageSurface: "#eeeeee",
     });
     expectThemeColors(getStandardThemeColors("dark"), {
       canvas: "#161616",
-      sidebar: "#090711",
-      sidebarRowActive: "#282239",
+      sidebar: "#181818",
+      sidebarRowActive: "#303030",
       messageSurface: "#242424",
     });
   });
