@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createHashHistory, createBrowserHistory } from "@tanstack/react-router";
 
 import "./index.css";
+import { installFocusInputMode } from "./lib/focusInputMode";
 
 import { prepareProviderAuthDelivery } from "./providerAuthDelivery";
 import { isElectron } from "./env";
@@ -14,6 +15,9 @@ import {
 } from "./lib/windowControlsOverlay";
 import { AppRoot } from "./AppRoot";
 import { clearChunkReloadGuard, reloadOnceForChunkLoadError } from "./lib/chunkReloadGuard";
+
+const removeFocusInputMode = installFocusInputMode(document);
+import.meta.hot?.dispose(removeFocusInputMode);
 
 prepareProviderAuthDelivery();
 

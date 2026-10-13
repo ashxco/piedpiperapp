@@ -3266,3 +3266,24 @@ body:has([data-native-glass="true"]),
   width: 14px;
   height: 14px;
 }
+
+/* Clicking controls should not paint a keyboard focus ring, including when
+   a menu moves focus programmatically or a text field matches :focus-visible. */
+html[data-focus-input="pointer"] :is(:focus, :focus-within),
+html[data-focus-input="pointer"] :is(:focus, :focus-within)::before,
+html[data-focus-input="pointer"] :is(:focus, :focus-within)::after {
+  outline: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-inset-ring-shadow: 0 0 #0000 !important;
+}
+
+html[data-focus-input="pointer"] .settings-sidebar-search:focus-within {
+  box-shadow: none;
+}
+html[data-focus-input="pointer"] .settings-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--contrast-foreground) 12%, transparent);
+}
+html[data-focus-input="pointer"] .settings-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--contrast-foreground) 12%, transparent);
+}
