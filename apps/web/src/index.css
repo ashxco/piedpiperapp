@@ -263,6 +263,8 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
   --color-surface-raised: var(--surface-raised);
   --color-message: var(--message-surface);
   --color-message-foreground: var(--contrast-message-foreground);
+  --color-composer-send-foreground: #171717;
+  --color-composer-send-hover: #f5f5f5;
   --color-message-action: var(--message-action);
   --color-message-action-foreground: var(--message-action-foreground);
   --color-message-action-hover: var(--message-action-hover);
