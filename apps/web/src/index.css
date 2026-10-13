@@ -3287,3 +3287,35 @@ html[data-focus-input="pointer"] .settings-slider:focus-visible::-webkit-slider-
 html[data-focus-input="pointer"] .settings-slider:focus-visible::-moz-range-thumb {
   box-shadow: 0 1px 2px color-mix(in srgb, var(--contrast-foreground) 12%, transparent);
 }
+.draft-composer-context
+  :is(
+    [data-draft-project-trigger],
+    [data-composer-shortcut="composer.host"],
+    .draft-project-empty
+  ) {
+  min-height: 28px;
+  padding-inline: 10px;
+  border-radius: 999px;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+.draft-composer-context
+  :is(
+    [data-draft-project-trigger],
+    [data-composer-shortcut="composer.host"],
+    .draft-project-empty
+  ):is(:hover, [data-popup-open], [data-pressed]) {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  .draft-composer-context
+    :is(
+      [data-draft-project-trigger],
+      [data-composer-shortcut="composer.host"],
+      .draft-project-empty
+    ) {
+    transition: none;
+  }
+}
