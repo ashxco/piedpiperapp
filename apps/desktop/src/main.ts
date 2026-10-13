@@ -19,7 +19,7 @@ import * as Electron from "electron";
 
 import * as NetService from "@piedpiperapp/shared/Net";
 import * as HostProcess from "@piedpiperapp/shared/HostProcess";
-import type { RemoteT3RunnerOptions } from "@piedpiperapp/ssh/tunnel";
+import type { RemotePiedPiperRunnerOptions } from "@piedpiperapp/ssh/tunnel";
 import serverPackageJson from "../../server/package.json" with { type: "json" };
 
 import * as DesktopIpc from "./ipc/DesktopIpc.ts";
@@ -108,8 +108,8 @@ const layerDesktopEnvironment = Layer.unwrap(
 // a source checkout instead so the two sides can be iterated together.
 const resolveDesktopSshCliRunner = (
   environment: DesktopEnvironment.DesktopEnvironment["Service"],
-): RemoteT3RunnerOptions => {
-  const devRemoteEntryPath = Option.getOrUndefined(environment.devRemoteT3ServerEntryPath);
+): RemotePiedPiperRunnerOptions => {
+  const devRemoteEntryPath = Option.getOrUndefined(environment.devRemotePiedPiperServerEntryPath);
   if (environment.isDevelopment && devRemoteEntryPath !== undefined) {
     return {
       nodeScriptPath: devRemoteEntryPath,

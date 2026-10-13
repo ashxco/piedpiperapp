@@ -81,7 +81,7 @@ function quantity(count: number, noun: string, plural = `${noun}s`): string {
 }
 
 /** Counts successful effects separately from failed or unfinished tool calls. */
-export function summarizeT3ToolCalls(
+export function summarizePiedPiperToolCalls(
   action: PiedPiperMcpToolSummaryAction,
   calls: ReadonlyArray<PiedPiperToolSummaryCall>,
 ): { label: string; failedCount: number } {

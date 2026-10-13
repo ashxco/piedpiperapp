@@ -13,24 +13,30 @@ import {
 
 it("formats package runner commands from their cache entry paths", () => {
   for (const [entryPath, expected] of [
-    ["/home/theo/.npm/_npx/abc123/node_modules/piedpiperapp/dist/bin.mjs", "npx piedpiperapp serve"],
+    ["/home/ash/.npm/_npx/abc123/node_modules/piedpiperapp/dist/bin.mjs", "npx piedpiperapp serve"],
     [
-      "C:\\Users\\theo\\AppData\\Local\\npm-cache\\_npx\\abc\\node_modules\\piedpiperapp\\dist\\bin.mjs",
+      "C:\\Users\\ash\\AppData\\Local\\npm-cache\\_npx\\abc\\node_modules\\piedpiperapp\\dist\\bin.mjs",
       "npx piedpiperapp serve",
     ],
-    ["/home/theo/.cache/pnpm/dlx/abc/node_modules/piedpiperapp/dist/bin.mjs", "pnpm dlx piedpiperapp serve"],
     [
-      "/home/theo/.local/share/pnpm/.pnpm/dlx/abc/node_modules/piedpiperapp/dist/bin.mjs",
+      "/home/ash/.cache/pnpm/dlx/abc/node_modules/piedpiperapp/dist/bin.mjs",
       "pnpm dlx piedpiperapp serve",
     ],
     [
-      "C:\\Users\\theo\\AppData\\Local\\pnpm-cache\\dlx\\abc\\node_modules\\piedpiperapp\\dist\\bin.mjs",
+      "/home/ash/.local/share/pnpm/.pnpm/dlx/abc/node_modules/piedpiperapp/dist/bin.mjs",
       "pnpm dlx piedpiperapp serve",
     ],
-    ["/home/theo/.bun/install/cache/piedpiperapp@0.0.31/dist/bin.mjs", "bunx piedpiperapp serve"],
-    ["/tmp/bunx-1000-piedpiperapp@latest/node_modules/piedpiperapp/dist/bin.mjs", "bunx piedpiperapp serve"],
     [
-      "C:\\Users\\theo\\AppData\\Local\\Temp\\bunx-0-piedpiperapp@latest\\node_modules\\piedpiperapp\\dist\\bin.mjs",
+      "C:\\Users\\ash\\AppData\\Local\\pnpm-cache\\dlx\\abc\\node_modules\\piedpiperapp\\dist\\bin.mjs",
+      "pnpm dlx piedpiperapp serve",
+    ],
+    ["/home/ash/.bun/install/cache/piedpiperapp@0.0.31/dist/bin.mjs", "bunx piedpiperapp serve"],
+    [
+      "/tmp/bunx-1000-piedpiperapp@latest/node_modules/piedpiperapp/dist/bin.mjs",
+      "bunx piedpiperapp serve",
+    ],
+    [
+      "C:\\Users\\ash\\AppData\\Local\\Temp\\bunx-0-piedpiperapp@latest\\node_modules\\piedpiperapp\\dist\\bin.mjs",
       "bunx piedpiperapp serve",
     ],
   ] as const) {
@@ -41,8 +47,8 @@ it("formats package runner commands from their cache entry paths", () => {
 it("treats stable installs as direct invocations", () => {
   for (const entryPath of [
     "/usr/local/lib/node_modules/piedpiperapp/dist/bin.mjs",
-    "/home/theo/Code/work/piedpiperapp/apps/server/dist/bin.mjs",
-    "/home/theo/.piedpiperapp/runtime/0.0.31/node_modules/piedpiperapp/dist/bin.mjs",
+    "/home/ash/Code/work/piedpiperapp/apps/server/dist/bin.mjs",
+    "/home/ash/.piedpiperapp/runtime/0.0.31/node_modules/piedpiperapp/dist/bin.mjs",
     "",
   ]) {
     assert.equal(
@@ -62,7 +68,7 @@ it("re-suggests the prerelease channel only for prerelease builds", () => {
     assert.equal(
       formatCliCommand({
         subcommand: "serve",
-        entryPath: "/home/theo/.npm/_npx/abc123/node_modules/piedpiperapp/dist/bin.mjs",
+        entryPath: "/home/ash/.npm/_npx/abc123/node_modules/piedpiperapp/dist/bin.mjs",
         version,
       }),
       expected,
@@ -74,7 +80,7 @@ it("formats serve suggestions to match the launching command", () => {
   assert.equal(
     formatCliCommand({
       subcommand: "serve",
-      entryPath: "/home/theo/.npm/_npx/abc/node_modules/piedpiperapp/dist/bin.mjs",
+      entryPath: "/home/ash/.npm/_npx/abc/node_modules/piedpiperapp/dist/bin.mjs",
       version: "0.0.31-nightly.20260729",
     }),
     "npx piedpiperapp@nightly serve",
@@ -115,7 +121,7 @@ it.layer(NodeServices.layer)("root CLI commands", (it) => {
     );
 
   /** A directory holding an executable `piedpiperapp`, to stand in for one on PATH. */
-  const pathWithT3 = Effect.gen(function* () {
+  const pathWithPiedPiper = Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
     const bin = yield* fs.makeTempDirectoryScoped();
@@ -125,20 +131,20 @@ it.layer(NodeServices.layer)("root CLI commands", (it) => {
 
   it.effect("keeps a user-installed Node reachable when the command runs under sudo", () =>
     Effect.gen(function* () {
-      const npx = "/home/theo/.npm/_npx/abc/node_modules/piedpiperapp/dist/bin.mjs";
+      const npx = "/home/ash/.npm/_npx/abc/node_modules/piedpiperapp/dist/bin.mjs";
       // sudo's secure_path already has a system Node.
       expect(yield* rootCommand({ node: "/usr/bin/node", entry: npx })).toBe(
         "sudo npx piedpiperapp browser setup",
       );
       // nvm, fnm, and tarball installs are dropped by sudo's PATH reset.
       expect(
-        yield* rootCommand({ node: "/home/theo/.nvm/versions/node/v24/bin/node", entry: npx }),
+        yield* rootCommand({ node: "/home/ash/.nvm/versions/node/v24/bin/node", entry: npx }),
       ).toBe('sudo env "PATH=$PATH" npx piedpiperapp browser setup');
       expect(
         yield* rootCommand({
-          node: "/home/theo/.local/node/bin/node",
-          entry: "/home/theo/.local/lib/node_modules/piedpiperapp/dist/bin.mjs",
-          path: yield* pathWithT3,
+          node: "/home/ash/.local/node/bin/node",
+          entry: "/home/ash/.local/lib/node_modules/piedpiperapp/dist/bin.mjs",
+          path: yield* pathWithPiedPiper,
         }),
       ).toBe('sudo env "PATH=$PATH" piedpiperapp browser setup');
     }).pipe(Effect.scoped),
@@ -153,14 +159,14 @@ it.layer(NodeServices.layer)("root CLI commands", (it) => {
       yield* fs.makeDirectory(path.dirname(shim), { recursive: true });
       yield* fs.writeFileString(shim, "#!/bin/sh\n", { mode: 0o755 });
       const desktop = {
-        node: "/tmp/.mount_T3abc/piedpiperapp",
-        entry: "/tmp/.mount_T3abc/resources/app.asar/apps/server/dist/bin.mjs",
+        node: "/tmp/.mount_PiedPiperabc/piedpiperapp",
+        entry: "/tmp/.mount_PiedPiperabc/resources/app.asar/apps/server/dist/bin.mjs",
         env: { PIEDPIPER_CLI_PATH: shim },
       };
       // The desktop app's shim, quoted for the shell and run as root as is.
       expect(yield* rootCommand(desktop)).toBe(`sudo '${shim}' browser setup`);
       // A `piedpiperapp` the person put on PATH still wins.
-      expect(yield* rootCommand({ ...desktop, path: yield* pathWithT3 })).toBe(
+      expect(yield* rootCommand({ ...desktop, path: yield* pathWithPiedPiper })).toBe(
         'sudo env "PATH=$PATH" piedpiperapp browser setup',
       );
       // A standalone binary names itself.
@@ -243,7 +249,10 @@ it.layer(NodeServices.layer)("manual server installation ownership", (it) => {
       const prefix = path.join(root, "bunx-tools");
       const packageRoot = path.join(prefix, "lib/node_modules/piedpiperapp");
       const launcher = path.join(packageRoot, "bin/piedpiperapp.js");
-      const entry = path.join(packageRoot, "node_modules/@piedpiperapp/piedpiperapp-linux-x64/piedpiperapp");
+      const entry = path.join(
+        packageRoot,
+        "node_modules/@piedpiperapp/piedpiperapp-linux-x64/piedpiperapp",
+      );
       yield* fs.makeDirectory(path.dirname(launcher), { recursive: true });
       yield* fs.makeDirectory(path.dirname(entry), { recursive: true });
       yield* fs.makeDirectory(path.join(prefix, "bin"));

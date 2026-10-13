@@ -969,9 +969,9 @@ export const makeOpenCodeAdapterV2 = Effect.fn("makeOpenCodeAdapterV2")(function
         });
 
         const mcpSession = yield* mcpSessions.read(input.threadId);
-        const hasT3Mcp = mcpSession !== undefined && !connection.external;
-        const orchestrationSystemPrompt = piedPiperOrchestrationSystemPrompt(hasT3Mcp);
-        if (hasT3Mcp) {
+        const hasPiedPiperMcp = mcpSession !== undefined && !connection.external;
+        const orchestrationSystemPrompt = piedPiperOrchestrationSystemPrompt(hasPiedPiperMcp);
+        if (hasPiedPiperMcp) {
           yield* OpenCodeRuntime.runOpenCodeSdk("mcp.add", () =>
             client.mcp.add({
               name: "piedpiperapp",

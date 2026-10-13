@@ -9,7 +9,7 @@ import {
   type ThreadId,
 } from "@piedpiperapp/contracts";
 import {
-  resolveT3McpToolDefinition,
+  resolvePiedPiperMcpToolDefinition,
   type PiedPiperMcpToolDefinition,
   type PiedPiperMcpToolSummaryAction,
 } from "@piedpiperapp/shared/piedPiperMcpToolPresentation";
@@ -22,7 +22,7 @@ import { classifyToolActivity } from "@piedpiperapp/shared/toolActivity";
 import { toolOutputIndicatesFailure } from "@piedpiperapp/shared/toolOutput";
 
 import {
-  summarizeT3ToolCalls,
+  summarizePiedPiperToolCalls,
   piedPiperToolResultIndicatesFailure,
   type PiedPiperToolSummaryCall,
 } from "@piedpiperapp/client-runtime/piedPiperToolSummary";
@@ -125,7 +125,7 @@ function workEntryToolName(
     return `${data.server}.${data.tool}`;
   }
   if (typeof data?.toolName === "string") return data.toolName;
-  return resolveT3McpToolDefinition(entry.toolTitle) ? entry.toolTitle : entry.label;
+  return resolvePiedPiperMcpToolDefinition(entry.toolTitle) ? entry.toolTitle : entry.label;
 }
 
 function workEntryToolOutput(
@@ -138,7 +138,7 @@ function workEntryToolOutput(
     : (data?.output ?? data?.result ?? data?.rawOutput ?? data?.content);
 }
 
-function resolveT3McpToolPresentation(
+function resolvePiedPiperMcpToolPresentation(
   definition: PiedPiperMcpToolDefinition | null,
   status: string | undefined,
   data?: unknown,
@@ -203,11 +203,13 @@ export function resolveWorkEntryToolPresentation(
   >,
   fallbackStatus?: "inProgress" | "completed",
 ) {
-  const definition = resolveT3McpToolDefinition(workEntryToolName(entry));
+  const definition = resolvePiedPiperMcpToolDefinition(workEntryToolName(entry));
   const status = entry.toolLifecycleStatus ?? fallbackStatus;
-  return resolveT3McpToolPresentation(
+  return resolvePiedPiperMcpToolPresentation(
     definition,
-    definition && piedPiperToolResultIndicatesFailure(workEntryToolOutput(entry)) ? "failed" : status,
+    definition && piedPiperToolResultIndicatesFailure(workEntryToolOutput(entry))
+      ? "failed"
+      : status,
     entry.toolData,
   );
 }
@@ -373,7 +375,7 @@ function workEntryIndicatesToolFailureFromOutput(
   }
   if (!workLogEntryIsToolLike(entry)) return false;
   if (
-    resolveT3McpToolDefinition(workEntryToolName(entry)) &&
+    resolvePiedPiperMcpToolDefinition(workEntryToolName(entry)) &&
     piedPiperToolResultIndicatesFailure(workEntryToolOutput(entry))
   ) {
     return true;
@@ -665,7 +667,8 @@ export function summarizeToolGroup(entries: ReadonlyArray<WorkLogPresentationEnt
   >();
   const sources = new Map<string, ToolActivitySource>();
   for (const entry of entries) {
-    const piedPiperAction = resolveT3McpToolDefinition(workEntryToolName(entry))?.summaryAction ?? null;
+    const piedPiperAction =
+      resolvePiedPiperMcpToolDefinition(workEntryToolName(entry))?.summaryAction ?? null;
     if (entry.toolSource && piedPiperAction === null) {
       sources.set(entry.toolSource.key, entry.toolSource);
       continue;
@@ -681,7 +684,10 @@ export function summarizeToolGroup(entries: ReadonlyArray<WorkLogPresentationEnt
     count: group.entries.length,
     priority: summaryActionPriority(action),
     ...(group.piedPiperAction
-      ? summarizeT3ToolCalls(group.piedPiperAction, group.entries.map(piedPiperToolSummaryCall))
+      ? summarizePiedPiperToolCalls(
+          group.piedPiperAction,
+          group.entries.map(piedPiperToolSummaryCall),
+        )
       : {
           label: toolGroupActionLabel(
             group.action,
@@ -712,7 +718,7 @@ export function summarizeToolGroup(entries: ReadonlyArray<WorkLogPresentationEnt
   const sourcedCount = entries.filter(
     (entry) =>
       entry.toolSource !== undefined &&
-      resolveT3McpToolDefinition(workEntryToolName(entry)) === null,
+      resolvePiedPiperMcpToolDefinition(workEntryToolName(entry)) === null,
   ).length;
   const remainingCount =
     entries.length - sourcedCount - selected.reduce((count, group) => count + group.count, 0);

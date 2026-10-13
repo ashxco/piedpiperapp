@@ -832,7 +832,13 @@ it.layer(NodeServices.layer)("AgentSessionScanner", (it) => {
         const codexHomePath = yield* makeTempDir("piedpiperapp-codex-home-");
         const fileSystem = yield* FileSystem.FileSystem;
 
-        const worktreeCwd = path.join(claudeHomePath, ".piedpiperapp", "worktrees", "piedpiperapp", "wt-1");
+        const worktreeCwd = path.join(
+          claudeHomePath,
+          ".piedpiperapp",
+          "worktrees",
+          "piedpiperapp",
+          "wt-1",
+        );
         yield* fileSystem.makeDirectory(worktreeCwd, { recursive: true });
         yield* writeTranscript({
           filePath: path.join(claudeHomePath, "projects", "-slug", "a.jsonl"),
@@ -921,7 +927,7 @@ it.layer(NodeServices.layer)("AgentSessionScanner", (it) => {
         yield* fileSystem.makeDirectory(submoduleGitDir, { recursive: true });
         yield* fileSystem.writeFileString(
           path.join(submoduleGitDir, "config"),
-          '[remote "origin"]\n\turl = ssh://github.com/pingdotgg/vendor.git\n',
+          '[remote "origin"]\n\turl = ssh://github.com/ashxco/vendor.git\n',
         );
         yield* fileSystem.writeFileString(
           path.join(submodule, ".git"),
@@ -943,7 +949,7 @@ it.layer(NodeServices.layer)("AgentSessionScanner", (it) => {
         ).toEqual([
           {
             path: submodule,
-            git: { remoteKey: "github.com/pingdotgg/vendor", repository: "pingdotgg/vendor" },
+            git: { remoteKey: "github.com/ashxco/vendor", repository: "ashxco/vendor" },
           },
           { path: noRemote, git: { remoteKey: null, repository: null } },
           { path: plain, git: null },
@@ -955,29 +961,31 @@ it.layer(NodeServices.layer)("AgentSessionScanner", (it) => {
       }),
     );
 
-    it.effect("excludes sandboxes under the configured worktrees dir without .piedpiperapp in the path", () =>
-      Effect.gen(function* () {
-        const path = yield* Path.Path;
-        const claudeHomePath = yield* makeTempDir("piedpiperapp-claude-home-");
-        const codexHomePath = yield* makeTempDir("piedpiperapp-codex-home-");
-        const configBaseDir = yield* makeTempDir("piedpiperapp-scanner-base-");
-        const fileSystem = yield* FileSystem.FileSystem;
+    it.effect(
+      "excludes sandboxes under the configured worktrees dir without .piedpiperapp in the path",
+      () =>
+        Effect.gen(function* () {
+          const path = yield* Path.Path;
+          const claudeHomePath = yield* makeTempDir("piedpiperapp-claude-home-");
+          const codexHomePath = yield* makeTempDir("piedpiperapp-codex-home-");
+          const configBaseDir = yield* makeTempDir("piedpiperapp-scanner-base-");
+          const fileSystem = yield* FileSystem.FileSystem;
 
-        // worktreesDir derives as `<baseDir>/worktrees`, and the temp base
-        // dir contains no `.piedpiperapp` segment — only the config-based prefix match
-        // can exclude this one.
-        const worktreeCwd = path.join(configBaseDir, "worktrees", "piedpiperapp", "wt-2");
-        yield* fileSystem.makeDirectory(worktreeCwd, { recursive: true });
-        yield* writeTranscript({
-          filePath: path.join(claudeHomePath, "projects", "-slug", "a.jsonl"),
-          contents: claudeSessionLine(worktreeCwd),
-          mtimeMs: Date.parse("2026-01-01T00:00:00.000Z"),
-        });
+          // worktreesDir derives as `<baseDir>/worktrees`, and the temp base
+          // dir contains no `.piedpiperapp` segment — only the config-based prefix match
+          // can exclude this one.
+          const worktreeCwd = path.join(configBaseDir, "worktrees", "piedpiperapp", "wt-2");
+          yield* fileSystem.makeDirectory(worktreeCwd, { recursive: true });
+          yield* writeTranscript({
+            filePath: path.join(claudeHomePath, "projects", "-slug", "a.jsonl"),
+            contents: claudeSessionLine(worktreeCwd),
+            mtimeMs: Date.parse("2026-01-01T00:00:00.000Z"),
+          });
 
-        const result = yield* runScan({ claudeHomePath, codexHomePath, configBaseDir });
+          const result = yield* runScan({ claudeHomePath, codexHomePath, configBaseDir });
 
-        expect(result.candidates).toEqual([]);
-      }),
+          expect(result.candidates).toEqual([]);
+        }),
     );
 
     it.effect("excludes sandboxes reached through a symlink into the worktrees dir", () =>

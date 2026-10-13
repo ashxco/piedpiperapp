@@ -77,7 +77,7 @@ Verify an expanded card with five threads, attention/failure priority, project n
 After Android prebuild, run the native presentation regression tests from `apps/mobile/android`:
 
 ```sh
-./gradlew :piedpiperapp-agent-notifications:testDebugUnitTest --tests expo.modules.t3agentnotifications.AgentNotificationsTest
+./gradlew :piedpiperapp-agent-notifications:testDebugUnitTest --tests expo.modules.piedpiperappagentnotifications.AgentNotificationsTest
 ```
 
 ## Relay deployment

@@ -82,7 +82,7 @@ function tool(
   return { displayName, labels, icon, summaryAction };
 }
 
-const PIED_PIPER_MCP_SERVER_ALIASES = new Set(["piedpiperapp", "piedpiperapp_code", "piedpiperapp"]);
+const PIED_PIPER_MCP_SERVER_ALIASES = new Set(["piedpiperapp", "piedpiperapp_code"]);
 
 // Cards, activity rows, summaries, and provider identity recovery share this inventory.
 const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>> = {
@@ -146,11 +146,23 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
   ),
   request_secret: tool(["Ask for", "Asking for", "Asked for", "a secret"], "secret-request"),
   create_threads: tool(["Create", "Creating", "Created", "Pied Piper threads"], "thread-create"),
-  piedpiperapp_thread_start: tool(["Start", "Starting", "Started", "a Pied Piper thread"], "thread-create"),
-  piedpiperapp_thread_list: tool(["List", "Listing", "Listed", "Pied Piper threads"], "thread-list"),
+  piedpiperapp_thread_start: tool(
+    ["Start", "Starting", "Started", "a Pied Piper thread"],
+    "thread-create",
+  ),
+  piedpiperapp_thread_list: tool(
+    ["List", "Listing", "Listed", "Pied Piper threads"],
+    "thread-list",
+  ),
   piedpiperapp_thread_read: tool(["Read", "Reading", "Read", "a Pied Piper thread"], "thread-read"),
-  piedpiperapp_thread_send: tool(["Send", "Sending", "Sent", "to a Pied Piper thread"], "thread-send"),
-  piedpiperapp_thread_wait: tool(["Wait", "Waiting", "Waited", "for a Pied Piper thread"], "thread-wait"),
+  piedpiperapp_thread_send: tool(
+    ["Send", "Sending", "Sent", "to a Pied Piper thread"],
+    "thread-send",
+  ),
+  piedpiperapp_thread_wait: tool(
+    ["Wait", "Waiting", "Waited", "for a Pied Piper thread"],
+    "thread-wait",
+  ),
   piedpiperapp_workflow_stop: tool(
     ["Stop", "Stopping", "Requested a stop for", "a workflow"],
     "workflow-stop",
@@ -163,7 +175,10 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
     ["Hand off", "Handing off", "Handed off", "thread to a git worktree"],
     "worktree-handoff",
   ),
-  piedpiperapp_worktree_status: tool(["Get", "Getting", "Got", "thread worktree status"], "worktree-status"),
+  piedpiperapp_worktree_status: tool(
+    ["Get", "Getting", "Got", "thread worktree status"],
+    "worktree-status",
+  ),
   preview_status: tool(["Get", "Getting", "Got", "preview browser status"], "browser", "browser"),
   preview_open: tool(
     ["Open", "Opening", "Opened", "a page in the preview browser"],
@@ -275,7 +290,10 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
     ["Cancel", "Canceling", "Requested cancellation of", "a queued run"],
     "queue-cancel",
   ),
-  piedpiperapp_queue_reorder: tool(["Reorder", "Reordering", "Reordered", "a queued run"], "queue-reorder"),
+  piedpiperapp_queue_reorder: tool(
+    ["Reorder", "Reordering", "Reordered", "a queued run"],
+    "queue-reorder",
+  ),
   piedpiperapp_queue_promote_to_steer: tool(
     ["Steer with", "Steering with", "Requested steering with", "a queued message"],
     "queue-steer",
@@ -284,7 +302,10 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
     ["List", "Listing", "Listed", "pending questions"],
     "question-list",
   ),
-  piedpiperapp_pending_request_read: tool(["Read", "Reading", "Read", "pending questions"], "question-read"),
+  piedpiperapp_pending_request_read: tool(
+    ["Read", "Reading", "Read", "pending questions"],
+    "question-read",
+  ),
   piedpiperapp_pending_request_respond: tool(
     ["Answer", "Answering", "Answered", "pending questions"],
     "question-respond",
@@ -293,19 +314,48 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
     ["Read", "Reading", "Read", "thread configuration"],
     "thread-configuration",
   ),
-  piedpiperapp_thread_configure: tool(["Set", "Setting", "Set", "thread model"], "thread-configure"),
-  piedpiperapp_thread_fork: tool(["Fork", "Forking", "Requested a fork of", "this thread"], "thread-fork"),
+  piedpiperapp_thread_configure: tool(
+    ["Set", "Setting", "Set", "thread model"],
+    "thread-configure",
+  ),
+  piedpiperapp_thread_fork: tool(
+    ["Fork", "Forking", "Requested a fork of", "this thread"],
+    "thread-fork",
+  ),
   piedpiperapp_thread_merge_back: tool(
     ["Merge", "Merging", "Requested a merge of", "thread context"],
     "thread-merge",
   ),
-  piedpiperapp_thread_search: tool(["Search", "Searching", "Searched", "thread content"], "thread-search"),
-  piedpiperapp_thread_transfers: tool(["Read", "Reading", "Read", "thread transfers"], "thread-transfers"),
-  piedpiperapp_thread_organize: tool(["Organize", "Organizing", "Organized", "a thread"], "thread-organize"),
-  piedpiperapp_thread_update: tool(["Update", "Updating", "Updated", "Pied Piper thread metadata"], "thread-update"),
-  piedpiperapp_worktree_list: tool(["List", "Listing", "Listed", "workspace branches"], "worktree-list"),
-  piedpiperapp_preview_list: tool(["List", "Listing", "Listed", "preview tabs"], "browser", "browser"),
-  piedpiperapp_preview_close: tool(["Close", "Closing", "Closed", "a preview tab"], "browser", "browser"),
+  piedpiperapp_thread_search: tool(
+    ["Search", "Searching", "Searched", "thread content"],
+    "thread-search",
+  ),
+  piedpiperapp_thread_transfers: tool(
+    ["Read", "Reading", "Read", "thread transfers"],
+    "thread-transfers",
+  ),
+  piedpiperapp_thread_organize: tool(
+    ["Organize", "Organizing", "Organized", "a thread"],
+    "thread-organize",
+  ),
+  piedpiperapp_thread_update: tool(
+    ["Update", "Updating", "Updated", "Pied Piper thread metadata"],
+    "thread-update",
+  ),
+  piedpiperapp_worktree_list: tool(
+    ["List", "Listing", "Listed", "workspace branches"],
+    "worktree-list",
+  ),
+  piedpiperapp_preview_list: tool(
+    ["List", "Listing", "Listed", "preview tabs"],
+    "browser",
+    "browser",
+  ),
+  piedpiperapp_preview_close: tool(
+    ["Close", "Closing", "Closed", "a preview tab"],
+    "browser",
+    "browser",
+  ),
   piedpiperapp_environment_read: tool(
     ["Read", "Reading", "Read", "environment preferences"],
     "environment-read",
@@ -314,12 +364,24 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
     ["Update", "Updating", "Updated", "environment preferences"],
     "environment-update",
   ),
-  piedpiperapp_thread_launch: tool(["Launch", "Launching", "Launched", "a project thread"], "thread-create"),
+  piedpiperapp_thread_launch: tool(
+    ["Launch", "Launching", "Launched", "a project thread"],
+    "thread-create",
+  ),
   piedpiperapp_project_list: tool(["List", "Listing", "Listed", "projects"], "project-list"),
   piedpiperapp_project_read: tool(["Read", "Reading", "Read", "a project"], "project-read"),
-  piedpiperapp_project_create: tool(["Register", "Registering", "Registered", "a project"], "project-create"),
-  piedpiperapp_project_update: tool(["Update", "Updating", "Updated", "a project"], "project-update"),
-  piedpiperapp_project_delete: tool(["Delete", "Deleting", "Deleted", "a project"], "project-delete"),
+  piedpiperapp_project_create: tool(
+    ["Register", "Registering", "Registered", "a project"],
+    "project-create",
+  ),
+  piedpiperapp_project_update: tool(
+    ["Update", "Updating", "Updated", "a project"],
+    "project-update",
+  ),
+  piedpiperapp_project_delete: tool(
+    ["Delete", "Deleting", "Deleted", "a project"],
+    "project-delete",
+  ),
   piedpiperapp_project_clone: tool(["Clone", "Cloning", "Cloned", "a repository"], "project-clone"),
   piedpiperapp_attachment_prepare_upload: tool(
     ["Prepare", "Preparing", "Prepared", "an attachment upload"],
@@ -329,7 +391,10 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
     ["Discard", "Discarding", "Discarded", "a pending attachment"],
     "attachment-discard",
   ),
-  piedpiperapp_thread_send_attachments: tool(["Send", "Sending", "Sent", "attachments"], "attachment-send"),
+  piedpiperapp_thread_send_attachments: tool(
+    ["Send", "Sending", "Sent", "attachments"],
+    "attachment-send",
+  ),
   html_preview: tool(["Preview", "Previewing", "Previewed", "an HTML page"], "html-preview"),
   html_render: tool(["Render", "Rendering", "Rendered", "an HTML page"], "html-render"),
 };
@@ -338,9 +403,11 @@ const PIED_PIPER_MCP_TOOLS: Readonly<Record<string, PiedPiperMcpToolDefinition>>
  * The Pied Piper orchestration tool inventory, used to gate loose name matching on
  * both the server (ACP MCP identity recovery) and the client (logo branding).
  */
-export const PIED_PIPER_MCP_TOOL_NAMES: ReadonlySet<string> = new Set(Object.keys(PIED_PIPER_MCP_TOOLS));
+export const PIED_PIPER_MCP_TOOL_NAMES: ReadonlySet<string> = new Set(
+  Object.keys(PIED_PIPER_MCP_TOOLS),
+);
 
-function normalizeT3McpToolLabel(value: string): string {
+function normalizePiedPiperMcpToolLabel(value: string): string {
   return value.replace(/\s+(?:complete|completed)\s*$/i, "").trim();
 }
 
@@ -351,8 +418,9 @@ function normalizeT3McpToolLabel(value: string): string {
  * agents. The prefix match is deliberately loose because the display-name
  * inventory is the real gate; unknown tools stay on the generic renderer.
  */
-function resolveT3McpToolName(value: string): string | null {
-  const label = normalizeT3McpToolLabel(value);
+function resolvePiedPiperMcpToolName(value: string): string | null {
+  const label = normalizePiedPiperMcpToolLabel(value);
+  if (Object.hasOwn(PIED_PIPER_MCP_TOOLS, label)) return label;
   const mcpMatch = /^mcp__(?<server>.+?)__(?<tool>.+)$/i.exec(label);
   if (mcpMatch?.groups) {
     const { server, tool } = mcpMatch.groups;
@@ -363,14 +431,18 @@ function resolveT3McpToolName(value: string): string | null {
       : null;
   }
 
-  const namespaceMatch = /^(?<server>piedpiperapp|piedpiperapp_code|piedpiperapp)(?:[.:/]|\s*·\s*)(?<tool>.+)$/i.exec(
-    label,
-  );
+  const namespaceMatch =
+    /^(?<server>piedpiperapp_code|piedpiperapp|pied piper)(?:[.:/]|\s*·\s*)(?<tool>.+)$/i.exec(
+      label,
+    );
   if (namespaceMatch?.groups) {
     return namespaceMatch.groups.tool ?? null;
   }
 
-  const prefixed = /^(?:mcp[-_]{1,2})?piedpiperapp[-_ ]?code(?:__|[-_.:/ ])(?<tool>.+)$/i.exec(label);
+  const prefixed =
+    /^(?:mcp[-_]{1,2})?(?:piedpiperapp(?:[-_ ]?code)?|pied piper)(?:__|[-_.:/ ])(?<tool>.+)$/i.exec(
+      label,
+    );
   const candidate = prefixed?.groups?.tool ?? label;
   if (Object.hasOwn(PIED_PIPER_MCP_TOOLS, candidate)) return candidate;
   // OpenCode 2 registers one server per thread, `piedpiperapp-<thread>`, and joins
@@ -385,27 +457,29 @@ function resolveT3McpToolName(value: string): string | null {
 }
 
 /** The bare Pied Piper tool name (`html_render`) for any provider's spelling of it. */
-export function resolveT3McpToolId(toolName: string | null | undefined): string | null {
-  const name = toolName == null ? null : resolveT3McpToolName(toolName);
+export function resolvePiedPiperMcpToolId(toolName: string | null | undefined): string | null {
+  const name = toolName == null ? null : resolvePiedPiperMcpToolName(toolName);
   return name !== null && Object.hasOwn(PIED_PIPER_MCP_TOOLS, name) ? name : null;
 }
 
-export function resolveT3McpToolDefinition(
+export function resolvePiedPiperMcpToolDefinition(
   toolName: string | null | undefined,
 ): PiedPiperMcpToolDefinition | null {
-  const name = toolName == null ? null : resolveT3McpToolName(toolName);
-  return name !== null && Object.hasOwn(PIED_PIPER_MCP_TOOLS, name) ? PIED_PIPER_MCP_TOOLS[name]! : null;
+  const name = toolName == null ? null : resolvePiedPiperMcpToolName(toolName);
+  return name !== null && Object.hasOwn(PIED_PIPER_MCP_TOOLS, name)
+    ? PIED_PIPER_MCP_TOOLS[name]!
+    : null;
 }
 
-export function resolveT3McpToolPresentation(
+export function resolvePiedPiperMcpToolPresentation(
   toolName: string | null | undefined,
 ): PiedPiperMcpToolPresentation | null {
-  const definition = resolveT3McpToolDefinition(toolName);
+  const definition = resolvePiedPiperMcpToolDefinition(toolName);
   return definition === null ? null : { displayName: definition.displayName, logo: "piedpiperapp" };
 }
 
-export function resolveT3McpToolSummaryAction(
+export function resolvePiedPiperMcpToolSummaryAction(
   toolName: string | null | undefined,
 ): PiedPiperMcpToolSummaryAction | null {
-  return resolveT3McpToolDefinition(toolName)?.summaryAction ?? null;
+  return resolvePiedPiperMcpToolDefinition(toolName)?.summaryAction ?? null;
 }

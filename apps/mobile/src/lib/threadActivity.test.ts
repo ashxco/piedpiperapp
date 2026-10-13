@@ -1503,18 +1503,21 @@ describe("buildThreadFeed", () => {
   it("uses canonical Pied Piper orchestration summaries in compact work groups", () => {
     const rows = [
       projected(command("2026-06-20T00:00:01.000Z"), 0),
-      ...["mcp__piedpiperapp__piedpiperapp_thread_send", "piedpiperapp_code.piedpiperapp_thread_send", "piedpiperapp_thread_send"].map(
-        (toolName, index) =>
-          projected(
-            {
-              ...base(`item-send-${index}`, `2026-06-20T00:00:0${index + 2}.000Z`, index + 2),
-              type: "dynamic_tool" as const,
-              toolName,
-              input: { threadId: `thread-${index}`, message: "Continue" },
-              output: { threadId: `thread-${index}`, messageId: `message-${index}` },
-            },
-            index + 1,
-          ),
+      ...[
+        "mcp__piedpiperapp__piedpiperapp_thread_send",
+        "piedpiperapp_code.piedpiperapp_thread_send",
+        "piedpiperapp_thread_send",
+      ].map((toolName, index) =>
+        projected(
+          {
+            ...base(`item-send-${index}`, `2026-06-20T00:00:0${index + 2}.000Z`, index + 2),
+            type: "dynamic_tool" as const,
+            toolName,
+            input: { threadId: `thread-${index}`, message: "Continue" },
+            output: { threadId: `thread-${index}`, messageId: `message-${index}` },
+          },
+          index + 1,
+        ),
       ),
       projected(
         {
@@ -1548,7 +1551,7 @@ describe("buildThreadFeed", () => {
         ...base("list", "2026-09-19T00:00:01.000Z", 1),
         type: "dynamic_tool",
         title: "Custom provider title",
-        toolName: "Pied Piper-code.piedpiperapp_project_list",
+        toolName: "Pied Piper.piedpiperapp_project_list",
         input: {},
         output: { projects: [] },
       },

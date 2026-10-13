@@ -1,4 +1,6 @@
 {
   "platforms": ["android"],
-  "android": { "modules": ["expo.modules.t3agentnotifications.PiedPiperAgentNotificationsModule"] }
+  "android": {
+    "modules": ["expo.modules.piedpiperappagentnotifications.PiedPiperAgentNotificationsModule"]
+  }
 }

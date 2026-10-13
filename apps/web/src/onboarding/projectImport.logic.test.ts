@@ -1,4 +1,8 @@
-import { EnvironmentId, ProjectId, type AgentSessionProjectCandidate } from "@piedpiperapp/contracts";
+import {
+  EnvironmentId,
+  ProjectId,
+  type AgentSessionProjectCandidate,
+} from "@piedpiperapp/contracts";
 import { describe, expect, it } from "vite-plus/test";
 
 import {
@@ -95,7 +99,7 @@ describe("groupOnboardingProjects", () => {
       lastActiveAt: "2026-08-10T12:00:00.000Z",
     });
     const older = candidate("/code/fleet", {
-      git: github("t3dotgg/fleet"),
+      git: github("ashxco/fleet"),
       threadCount: 295,
       lastActiveAt: "2026-08-22T00:00:00.000Z",
     });
@@ -114,7 +118,7 @@ describe("groupOnboardingProjects", () => {
       })),
     ).toEqual([
       {
-        label: "t3dotgg/fleet",
+        label: "ashxco/fleet",
         paths: ["/code/fleet"],
         threadCount: 295,
         lastActiveAt: "2026-08-22T00:00:00.000Z",

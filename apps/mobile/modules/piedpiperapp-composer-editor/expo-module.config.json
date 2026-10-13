@@ -4,6 +4,6 @@
     "modules": ["PiedPiperComposerEditorModule"]
   },
   "android": {
-    "modules": ["expo.modules.t3composereditor.PiedPiperComposerEditorModule"]
+    "modules": ["expo.modules.piedpiperappcomposereditor.PiedPiperComposerEditorModule"]
   }
 }

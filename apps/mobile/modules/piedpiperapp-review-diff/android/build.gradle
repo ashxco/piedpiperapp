@@ -5,7 +5,7 @@ group = 'com.piedpiperapp.reviewdiff'
 version = '0.0.0'
 
 android {
-  namespace 'expo.modules.t3reviewdiff'
+  namespace 'expo.modules.piedpiperappreviewdiff'
   compileSdk rootProject.ext.compileSdkVersion
 
   testOptions {

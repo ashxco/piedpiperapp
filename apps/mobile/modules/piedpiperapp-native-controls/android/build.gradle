@@ -13,7 +13,7 @@ group = 'com.piedpiperapp.nativecontrols'
 version = '0.0.0'
 
 android {
-  namespace 'expo.modules.t3nativecontrols'
+  namespace 'expo.modules.piedpiperappnativecontrols'
   compileSdk rootProject.ext.compileSdkVersion
 
   defaultConfig {

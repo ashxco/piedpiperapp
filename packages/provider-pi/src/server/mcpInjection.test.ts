@@ -13,7 +13,7 @@ import {
 } from "./mcpExtensionSource.ts";
 import {
   buildPiRpcLaunch,
-  materializePiT3McpExtension,
+  materializePiPiedPiperMcpExtension,
   resolvePiLaunchArgs,
 } from "./mcpInjection.ts";
 
@@ -66,7 +66,10 @@ describe("pi Pied Piper MCP injection", () => {
     assert.equal(launch.env[PIED_PIPER_MCP_URL_ENV], "http://127.0.0.1:43123/mcp");
     assert.equal(launch.env[PIED_PIPER_MCP_BEARER_ENV], "secret-pi-token");
     assert.equal(launch.env[PIED_PIPER_PI_RUNTIME_MODE_ENV], "approval-required");
-    assert.equal(launch.env[PIED_PIPER_PI_MCP_EXTENSION_PATH_ENV], "/tmp/cache/pi-piedpiperapp-mcp-extension.ts");
+    assert.equal(
+      launch.env[PIED_PIPER_PI_MCP_EXTENSION_PATH_ENV],
+      "/tmp/cache/pi-piedpiperapp-mcp-extension.ts",
+    );
 
     const permissionOnly = buildPiRpcLaunch({
       launchArgs: [],
@@ -85,7 +88,7 @@ describe("pi Pied Piper MCP injection", () => {
       "--extension",
       "/tmp/cache/pi-piedpiperapp-mcp-extension.ts",
     ]);
-    assert.isFalse(permissionOnly.hasT3Mcp);
+    assert.isFalse(permissionOnly.hasPiedPiperMcp);
     assert.isUndefined(permissionOnly.env[PIED_PIPER_MCP_URL_ENV]);
     assert.isUndefined(permissionOnly.env[PIED_PIPER_MCP_BEARER_ENV]);
     assert.equal(permissionOnly.env[PIED_PIPER_PI_RUNTIME_MODE_ENV], "auto-accept-edits");
@@ -134,7 +137,7 @@ describe("pi Pied Piper MCP injection", () => {
       "--no-extensions",
       "--no-tools",
     ]);
-    assert.isFalse(launch.hasT3Mcp);
+    assert.isFalse(launch.hasPiedPiperMcp);
     assert.deepInclude(resolvePiLaunchArgs("--mode text"), {
       ok: false,
       message: "Pi launch argument '--mode' is controlled by Pied Piper and cannot be overridden.",
@@ -159,7 +162,7 @@ describe("pi Pied Piper MCP injection", () => {
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;
       const cacheDir = yield* fs.makeTempDirectoryScoped({ prefix: "piedpiperapp-pi-extensions-" });
-      const mcpDest = yield* materializePiT3McpExtension(cacheDir);
+      const mcpDest = yield* materializePiPiedPiperMcpExtension(cacheDir);
       assert.isTrue(mcpDest.endsWith(PI_PIED_PIPER_MCP_EXTENSION_FILENAME));
       const mcpSource = yield* fs.readFileString(mcpDest);
       assert.include(mcpSource, "export default async function piedPiperMcpExtension");

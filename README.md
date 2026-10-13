@@ -2,7 +2,7 @@
 
 A local-first workspace for coding agents, maintained at [ashxco/piedpiperapp](https://github.com/ashxco/piedpiperapp). Project domain: **piedpiperapp.com**.
 
-Pied Piper is an independent fork of [T3 Code](https://github.com/pingdotgg/t3code), with product analytics and telemetry collection/export removed. The original MIT license and copyright notices are retained.
+Pied Piper provides web, desktop, and mobile clients for working with your coding agents. Product analytics and telemetry collection/export are disabled. See LICENSE for licensing information.
 
 ## Run locally
 
@@ -25,4 +25,4 @@ Cloud credentials, mobile app-store listings, and upstream Expo updates are not 
 
 ## Branding
 
-The application is **Pied Piper**, the CLI/package is `piedpiperapp`, and fork-owned links use `piedpiperapp.com`. Runtime state uses `~/.piedpiperapp` and `PIEDPIPER_*` environment variables, separate from an existing T3 Code install.
+The application is **Pied Piper**, the CLI/package is `piedpiperapp`, and fork-owned links use `piedpiperapp.com`. Runtime state uses `~/.piedpiperapp` and `PIEDPIPER_*` environment variables.

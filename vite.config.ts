@@ -179,7 +179,9 @@ export default defineConfig({
     overrides: [
       {
         files: ["packages/client-runtime/src/state/**", "apps/{web,mobile,desktop}/src/**"],
-        rules: { "piedpiperapp/no-rpc-permission-bypass": ["error", { allowRawClientAccess: false }] },
+        rules: {
+          "piedpiperapp/no-rpc-permission-bypass": ["error", { allowRawClientAccess: false }],
+        },
       },
       {
         // Only shared command boundaries install the session-backed permission guard.
@@ -202,7 +204,9 @@ export default defineConfig({
           "apps/web/src/components/device/DevicePhoneViewport.tsx",
           "apps/web/src/components/device/DeviceDuoViewport.tsx",
         ],
-        rules: { "piedpiperapp/no-rpc-permission-bypass": ["error", { allowRawClientAccess: true }] },
+        rules: {
+          "piedpiperapp/no-rpc-permission-bypass": ["error", { allowRawClientAccess: true }],
+        },
       },
       {
         // Incompatible hosts cannot open a normal session; their updater uses a dedicated socket.
@@ -391,12 +395,15 @@ export default defineConfig({
           "apps/mobile/src/features/threads/thread-list-items.tsx",
           "apps/mobile/src/features/threads/thread-list-v2-items.tsx",
           "apps/mobile/src/lib/useMobileNavigationTheme.ts",
-          "apps/mobile/src/native/T3ComposerEditor.ios.tsx",
-          "apps/mobile/src/native/T3ComposerEditor.native.tsx",
+          "apps/mobile/src/native/PiedPiperComposerEditor.ios.tsx",
+          "apps/mobile/src/native/PiedPiperComposerEditor.native.tsx",
           "apps/mobile/src/native/SelectableMarkdownText.tsx",
         ],
         rules: {
-          "piedpiperapp/no-mobile-uniwind-theme-escape-hatches": ["error", { allowUniwindTheme: true }],
+          "piedpiperapp/no-mobile-uniwind-theme-escape-hatches": [
+            "error",
+            { allowUniwindTheme: true },
+          ],
         },
       },
     ],

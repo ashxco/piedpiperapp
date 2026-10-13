@@ -84,7 +84,7 @@ describe("isPendingNativeViewRegistration", () => {
     expect(
       isPendingNativeViewRegistration(
         new Error(
-          "Unable to find the class expo.modules.t3reviewdiff.PiedPiperReviewDiffView view with tag 1150",
+          "Unable to find the class expo.modules.piedpiperappreviewdiff.PiedPiperReviewDiffView view with tag 1150",
         ),
       ),
     ).toBe(true);

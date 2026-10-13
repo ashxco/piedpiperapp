@@ -208,7 +208,7 @@ export function cursorMcpServers(
     return undefined;
   }
   return {
-    "piedpiperapp": {
+    piedpiperapp: {
       type: "http",
       url: session.endpoint,
       headers: {
@@ -2140,7 +2140,7 @@ export const makeCursorAdapterV2 = Effect.fn("makeCursorAdapterV2")(function* (
               resolveAttachmentPath: host.resolveAttachmentPath,
             }),
             runOrdinal: turnInput.runOrdinal,
-            hasT3Mcp: mcpServers !== undefined,
+            hasPiedPiperMcp: mcpServers !== undefined,
           });
           const images = yield* Effect.forEach(
             turnInput.message.attachments.filter(isProviderNativeImageAttachment),

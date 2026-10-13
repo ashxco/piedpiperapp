@@ -117,7 +117,7 @@ PiedPiperSourceTextOutsideTapCoordinatorForWindow(UIWindow *window) {
   return coordinator;
 }
 
-@interface PiedPiperSourceText () <RCTT3SourceTextViewProtocol, UITextViewDelegate,
+@interface PiedPiperSourceText () <RCTPiedPiperSourceTextViewProtocol, UITextViewDelegate,
                             PiedPiperSourceTextOutsideTapTarget>
 @end
 

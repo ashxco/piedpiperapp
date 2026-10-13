@@ -23,7 +23,7 @@ describe("promptLinkSearchFromParams", () => {
       value: {
         kind: "new",
         prompt: { text: "Fix the bug & add tests = done?", hiddenCharacters: 0 },
-        repository: { owner: "pingdotgg", name: "piedpiperapp" },
+        repository: { owner: "ashxco", name: "piedpiperapp" },
         provider: "codex",
         model: null,
       },

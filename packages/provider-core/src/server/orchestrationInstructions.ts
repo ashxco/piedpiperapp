@@ -62,7 +62,7 @@ Investigate with read-only actions and do not edit files or otherwise execute th
 
 export interface PiedPiperAcpInstructionState {
   readonly interactionMode: ProviderInteractionMode;
-  readonly hasT3Mcp: boolean;
+  readonly hasPiedPiperMcp: boolean;
 }
 
 /**
@@ -78,7 +78,7 @@ export function piedPiperAcpPromptWithInstructions(input: {
   if (input.prompt.trimStart().startsWith("/")) return input.prompt;
   if (
     input.previousState?.interactionMode === input.state.interactionMode &&
-    input.previousState.hasT3Mcp === input.state.hasT3Mcp
+    input.previousState.hasPiedPiperMcp === input.state.hasPiedPiperMcp
   ) {
     return input.prompt;
   }
@@ -86,7 +86,7 @@ export function piedPiperAcpPromptWithInstructions(input: {
     input.state.interactionMode === "plan"
       ? PIED_PIPER_ACP_PLAN_MODE_INSTRUCTIONS
       : PIED_PIPER_ACP_DEFAULT_MODE_INSTRUCTIONS,
-    ...(input.state.hasT3Mcp
+    ...(input.state.hasPiedPiperMcp
       ? [PIED_PIPER_BROWSER_TOOL_INSTRUCTIONS.trim(), PIED_PIPER_ORCHESTRATION_INSTRUCTIONS.trim()]
       : []),
   ];
@@ -98,20 +98,20 @@ export function piedPiperAcpPromptWithInstructions(input: {
  * context in the first prompt. Keep the wrapper explicit so it cannot be
  * mistaken for text authored by the user.
  */
-function prependT3OrchestrationInstructions(prompt: string): string {
+function prependPiedPiperOrchestrationInstructions(prompt: string): string {
   return `<piedpiperapp_code_orchestration_instructions>${PIED_PIPER_ORCHESTRATION_INSTRUCTIONS.trim()}</piedpiperapp_code_orchestration_instructions>\n\n<user_request>\n${prompt}\n</user_request>`;
 }
 
 export function piedPiperOrchestrationPromptForFirstRun(input: {
   readonly prompt: string;
   readonly runOrdinal: number;
-  readonly hasT3Mcp: boolean;
+  readonly hasPiedPiperMcp: boolean;
 }): string {
-  return input.runOrdinal === 1 && input.hasT3Mcp
-    ? prependT3OrchestrationInstructions(input.prompt)
+  return input.runOrdinal === 1 && input.hasPiedPiperMcp
+    ? prependPiedPiperOrchestrationInstructions(input.prompt)
     : input.prompt;
 }
 
-export function piedPiperOrchestrationSystemPrompt(hasT3Mcp: boolean): string | undefined {
-  return hasT3Mcp ? PIED_PIPER_ORCHESTRATION_INSTRUCTIONS : undefined;
+export function piedPiperOrchestrationSystemPrompt(hasPiedPiperMcp: boolean): string | undefined {
+  return hasPiedPiperMcp ? PIED_PIPER_ORCHESTRATION_INSTRUCTIONS : undefined;
 }

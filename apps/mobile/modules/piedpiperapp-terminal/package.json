@@ -10,7 +10,7 @@
     },
     "android": {
       "modules": [
-        "expo.modules.t3terminal.PiedPiperTerminalModule"
+        "expo.modules.piedpiperappterminal.PiedPiperTerminalModule"
       ]
     }
   }

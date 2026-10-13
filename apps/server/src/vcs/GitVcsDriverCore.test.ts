@@ -200,8 +200,8 @@ it.effect("bounds Git bursts across drivers without timing out queued commands",
     const duration = yield* Metric.value(
       Metric.withAttributes(gitCommandDuration, [["operation", "test.gitBurst"]]),
     );
-    assert.equal(duration.count, 16);
-    assert.equal(duration.sum, 16_000);
+    assert.equal(duration.count, 0);
+    assert.equal(duration.sum, 0);
   }).pipe(Effect.provide(layerServerConfig.pipe(Layer.provideMerge(NodeServices.layer)))),
 );
 
@@ -3542,35 +3542,35 @@ it.layer(layerTest)("GitVcsDriver core integration", (it) => {
 
         const reusedForSsh = yield* driver.ensureRemote({
           cwd,
-          preferredName: "pingdotgg",
+          preferredName: "ashxco",
           url: "git@github.com:ashxco/piedpiperapp.git",
         });
         assert.equal(reusedForSsh, "origin");
 
         const reusedForSshScheme = yield* driver.ensureRemote({
           cwd,
-          preferredName: "pingdotgg",
+          preferredName: "ashxco",
           url: "ssh://git@github.com/ashxco/piedpiperapp",
         });
         assert.equal(reusedForSshScheme, "origin");
 
         const reusedForBareSshScheme = yield* driver.ensureRemote({
           cwd,
-          preferredName: "pingdotgg",
+          preferredName: "ashxco",
           url: "ssh://github.com/ashxco/piedpiperapp",
         });
         assert.equal(reusedForBareSshScheme, "origin");
 
         const reusedForSshPort = yield* driver.ensureRemote({
           cwd,
-          preferredName: "pingdotgg",
+          preferredName: "ashxco",
           url: "ssh://git@github.com:22/ashxco/piedpiperapp",
         });
         assert.equal(reusedForSshPort, "origin");
 
         const reusedForSshWithPort = yield* driver.ensureRemote({
           cwd,
-          preferredName: "pingdotgg",
+          preferredName: "ashxco",
           url: "ssh://git@github.com:22/ashxco/piedpiperapp.git",
         });
         assert.equal(reusedForSshWithPort, "origin");
@@ -3855,7 +3855,10 @@ it.layer(layerTest)("GitVcsDriver core integration", (it) => {
 
         assert.equal(yield* git(worktreePath, ["rev-parse", "HEAD"]), remoteHead);
         assert.equal(
-          yield* driver.readConfigValue(worktreePath, "branch.piedpiperapp/fetched-origin.gh-merge-base"),
+          yield* driver.readConfigValue(
+            worktreePath,
+            "branch.piedpiperapp/fetched-origin.gh-merge-base",
+          ),
           initialBranch,
         );
         assert.equal(

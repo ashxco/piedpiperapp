@@ -5,6 +5,6 @@
     "podspecPath": "PiedPiperTerminalNative.podspec"
   },
   "android": {
-    "modules": ["expo.modules.t3terminal.PiedPiperTerminalModule"]
+    "modules": ["expo.modules.piedpiperappterminal.PiedPiperTerminalModule"]
   }
 }

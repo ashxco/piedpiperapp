@@ -107,12 +107,9 @@ const WSL_FORWARDED_ENV_NAMES = [
   "PIEDPIPER_OTEL_SDK_DISABLED",
   "OTEL_SDK_DISABLED",
 
-
   // Forwarded without a WSLENV flag, so the values arrive untranslated. The
   // server prefers an OTEL endpoint over the bootstrap envelope, so the Pied Piper URLs
   // travel as variables to keep winning inside the distro as they do on Windows.
-
-
 
   "OTEL_EXPORTER_OTLP_ENDPOINT",
   "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
@@ -186,7 +183,9 @@ const logBackendObservabilitySettingsReadFailure = (
 };
 
 function resourceMonitorBinaryName(platform: NodeJS.Platform): string {
-  return platform === "win32" ? "piedpiperapp-resource-monitor.exe" : "piedpiperapp-resource-monitor";
+  return platform === "win32"
+    ? "piedpiperapp-resource-monitor.exe"
+    : "piedpiperapp-resource-monitor";
 }
 
 const resolveResourceMonitorPath = Effect.fn(
@@ -752,12 +751,12 @@ const resolveWslStartConfig = Effect.fn("desktop.backendConfiguration.resolveWsl
   // the WSL backend the Linux side ends up sharing C:\Users\...\.piedpiperapp via
   // /mnt/c, which means both backends read/write the same database and
   // their env-ids collide).
-  const parentEnvWithoutT3Home: Record<string, string | undefined> = {};
+  const parentEnvWithoutPiedPiperHome: Record<string, string | undefined> = {};
   for (const [key, value] of Object.entries(process.env)) {
     if (key === "PIEDPIPER_HOME") continue;
-    parentEnvWithoutT3Home[key] = value;
+    parentEnvWithoutPiedPiperHome[key] = value;
   }
-  const wslEnv = mergeWslEnv(parentEnvWithoutT3Home.WSLENV, forwardedEnvNames);
+  const wslEnv = mergeWslEnv(parentEnvWithoutPiedPiperHome.WSLENV, forwardedEnvNames);
 
   const baseConfig = {
     executablePath: "wsl.exe",
@@ -765,7 +764,7 @@ const resolveWslStartConfig = Effect.fn("desktop.backendConfiguration.resolveWsl
       preflight._tag === "Ready" ? preflight.windowsEntryPath : environment.backendEntryPath,
     cwd: environment.backendCwd,
     env: {
-      ...parentEnvWithoutT3Home,
+      ...parentEnvWithoutPiedPiperHome,
       ...backendChildEnvPatch(),
       ...forwardedEnv,
       ...(wslEnv !== undefined ? { WSLENV: wslEnv } : {}),

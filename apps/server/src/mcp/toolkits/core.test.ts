@@ -68,9 +68,9 @@ const declaredFailure = (result: McpSchema.CallToolResult) => {
 import { PullRequestsToolkit } from "./pullRequests/tools.ts";
 import { HtmlToolkit } from "./html/tools.ts";
 import {
-  resolveT3McpToolDefinition,
-  resolveT3McpToolPresentation,
-  resolveT3McpToolSummaryAction,
+  resolvePiedPiperMcpToolDefinition,
+  resolvePiedPiperMcpToolPresentation,
+  resolvePiedPiperMcpToolSummaryAction,
 } from "@piedpiperapp/shared/piedPiperMcpToolPresentation";
 import { htmlRenderFromToolItem } from "@piedpiperapp/shared/toolOutput";
 
@@ -106,15 +106,19 @@ it("publishes unique tool names with reference-free object-root inputs", () => {
       // The published tool catalog must also work with providers without $ref support.
       expect(JSON.stringify(schema), tool.name).not.toContain('"$ref"');
       // Every published tool must have labels for its lifecycle, branding, and a summary.
-      const definition = resolveT3McpToolDefinition(tool.name);
+      const definition = resolvePiedPiperMcpToolDefinition(tool.name);
       expect(definition, tool.name).not.toBeNull();
       expect(
         definition?.labels.every((label) => label.trim().length > 0),
         tool.name,
       ).toBe(true);
-      for (const name of [tool.name, `mcp__piedpiperapp__${tool.name}`, `Pied Piper-code.${tool.name}`]) {
-        expect(resolveT3McpToolPresentation(name)?.logo, name).toBe("piedpiperapp");
-        expect(resolveT3McpToolSummaryAction(name), name).not.toBeNull();
+      for (const name of [
+        tool.name,
+        `mcp__piedpiperapp__${tool.name}`,
+        `Pied Piper.${tool.name}`,
+      ]) {
+        expect(resolvePiedPiperMcpToolPresentation(name)?.logo, name).toBe("piedpiperapp");
+        expect(resolvePiedPiperMcpToolSummaryAction(name), name).not.toBeNull();
       }
     }
   }
@@ -151,7 +155,9 @@ const client = McpSchema.McpServerClient.of({
 it.effect("checks capability through the production registration", () =>
   Effect.gen(function* () {
     const server = yield* McpServer.McpServer;
-    expect(server.tools.some(({ tool }) => tool.name === "piedpiperapp_thread_organize")).toBe(true);
+    expect(server.tools.some(({ tool }) => tool.name === "piedpiperapp_thread_organize")).toBe(
+      true,
+    );
     const result = yield* server
       .callTool({ name: "piedpiperapp_thread_organize", arguments: { action: "pin" } })
       .pipe(
@@ -196,7 +202,9 @@ it.effect("returns a bounded public failure without serializing storage causes",
         text: '{"_tag":"OrchestratorMcpFailure","code":"orchestration_error","message":"The operation could not be completed."}',
       },
     ]);
-    const definition = server.tools.find(({ tool }) => tool.name === "piedpiperapp_thread_organize");
+    const definition = server.tools.find(
+      ({ tool }) => tool.name === "piedpiperapp_thread_organize",
+    );
     expect(definition?.tool.outputSchema).toBeDefined();
     const validate = new AjvJsonSchemaValidator().getValidator(
       definition!.tool.outputSchema! as JsonSchemaType,
@@ -280,14 +288,19 @@ it.effect("returns an HTML render reference that Codex and Claude tool rows both
     });
     expect(reference).toMatchObject({ title: "Revenue", height: 240 });
     expect(
-      htmlRenderFromToolItem({ toolName: "mcp__piedpiperapp__html_render", output: result.content }),
+      htmlRenderFromToolItem({
+        toolName: "mcp__piedpiperapp__html_render",
+        output: result.content,
+      }),
     ).toEqual(reference);
   }).pipe(
     Effect.provide(
       McpHttpServer.layerHtmlToolkit.pipe(
         Layer.provideMerge(McpServer.McpServer.layer),
         Layer.provide(PreviewBrowser.layer),
-        Layer.provide(ServerConfig.layerTest(process.cwd(), { prefix: "piedpiperapp-mcp-html-render-" })),
+        Layer.provide(
+          ServerConfig.layerTest(process.cwd(), { prefix: "piedpiperapp-mcp-html-render-" }),
+        ),
         Layer.provide(NodeServices.layer),
         // The preview browser is not installed in a fresh home, so nothing downloads.
         Layer.provide(FetchHttpClient.layer),
@@ -437,7 +450,11 @@ it.effect("a client caller targets any thread within its ceiling and cannot act 
           Effect.provideService(McpSchema.McpServerClient, client),
         );
 
-    const untargeted = yield* call("piedpiperapp_thread_organize", { action: "pin" }, clientScope("auto"));
+    const untargeted = yield* call(
+      "piedpiperapp_thread_organize",
+      { action: "pin" },
+      clientScope("auto"),
+    );
     expect(declaredFailure(untargeted)).toMatchObject({ code: "target_required" });
 
     const pinned = yield* call(
@@ -682,7 +699,9 @@ it.effect.each(["piedpiperapp_thread_interrupt", "piedpiperapp_workflow_stop"])(
           name: toolName,
           arguments: {
             threadId: "full-access-thread",
-            ...(toolName === "piedpiperapp_workflow_stop" ? { subagentId: "workflow-coordinator" } : {}),
+            ...(toolName === "piedpiperapp_workflow_stop"
+              ? { subagentId: "workflow-coordinator" }
+              : {}),
           },
         })
         .pipe(
@@ -873,7 +892,9 @@ it.effect("only the caller that prepared a pending upload can discard it", () =>
         Layer.provideMerge(McpServer.McpServer.layer),
         Layer.provide(McpToolAccessTestkit.liveThreadsLayer),
         Layer.provide(ServerSecretStore.layer),
-        Layer.provide(ServerConfig.layerTest(process.cwd(), { prefix: "piedpiperapp-mcp-attachment-" })),
+        Layer.provide(
+          ServerConfig.layerTest(process.cwd(), { prefix: "piedpiperapp-mcp-attachment-" }),
+        ),
         Layer.provide(NodeServices.layer),
       ),
     ),

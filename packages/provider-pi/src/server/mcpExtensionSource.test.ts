@@ -34,7 +34,7 @@ async function loadHooks(commands: ReadonlyArray<SkillCommand> = []) {
       "async function",
     ),
   );
-  await NodeVM.runInNewContext(`${source}\nt3McpExtension(pi)`, {
+  await NodeVM.runInNewContext(`${source}\npiedPiperMcpExtension(pi)`, {
     process: { env: {} },
     NodeFSP,
     NodePath,
@@ -314,7 +314,7 @@ describe("Pi tool discovery permissions", () => {
         "async function",
       ),
     );
-    await NodeVM.runInNewContext(`${source}\nt3McpExtension(pi)`, {
+    await NodeVM.runInNewContext(`${source}\npiedPiperMcpExtension(pi)`, {
       process: { env: { PIED_PIPER_PI_RUNTIME_MODE: "approval-required" } },
       pi: {
         on: (name: string, handler: ToolCallHook) => {
@@ -340,7 +340,10 @@ describe("Pi tool discovery permissions", () => {
       await toolCall!({ toolName: "tool_search", input: { query: "preview_snapshot" } }, ctx),
     );
     assert.equal(confirmations.length, 0);
-    const result = await toolCall!({ toolName: "mcp__piedpiperapp__preview_snapshot", input: {} }, ctx);
+    const result = await toolCall!(
+      { toolName: "mcp__piedpiperapp__preview_snapshot", input: {} },
+      ctx,
+    );
     assert.equal(result?.block, true);
     assert.deepEqual(confirmations, ["Allow mcp__piedpiperapp__preview_snapshot?"]);
 
@@ -361,7 +364,7 @@ async function loadRequestHook(): Promise<RequestHook> {
       "async function",
     ),
   );
-  await NodeVM.runInNewContext(`${source}\nt3McpExtension(pi)`, {
+  await NodeVM.runInNewContext(`${source}\npiedPiperMcpExtension(pi)`, {
     process: { env: {} },
     pi: { on: (name: string, handler: RequestHook) => handlers.set(name, handler) },
   });

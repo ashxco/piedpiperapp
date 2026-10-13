@@ -19,7 +19,7 @@ import * as Schema from "effect/Schema";
 import { PIED_PIPER_PROJECT_FILE_NAME, type PiedPiperProjectFile } from "@piedpiperapp/contracts";
 import { PiedPiperProjectFileFromJson } from "@piedpiperapp/shared/piedPiperProjectFile";
 
-const decodeT3ProjectFileJson = Schema.decodeEffect(PiedPiperProjectFileFromJson);
+const decodePiedPiperProjectFileJson = Schema.decodeEffect(PiedPiperProjectFileFromJson);
 
 export class PiedPiperProjectFileLoadError extends Schema.TaggedError<PiedPiperProjectFileLoadError>()(
   "PiedPiperProjectFileLoadError",
@@ -49,7 +49,7 @@ export class PiedPiperProjectFileLoader extends Context.Service<
   }
 >()("piedpiperapp/project/PiedPiperProjectFileLoader") {}
 
-const logT3ProjectFileLoadError = (error: PiedPiperProjectFileLoadError) =>
+const logPiedPiperProjectFileLoadError = (error: PiedPiperProjectFileLoadError) =>
   Effect.logWarning(error).pipe(
     Effect.annotateLogs({
       operation: error.operation,
@@ -64,44 +64,44 @@ export const make = Effect.gen(function* () {
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
 
-  const load: PiedPiperProjectFileLoader["Service"]["load"] = Effect.fn("PiedPiperProjectFileLoader.load")(
-    function* (workspaceRoot) {
-      const filePath = path.join(workspaceRoot, PIED_PIPER_PROJECT_FILE_NAME);
-      const raw = yield* fileSystem.readFileString(filePath).pipe(
-        Effect.asSome,
-        Effect.catchTags({
-          PlatformError: (error) =>
-            error.reason._tag === "NotFound"
-              ? Effect.succeed(Option.none<string>())
-              : logT3ProjectFileLoadError(
-                  new PiedPiperProjectFileLoadError({
-                    operation: "read",
-                    workspaceRoot,
-                    filePath,
-                    cause: error,
-                  }),
-                ).pipe(Effect.as(Option.none<string>())),
-        }),
-      );
-      if (Option.isNone(raw)) {
-        return Option.none<PiedPiperProjectFile>();
-      }
-      return yield* decodeT3ProjectFileJson(raw.value).pipe(
-        Effect.asSome,
-        Effect.catchTags({
-          SchemaError: (error) =>
-            logT3ProjectFileLoadError(
-              new PiedPiperProjectFileLoadError({
-                operation: "decode",
-                workspaceRoot,
-                filePath,
-                cause: error,
-              }),
-            ).pipe(Effect.as(Option.none<PiedPiperProjectFile>())),
-        }),
-      );
-    },
-  );
+  const load: PiedPiperProjectFileLoader["Service"]["load"] = Effect.fn(
+    "PiedPiperProjectFileLoader.load",
+  )(function* (workspaceRoot) {
+    const filePath = path.join(workspaceRoot, PIED_PIPER_PROJECT_FILE_NAME);
+    const raw = yield* fileSystem.readFileString(filePath).pipe(
+      Effect.asSome,
+      Effect.catchTags({
+        PlatformError: (error) =>
+          error.reason._tag === "NotFound"
+            ? Effect.succeed(Option.none<string>())
+            : logPiedPiperProjectFileLoadError(
+                new PiedPiperProjectFileLoadError({
+                  operation: "read",
+                  workspaceRoot,
+                  filePath,
+                  cause: error,
+                }),
+              ).pipe(Effect.as(Option.none<string>())),
+      }),
+    );
+    if (Option.isNone(raw)) {
+      return Option.none<PiedPiperProjectFile>();
+    }
+    return yield* decodePiedPiperProjectFileJson(raw.value).pipe(
+      Effect.asSome,
+      Effect.catchTags({
+        SchemaError: (error) =>
+          logPiedPiperProjectFileLoadError(
+            new PiedPiperProjectFileLoadError({
+              operation: "decode",
+              workspaceRoot,
+              filePath,
+              cause: error,
+            }),
+          ).pipe(Effect.as(Option.none<PiedPiperProjectFile>())),
+      }),
+    );
+  });
 
   return PiedPiperProjectFileLoader.of({ load });
 });

@@ -5,7 +5,7 @@ group = 'com.piedpiperapp.widgetexpiry'
 version = '0.0.0'
 
 android {
-  namespace 'expo.modules.t3widgetexpiry'
+  namespace 'expo.modules.piedpiperappwidgetexpiry'
   compileSdk rootProject.ext.compileSdkVersion
   defaultConfig {
     minSdkVersion rootProject.ext.minSdkVersion

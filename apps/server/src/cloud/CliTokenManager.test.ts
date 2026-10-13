@@ -29,7 +29,7 @@ interface RecordedTokenRequest {
   readonly params: URLSearchParams;
 }
 
-// A JWT whose payload claims { email: "theo@example.test" } (signature is not
+// A JWT whose payload claims { email: "ash@example.test" } (signature is not
 // verified — the CLI only reads the claim to display the connected account).
 const TestIdTokenHeaderJson = Schema.fromJsonString(Schema.Struct({ alg: Schema.Literal("none") }));
 const TestIdTokenPayloadJson = Schema.fromJsonString(Schema.Struct({ email: Schema.String }));
@@ -37,7 +37,7 @@ const encodeTestIdTokenHeader = Schema.encodeSync(TestIdTokenHeaderJson);
 const encodeTestIdTokenPayload = Schema.encodeSync(TestIdTokenPayloadJson);
 const idTokenWithEmail = (() => {
   const header = Base64Url.encode(encodeTestIdTokenHeader({ alg: "none" }));
-  const payload = Base64Url.encode(encodeTestIdTokenPayload({ email: "theo@example.test" }));
+  const payload = Base64Url.encode(encodeTestIdTokenPayload({ email: "ash@example.test" }));
   return `${header}.${payload}.`;
 })();
 
@@ -192,8 +192,8 @@ it.layer(NodeServices.layer)("CliTokenManager.deviceAuthorizationLogin", (it) =>
       ]);
       assert.equal(token.accessToken, "access-token-1");
       assert.equal(token.refreshToken, "refresh-token-1");
-      assert.equal(token.identity, "theo@example.test");
-      assert.equal(identity, "theo@example.test");
+      assert.equal(token.identity, "ash@example.test");
+      assert.equal(identity, "ash@example.test");
 
       const authorization = server.requests[0]!;
       assert.equal(authorization.url, "https://clerk.example.test/oauth/device_authorization");

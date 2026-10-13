@@ -6,7 +6,7 @@
 
 using namespace facebook::react;
 
-@interface PiedPiperSourceTextRun () <RCTT3SourceTextRunViewProtocol>
+@interface PiedPiperSourceTextRun () <RCTPiedPiperSourceTextRunViewProtocol>
 
 @end
 

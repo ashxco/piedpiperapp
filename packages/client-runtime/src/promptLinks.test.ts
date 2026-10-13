@@ -23,13 +23,16 @@ describe("findPromptLinkProject", () => {
     const projects = [
       {
         id: "fork",
-        repositoryIdentity: identity("github.com/ashxco/piedpiperapp", "github.com/me/piedpiperapp"),
+        repositoryIdentity: identity(
+          "github.com/ashxco/piedpiperapp",
+          "github.com/me/piedpiperapp",
+        ),
       },
       { id: "none", repositoryIdentity: null },
-      { id: "recent", repositoryIdentity: identity("github.com/PingDotGG/PiedPiper") },
+      { id: "recent", repositoryIdentity: identity("github.com/AshXco/PiedPiperApp") },
       { id: "older", repositoryIdentity: identity("github.com/ashxco/piedpiperapp") },
     ];
-    expect(findPromptLinkProject(projects, { owner: "pingdotgg", name: "piedpiperapp" })?.id).toBe(
+    expect(findPromptLinkProject(projects, { owner: "ashxco", name: "piedpiperapp" })?.id).toBe(
       "recent",
     );
     expect(findPromptLinkProject(projects, { owner: "me", name: "piedpiperapp" })?.id).toBe("fork");
@@ -61,7 +64,7 @@ describe("findPromptLinkPullRequestThread", () => {
         pullRequests: [link(7, "stack-dismissed")],
       },
     ];
-    const pullRequest = { owner: "PingDotGG", name: "piedpiperapp", number: 7 };
+    const pullRequest = { owner: "ashxco", name: "piedpiperapp", number: 7 };
     expect(findPromptLinkPullRequestThread(threads, pullRequest)?.id).toBe("new");
     expect(findPromptLinkPullRequestThread(threads, { ...pullRequest, number: 9 })).toBeUndefined();
   });

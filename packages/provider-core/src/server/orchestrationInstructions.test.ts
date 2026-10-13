@@ -10,7 +10,10 @@ import {
 describe("Pied Piper orchestration provider instructions", () => {
   it("distinguishes delegated subagents from ordinary top-level threads", () => {
     assert.include(PIED_PIPER_ORCHESTRATION_INSTRUCTIONS, "Use `delegate_task`");
-    assert.include(PIED_PIPER_ORCHESTRATION_INSTRUCTIONS, "ordinary top-level Pied Piper conversations");
+    assert.include(
+      PIED_PIPER_ORCHESTRATION_INSTRUCTIONS,
+      "ordinary top-level Pied Piper conversations",
+    );
     assert.include(PIED_PIPER_ORCHESTRATION_INSTRUCTIONS, "Never use them merely");
     assert.include(PIED_PIPER_ORCHESTRATION_INSTRUCTIONS, "cross-provider");
     assert.include(PIED_PIPER_ORCHESTRATION_INSTRUCTIONS, "call `delegate_task` again");
@@ -31,17 +34,17 @@ describe("Pied Piper orchestration provider instructions", () => {
     const injected = piedPiperOrchestrationPromptForFirstRun({
       prompt,
       runOrdinal: 1,
-      hasT3Mcp: true,
+      hasPiedPiperMcp: true,
     });
 
     assert.include(injected, "<piedpiperapp_code_orchestration_instructions>");
     assert.include(injected, `<user_request>\n${prompt}\n</user_request>`);
     assert.equal(
-      piedPiperOrchestrationPromptForFirstRun({ prompt, runOrdinal: 2, hasT3Mcp: true }),
+      piedPiperOrchestrationPromptForFirstRun({ prompt, runOrdinal: 2, hasPiedPiperMcp: true }),
       prompt,
     );
     assert.equal(
-      piedPiperOrchestrationPromptForFirstRun({ prompt, runOrdinal: 1, hasT3Mcp: false }),
+      piedPiperOrchestrationPromptForFirstRun({ prompt, runOrdinal: 1, hasPiedPiperMcp: false }),
       prompt,
     );
   });
@@ -54,7 +57,7 @@ describe("Pied Piper orchestration provider instructions", () => {
   it("gives ACP sessions provider-neutral mode, browser, and orchestration guidance", () => {
     const injected = piedPiperAcpPromptWithInstructions({
       prompt: "Inspect the repository.",
-      state: { interactionMode: "default", hasT3Mcp: true },
+      state: { interactionMode: "default", hasPiedPiperMcp: true },
     });
 
     assert.include(injected, "Pied Piper interaction mode: Default");
@@ -65,10 +68,14 @@ describe("Pied Piper orchestration provider instructions", () => {
 
   it("reinjects ACP guidance only when mode or tool availability changes", () => {
     const prompt = "Continue.";
-    const defaultState = { interactionMode: "default", hasT3Mcp: true } as const;
+    const defaultState = { interactionMode: "default", hasPiedPiperMcp: true } as const;
 
     assert.equal(
-      piedPiperAcpPromptWithInstructions({ prompt, state: defaultState, previousState: defaultState }),
+      piedPiperAcpPromptWithInstructions({
+        prompt,
+        state: defaultState,
+        previousState: defaultState,
+      }),
       prompt,
     );
     assert.include(
@@ -81,7 +88,7 @@ describe("Pied Piper orchestration provider instructions", () => {
     );
     const withoutMcp = piedPiperAcpPromptWithInstructions({
       prompt,
-      state: { interactionMode: "default", hasT3Mcp: false },
+      state: { interactionMode: "default", hasPiedPiperMcp: false },
     });
     assert.include(withoutMcp, "Pied Piper interaction mode: Default");
     assert.notInclude(withoutMcp, "Pied Piper collaborative browser");

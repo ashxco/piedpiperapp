@@ -7,7 +7,7 @@ group = 'com.piedpiperapp.agentnotifications'
 version = '0.0.0'
 
 android {
-  namespace 'expo.modules.t3agentnotifications'
+  namespace 'expo.modules.piedpiperappagentnotifications'
   defaultConfig {
     versionCode 1
     versionName '0.0.0'

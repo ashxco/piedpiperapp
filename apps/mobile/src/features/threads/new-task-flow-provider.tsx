@@ -24,8 +24,11 @@ import {
   ThreadId,
 } from "@piedpiperapp/contracts";
 import { sanitizeNewRefName } from "@piedpiperapp/shared/git";
-import { resolveNewThreadEnvMode, resolveProjectSettings } from "@piedpiperapp/shared/projectSettings";
-import { parseT3ProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
+import {
+  resolveNewThreadEnvMode,
+  resolveProjectSettings,
+} from "@piedpiperapp/shared/projectSettings";
+import { parsePiedPiperProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
 import * as Arr from "effect/Array";
 import { pipe } from "effect/Function";
 
@@ -518,7 +521,7 @@ export function NewTaskFlowProvider(props: React.PropsWithChildren) {
     () =>
       piedPiperProjectFileData === null || piedPiperProjectFileData.truncated
         ? null
-        : parseT3ProjectFile(piedPiperProjectFileData.contents),
+        : parsePiedPiperProjectFile(piedPiperProjectFileData.contents),
     [piedPiperProjectFileData],
   );
   // Environment settings with the project's overrides and its piedpiperapp.json

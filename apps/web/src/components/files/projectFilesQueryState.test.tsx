@@ -99,7 +99,7 @@ vi.mock("~/state/queries", () => ({
 }));
 
 import { useWorkspaceMutationRefresh } from "~/hooks/useWorkspaceMutationRefresh";
-import { useT3ProjectFileState } from "~/hooks/useT3ProjectFileScripts";
+import { usePiedPiperProjectFileState } from "~/hooks/usePiedPiperProjectFileScripts";
 import { useProjectEntriesQuery, useProjectFileQuery } from "./projectFilesQueryState";
 
 const environmentId = EnvironmentId.make("environment-1");
@@ -197,14 +197,14 @@ describe("project query refresh", () => {
         error: null,
         isPending: true,
       });
-      expect(useT3ProjectFileState(environmentId, "/repo").status).toBe("loading");
+      expect(usePiedPiperProjectFileState(environmentId, "/repo").status).toBe("loading");
       expect(projectMocks.readFile).not.toHaveBeenCalled();
       expect(projectMocks.listEntries).not.toHaveBeenCalled();
 
       authorizationMocks.sessionAtom = Atom.make(
         AsyncResult.success({ authenticated: true, scopes: [AuthFilesystemReadScope] }),
       );
-      expect(useT3ProjectFileState(environmentId, "/repo")).toEqual({
+      expect(usePiedPiperProjectFileState(environmentId, "/repo")).toEqual({
         status: "valid",
         file: config,
         scripts: config.scripts,
@@ -245,7 +245,7 @@ describe("project query refresh", () => {
           error: null,
           isPending: true,
         });
-        expect(useT3ProjectFileState(environmentId, "/repo")).toEqual({
+        expect(usePiedPiperProjectFileState(environmentId, "/repo")).toEqual({
           status: "valid",
           file: config,
           scripts: config.scripts,
@@ -297,12 +297,14 @@ describe("project query refresh", () => {
     atomHooks.registry = registry;
     projectMocks.optimisticFile.mockReturnValue(Atom.make(null));
     try {
-      expect(useProjectFileQuery(environmentId, "/repo", "piedpiperapp.json", false)).toMatchObject({
-        data: null,
-        error: null,
-        isPending: false,
-      });
-      expect(useT3ProjectFileState(environmentId, null).status).toBe("missing");
+      expect(useProjectFileQuery(environmentId, "/repo", "piedpiperapp.json", false)).toMatchObject(
+        {
+          data: null,
+          error: null,
+          isPending: false,
+        },
+      );
+      expect(usePiedPiperProjectFileState(environmentId, null).status).toBe("missing");
       expect(projectMocks.readFile).not.toHaveBeenCalled();
     } finally {
       registry.dispose();

@@ -1,4 +1,4 @@
 {
   "platforms": ["android"],
-  "android": { "modules": ["expo.modules.t3widgetexpiry.PiedPiperWidgetExpiryModule"] }
+  "android": { "modules": ["expo.modules.piedpiperappwidgetexpiry.PiedPiperWidgetExpiryModule"] }
 }

@@ -680,7 +680,7 @@ describe("Android delivery routing", () => {
     );
     const data = fitFcmData({
       ...androidActivityData(aggregate),
-      t3_kind: "agent_activity",
+      piedpiperapp_kind: "agent_activity",
       device_id: "d".repeat(128),
       user_id: "u".repeat(128),
       updated_at: "1788780000000",

@@ -20,12 +20,12 @@ import {
   serviceStateHasPendingUpdate,
 } from "./serviceProtocol.ts";
 
-const linuxRuntime = "/home/theo/.piedpiperapp/runtime/versions/1.2.3/piedpiperapp";
+const linuxRuntime = "/home/ash/.piedpiperapp/runtime/versions/1.2.3/piedpiperapp";
 const linuxPlan = {
   program: [linuxRuntime, "__service-launcher"],
-  baseDir: "/home/theo/.piedpiperapp",
-  logPath: "/home/theo/.piedpiperapp/userdata/logs/boot-service.log",
-  unitPath: "/home/theo/.config/systemd/user/piedpiperapp.service",
+  baseDir: "/home/ash/.piedpiperapp",
+  logPath: "/home/ash/.piedpiperapp/userdata/logs/boot-service.log",
+  unitPath: "/home/ash/.config/systemd/user/piedpiperapp.service",
 };
 
 it("runs the pinned runtime's own executable as the systemd launcher", () => {
@@ -41,26 +41,28 @@ it("reads the served Pied Piper home back out of a rendered unit or plist", () =
     program: [`${baseDir}/runtime/versions/1.2.3/piedpiperapp`, "__service-launcher"],
     baseDir,
     logPath: `${baseDir}/userdata/logs/boot-service.log`,
-    unitPath: "/home/theo/.config/systemd/user/piedpiperapp.service",
+    unitPath: "/home/ash/.config/systemd/user/piedpiperapp.service",
   });
 
   expect(
-    BootService.bootServiceBaseDirOf(BootService.renderBootServiceUnit(plan("/home/theo/.piedpiperapp"))),
-  ).toBe("/home/theo/.piedpiperapp");
+    BootService.bootServiceBaseDirOf(
+      BootService.renderBootServiceUnit(plan("/home/ash/.piedpiperapp")),
+    ),
+  ).toBe("/home/ash/.piedpiperapp");
   // Spaces and specifiers are quoted and escaped on the way in.
   expect(
     BootService.bootServiceBaseDirOf(
-      BootService.renderBootServiceUnit(plan("/home/theo/Pied Piper Data/100%")),
+      BootService.renderBootServiceUnit(plan("/home/ash/Pied Piper Data/100%")),
     ),
-  ).toBe("/home/theo/Pied Piper Data/100%");
+  ).toBe("/home/ash/Pied Piper Data/100%");
   expect(
     BootService.bootServiceBaseDirOf(
-      BootService.renderBootServicePlist(plan("/Users/theo/a&b"), {
-        homeDir: "/Users/theo",
+      BootService.renderBootServicePlist(plan("/Users/ash/a&b"), {
+        homeDir: "/Users/ash",
         environmentPath: "/usr/bin",
       }),
     ),
-  ).toBe("/Users/theo/a&b");
+  ).toBe("/Users/ash/a&b");
   expect(BootService.bootServiceBaseDirOf("[Service]\nExecStart=/x\n")).toBeUndefined();
 });
 
@@ -70,16 +72,16 @@ it("survives the kernel OOM-killing a greedy agent child", () => {
   expect(unit).toContain("OOMPolicy=continue");
 });
 
-const macRuntime = "/Users/theo/.piedpiperapp/runtime/versions/1.2.3/piedpiperapp";
+const macRuntime = "/Users/ash/.piedpiperapp/runtime/versions/1.2.3/piedpiperapp";
 const macPlan = {
   program: [macRuntime, "__service-launcher"],
-  baseDir: "/Users/theo/.piedpiperapp",
-  logPath: "/Users/theo/.piedpiperapp/userdata/logs/boot-service.log",
-  unitPath: "/Users/theo/Library/LaunchAgents/com.piedpiperapp.piedpiperapp.service.plist",
+  baseDir: "/Users/ash/.piedpiperapp",
+  logPath: "/Users/ash/.piedpiperapp/userdata/logs/boot-service.log",
+  unitPath: "/Users/ash/Library/LaunchAgents/com.piedpiperapp.piedpiperapp.service.plist",
 };
 const macInstallerPath =
-  "/opt/homebrew/bin:/Users/theo/.npm-global/bin:/Users/theo/.nvm/versions/node/v22.16.0/bin:/usr/bin:/bin";
-const macRenderOptions = { homeDir: "/Users/theo", environmentPath: macInstallerPath };
+  "/opt/homebrew/bin:/Users/ash/.npm-global/bin:/Users/ash/.nvm/versions/node/v22.16.0/bin:/usr/bin:/bin";
+const macRenderOptions = { homeDir: "/Users/ash", environmentPath: macInstallerPath };
 
 it("runs the pinned runtime's own executable as the launch agent", () => {
   const plist = BootService.renderBootServicePlist(macPlan, macRenderOptions);
@@ -109,21 +111,21 @@ it("appends both stdio streams to the boot service log", () => {
   const plist = BootService.renderBootServicePlist(macPlan, macRenderOptions);
 
   expect(plist).toContain(
-    "<key>StandardOutPath</key>\n  <string>/Users/theo/.piedpiperapp/userdata/logs/boot-service.log</string>",
+    "<key>StandardOutPath</key>\n  <string>/Users/ash/.piedpiperapp/userdata/logs/boot-service.log</string>",
   );
   expect(plist).toContain(
-    "<key>StandardErrorPath</key>\n  <string>/Users/theo/.piedpiperapp/userdata/logs/boot-service.log</string>",
+    "<key>StandardErrorPath</key>\n  <string>/Users/ash/.piedpiperapp/userdata/logs/boot-service.log</string>",
   );
 });
 
 it("escapes XML in host paths", () => {
   const plist = BootService.renderBootServicePlist(
-    { ...macPlan, baseDir: "/Users/theo/Pied Piper & <Co>" },
-    { homeDir: "/Users/theo", environmentPath: "/Users/theo/Tools & <Scripts>:/usr/bin" },
+    { ...macPlan, baseDir: "/Users/ash/Pied Piper & <Co>" },
+    { homeDir: "/Users/ash", environmentPath: "/Users/ash/Tools & <Scripts>:/usr/bin" },
   );
 
-  expect(plist).toContain("<string>/Users/theo/Pied Piper &amp; &lt;Co&gt;</string>");
-  expect(plist).toContain("<string>/Users/theo/Tools &amp; &lt;Scripts&gt;:/usr/bin</string>");
+  expect(plist).toContain("<string>/Users/ash/Pied Piper &amp; &lt;Co&gt;</string>");
+  expect(plist).toContain("<string>/Users/ash/Tools &amp; &lt;Scripts&gt;:/usr/bin</string>");
 });
 
 const makeHarness = Effect.fn("test.make_boot_service_harness")(function* (
@@ -166,8 +168,10 @@ const makeHarness = Effect.fn("test.make_boot_service_harness")(function* (
       const failed = command === control.failCommand;
       if (!failed && command === "loginctl enable-linger --no-ask-password 501")
         control.linger = "yes";
-      if (!failed && command === "systemctl --user enable piedpiperapp.service") control.enabled = true;
-      if (!failed && command === "systemctl --user restart piedpiperapp.service") control.active = true;
+      if (!failed && command === "systemctl --user enable piedpiperapp.service")
+        control.enabled = true;
+      if (!failed && command === "systemctl --user restart piedpiperapp.service")
+        control.active = true;
       if (
         control.stateAfterStop !== undefined &&
         (command === "systemctl --user stop piedpiperapp.service" ||
@@ -444,7 +448,10 @@ it.layer(NodeServices.layer)("boot service install", (it) => {
           ),
         ).toEqual(
           platform === "linux"
-            ? ["systemctl --user stop piedpiperapp.service", "systemctl --user restart piedpiperapp.service"]
+            ? [
+                "systemctl --user stop piedpiperapp.service",
+                "systemctl --user restart piedpiperapp.service",
+              ]
             : [
                 "launchctl bootout --wait gui/501/com.piedpiperapp.piedpiperapp.service",
                 `launchctl bootstrap gui/501 ${plan.unitPath}`,
@@ -709,9 +716,9 @@ it.layer(NodeServices.layer)("boot service install", (it) => {
       expect(commands.some((command) => command.startsWith("systemctl "))).toBe(false);
       // A bootout can block up to the plist's 90s ExitTimeOut; the runner's
       // 60s default would cancel it and let bootstrap race a loaded job.
-      expect(timeouts.get("launchctl bootout --wait gui/501/com.piedpiperapp.piedpiperapp.service")).toEqual(
-        Duration.seconds(120),
-      );
+      expect(
+        timeouts.get("launchctl bootout --wait gui/501/com.piedpiperapp.piedpiperapp.service"),
+      ).toEqual(Duration.seconds(120));
     }),
   );
 
@@ -772,7 +779,7 @@ it.layer(NodeServices.layer)("boot service install", (it) => {
     Effect.gen(function* () {
       const { service, fs } = yield* makeHarness(
         "darwin",
-        "/opt/homebrew/bin:/Users/theo/\u0001invalid:/usr/bin",
+        "/opt/homebrew/bin:/Users/ash/\u0001invalid:/usr/bin",
       );
       const plan = yield* service.install();
       const plist = yield* fs.readFileString(plan.unitPath);
@@ -789,7 +796,8 @@ it.layer(NodeServices.layer)("boot service install", (it) => {
     Effect.gen(function* () {
       const { service, control } = yield* makeHarness("darwin");
       yield* service.install();
-      control.failCommand = "launchctl bootout --wait gui/501/com.piedpiperapp.piedpiperapp.service";
+      control.failCommand =
+        "launchctl bootout --wait gui/501/com.piedpiperapp.piedpiperapp.service";
 
       yield* service.install();
       expect((yield* service.status).current).toBe(true);

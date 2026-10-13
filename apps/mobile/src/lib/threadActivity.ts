@@ -31,8 +31,8 @@ import {
   type WorkLogToolLifecycleStatus,
 } from "@piedpiperapp/client-runtime/work-log/presentation";
 import {
-  resolveT3McpToolDefinition,
-  resolveT3McpToolPresentation,
+  resolvePiedPiperMcpToolDefinition,
+  resolvePiedPiperMcpToolPresentation,
   type PiedPiperMcpToolLogo,
   type PiedPiperMcpToolPresentation,
 } from "@piedpiperapp/shared/piedPiperMcpToolPresentation";
@@ -589,7 +589,10 @@ function itemToolPresentation(item: OrchestrationV2TurnItem): PiedPiperMcpToolPr
   if (item.type !== "dynamic_tool") {
     return null;
   }
-  return resolveT3McpToolPresentation(item.toolName) ?? resolveT3McpToolPresentation(item.title);
+  return (
+    resolvePiedPiperMcpToolPresentation(item.toolName) ??
+    resolvePiedPiperMcpToolPresentation(item.title)
+  );
 }
 
 function itemSummary(
@@ -929,7 +932,7 @@ function groupAdjacentActivities(entries: ReadonlyArray<RawThreadFeedEntry>): Th
         item.type === "dynamic_tool" &&
         item.runId !== null &&
         (item.status === "running" || item.status === "completed") &&
-        resolveT3McpToolDefinition(item.toolName)?.summaryAction === "delegate" &&
+        resolvePiedPiperMcpToolDefinition(item.toolName)?.summaryAction === "delegate" &&
         !workEntryDisplayIndicatesToolFailure(entry.activity.workEntry)
       ) {
         const output = compactDynamicToolOutput(item.output);

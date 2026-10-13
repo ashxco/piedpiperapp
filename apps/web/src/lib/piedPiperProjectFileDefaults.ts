@@ -1,5 +1,9 @@
-import { PIED_PIPER_PROJECT_FILE_NAME, type EnvironmentId, type PiedPiperProjectFile } from "@piedpiperapp/contracts";
-import { parseT3ProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
+import {
+  PIED_PIPER_PROJECT_FILE_NAME,
+  type EnvironmentId,
+  type PiedPiperProjectFile,
+} from "@piedpiperapp/contracts";
+import { parsePiedPiperProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
 import { executeAtomQuery } from "@piedpiperapp/client-runtime/state/runtime";
 
 import {
@@ -11,14 +15,14 @@ import { appAtomRegistry } from "~/rpc/atomRegistry";
 /**
  * Read and decode the project's checked-in `piedpiperapp.json`.
  *
- * Imperative counterpart to `useT3ProjectFileState` for the new-thread path,
+ * Imperative counterpart to `usePiedPiperProjectFileState` for the new-thread path,
  * which resolves defaults at call time rather than render time. The file
  * query atom caches per (environment, cwd), so repeat calls don't re-fetch.
  * Optimistic in-app writes overlay the query result, matching what
  * `useProjectFileQuery` renders. Missing, truncated, or invalid files
  * resolve to null.
  */
-export async function readT3ProjectFile(
+export async function readPiedPiperProjectFile(
   environmentId: EnvironmentId,
   workspaceRoot: string,
 ): Promise<PiedPiperProjectFile | null> {
@@ -34,5 +38,5 @@ export async function readT3ProjectFile(
     result._tag === "Success" ? result.value : null,
   );
   if (data === null || data.truncated) return null;
-  return parseT3ProjectFile(data.contents);
+  return parsePiedPiperProjectFile(data.contents);
 }

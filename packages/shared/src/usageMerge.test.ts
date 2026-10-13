@@ -136,7 +136,7 @@ describe("mergeUsage", () => {
 
   it("counts a shared transcript directory once", () => {
     // Two worktree servers on one machine resolve the same provider home.
-    const shared = { provider: "claude" as const, hostId: "mac", homePath: "/home/theo/.claude" };
+    const shared = { provider: "claude" as const, hostId: "mac", homePath: "/home/ash/.claude" };
     const merged = mergeUsage(
       [
         environment("env-a", summary([bucket()], [shared])),
@@ -156,7 +156,7 @@ describe("mergeUsage", () => {
     const sharedClaude = {
       provider: "claude" as const,
       hostId: "mac",
-      homePath: "/home/theo/.claude",
+      homePath: "/home/ash/.claude",
     };
     const merged = mergeUsage(
       [
@@ -165,7 +165,7 @@ describe("mergeUsage", () => {
           "env-b",
           summary(
             [bucket(), bucket({ provider: "codex", model: "gpt-5.6-sol", costUsd: 4 })],
-            [sharedClaude, { provider: "codex", hostId: "mac", homePath: "/home/theo/.codex" }],
+            [sharedClaude, { provider: "codex", hostId: "mac", homePath: "/home/ash/.codex" }],
           ),
         ),
       ],
@@ -212,7 +212,7 @@ describe("mergeUsage", () => {
   });
 
   it("uses the newest scan when environments share the same transcript directory", () => {
-    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/theo/.claude" };
+    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/ash/.claude" };
     const environments = [
       environment("env-a", summary([bucket({ costUsd: 4, records: 2 })], [source])),
       environment("env-b", {
@@ -227,12 +227,12 @@ describe("mergeUsage", () => {
       expect(merged.records).toBe(5);
       expect(merged.sessions).toBe(1);
       expect(merged.contributingEnvironments).toEqual(["env-b"]);
-      expect(merged.duplicateSources).toEqual(["env-a: /home/theo/.claude"]);
+      expect(merged.duplicateSources).toEqual(["env-a: /home/ash/.claude"]);
     }
   });
 
   it("prefers a complete scan over a newer partial scan of the same directory", () => {
-    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/theo/.claude" };
+    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/ash/.claude" };
     const incomplete = summary([bucket({ costUsd: 4, records: 2 })], [source]);
     const partial = environment("new", {
       ...incomplete,
@@ -248,13 +248,13 @@ describe("mergeUsage", () => {
       const merged = mergeUsage(ordered, USAGE_CONTRACT_VERSION);
       expect(merged.costUsd).toBe(10);
       expect(merged.contributingEnvironments).toEqual(["old"]);
-      expect(merged.duplicateSources).toEqual(["new: /home/theo/.claude"]);
+      expect(merged.duplicateSources).toEqual(["new: /home/ash/.claude"]);
     }
     expect(mergeUsage([partial], USAGE_CONTRACT_VERSION).costUsd).toBe(4);
   });
 
   it("keeps new cells from a later partial scan without recounting older cells", () => {
-    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/theo/.claude" };
+    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/ash/.claude" };
     const complete = environment(
       "old",
       summary([bucket()], [source], USAGE_MERGE_COMPATIBLE_SINCE),
@@ -292,12 +292,12 @@ describe("mergeUsage", () => {
       expect(merged.contributingEnvironments).toEqual(
         ordered.map(({ environmentId }) => environmentId),
       );
-      expect(merged.duplicateSources).toEqual(["new: /home/theo/.claude"]);
+      expect(merged.duplicateSources).toEqual(["new: /home/ash/.claude"]);
     }
   });
 
   it("retains a complete cell when a larger partial cell may have skipped old records", () => {
-    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/theo/.claude" };
+    const source = { provider: "claude" as const, hostId: "mac", homePath: "/home/ash/.claude" };
     const complete = environment("old", summary([bucket()], [source]));
     const partialSummary = summary(
       [
@@ -669,9 +669,9 @@ describe("mergeUsage", () => {
   });
 
   it("keeps two machines apart when hostname and home path collide", () => {
-    // Every Mac resolves /Users/theo/.claude, so a hostname clash used to make
+    // Every Mac resolves /Users/ash/.claude, so a hostname clash used to make
     // one machine's usage vanish. Filesystem identity separates them.
-    const shape = { provider: "claude" as const, hostId: "mac", homePath: "/Users/theo/.claude" };
+    const shape = { provider: "claude" as const, hostId: "mac", homePath: "/Users/ash/.claude" };
     const merged = mergeUsage(
       [
         environment("env-a", summary([bucket()], [{ ...shape, volumeId: "16777220:1234" }])),
@@ -688,7 +688,7 @@ describe("mergeUsage", () => {
     const same = {
       provider: "claude" as const,
       hostId: "mac",
-      homePath: "/Users/theo/.claude",
+      homePath: "/Users/ash/.claude",
       volumeId: "16777220:1234",
     };
     const merged = mergeUsage(

@@ -9,9 +9,9 @@
   },
   "android": {
     "modules": [
-      "expo.modules.t3nativecontrols.PiedPiperNativeControlsModule",
-      "expo.modules.t3nativecontrols.PiedPiperWorkspaceNavigationModule",
-      "expo.modules.t3nativecontrols.PiedPiperKeyboardCommandsModule"
+      "expo.modules.piedpiperappnativecontrols.PiedPiperNativeControlsModule",
+      "expo.modules.piedpiperappnativecontrols.PiedPiperWorkspaceNavigationModule",
+      "expo.modules.piedpiperappnativecontrols.PiedPiperKeyboardCommandsModule"
     ]
   }
 }

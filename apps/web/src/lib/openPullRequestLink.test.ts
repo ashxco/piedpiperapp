@@ -166,7 +166,7 @@ describe("matchesLinkedPullRequestUrl", () => {
     expect(
       matchesLinkedPullRequestUrl(
         linkedPullRequest,
-        "https://github.com/PingDotGG/PiedPiper/pull/42/files",
+        "https://github.com/AshXco/PiedPiperApp/pull/42/files",
       ),
     ).toBe(true);
   });
@@ -204,7 +204,10 @@ describe("matchesLinkedPullRequestUrl", () => {
 
   it("rejects a different pull request or host", () => {
     expect(
-      matchesLinkedPullRequestUrl(linkedPullRequest, "https://github.com/ashxco/piedpiperapp/pull/43"),
+      matchesLinkedPullRequestUrl(
+        linkedPullRequest,
+        "https://github.com/ashxco/piedpiperapp/pull/43",
+      ),
     ).toBe(false);
     expect(
       matchesLinkedPullRequestUrl(
@@ -228,7 +231,7 @@ describe("shouldOpenPullRequestExternally", () => {
 
 describe("parseChangeRequestUrl", () => {
   it("reads a GitHub pull request", () => {
-    expect(parseChangeRequestUrl("https://github.com/PiedPiper/PiedPiper/pull/123")).toEqual({
+    expect(parseChangeRequestUrl("https://github.com/PiedPiperApp/PiedPiperApp/pull/123")).toEqual({
       host: "github.com",
       repository: "piedpiperapp/piedpiperapp",
       number: 123,
@@ -245,7 +248,9 @@ describe("parseChangeRequestUrl", () => {
 
   it("reads a GitLab merge request, nested groups and all", () => {
     expect(
-      parseChangeRequestUrl("https://gitlab.com/piedpiperapp/platform/piedpiperapp/-/merge_requests/42"),
+      parseChangeRequestUrl(
+        "https://gitlab.com/piedpiperapp/platform/piedpiperapp/-/merge_requests/42",
+      ),
     ).toEqual({
       host: "gitlab.com",
       repository: "piedpiperapp/platform/piedpiperapp",
@@ -280,7 +285,9 @@ describe("parseChangeRequestUrl", () => {
       number: 17,
     });
     expect(
-      parseChangeRequestUrl("https://acme.visualstudio.com/platform/_git/piedpiperapp/pullrequest/17"),
+      parseChangeRequestUrl(
+        "https://acme.visualstudio.com/platform/_git/piedpiperapp/pullrequest/17",
+      ),
     ).toEqual({
       host: "acme.visualstudio.com",
       repository: "platform/_git/piedpiperapp",
@@ -289,7 +296,9 @@ describe("parseChangeRequestUrl", () => {
   });
 
   it("survives trailing segments, a trailing slash and a query string", () => {
-    expect(parseChangeRequestUrl("https://github.com/piedpiperapp/piedpiperapp/pull/123/files?w=1")).toEqual({
+    expect(
+      parseChangeRequestUrl("https://github.com/piedpiperapp/piedpiperapp/pull/123/files?w=1"),
+    ).toEqual({
       host: "github.com",
       repository: "piedpiperapp/piedpiperapp",
       number: 123,
@@ -300,11 +309,13 @@ describe("parseChangeRequestUrl", () => {
     expect(
       parseChangeRequestUrl("https://bitbucket.org/team/repo/pull-requests/5/commits"),
     ).toEqual({ host: "bitbucket.org", repository: "team/repo", number: 5 });
-    expect(parseChangeRequestUrl("https://github.com/piedpiperapp/piedpiperapp/pull/123/")).toEqual({
-      host: "github.com",
-      repository: "piedpiperapp/piedpiperapp",
-      number: 123,
-    });
+    expect(parseChangeRequestUrl("https://github.com/piedpiperapp/piedpiperapp/pull/123/")).toEqual(
+      {
+        host: "github.com",
+        repository: "piedpiperapp/piedpiperapp",
+        number: 123,
+      },
+    );
   });
 
   it("claims nothing it cannot be sure of, so the link goes to the browser", () => {
@@ -486,7 +497,7 @@ describe("findProjectForChangeRequest", () => {
       project({
         canonicalKey: "github.com/ashxco/piedpiperapp",
         provider: "github",
-        owner: "pingdotgg",
+        owner: "ashxco",
         name: "piedpiperapp",
       }),
     ];
@@ -506,7 +517,9 @@ describe("findProjectForChangeRequest", () => {
     //
     // Derived from the SSH remote the way the server derives it rather than written out, so the
     // day that normalization stops reaching the web spelling this fails here too.
-    const canonicalKey = normalizeGitRemoteUrl("git@ssh.dev.azure.com:v3/PiedPiper/Platform/PiedPiper");
+    const canonicalKey = normalizeGitRemoteUrl(
+      "git@ssh.dev.azure.com:v3/PiedPiperApp/Platform/PiedPiperApp",
+    );
     const projects = [
       project({
         canonicalKey,
@@ -530,7 +543,7 @@ describe("findProjectForChangeRequest", () => {
       project({
         canonicalKey: "github.com/ashxco/piedpiperapp",
         provider: "github",
-        owner: "pingdotgg",
+        owner: "ashxco",
         name: "piedpiperapp",
       }),
     ];

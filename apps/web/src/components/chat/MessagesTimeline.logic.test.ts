@@ -158,7 +158,7 @@ describe("work entry labels", () => {
   ] as const)("uses the same friendly %s label in both views", (toolLifecycleStatus, label) => {
     const browserEntry = {
       ...entry,
-      toolTitle: "Pied Piper-code.preview_click",
+      toolTitle: "Pied Piper.preview_click",
       detail: '{"ok":true}',
       toolLifecycleStatus,
     };
@@ -194,13 +194,17 @@ describe("work entry labels", () => {
     const payload = (toolName: string, input: unknown) => ({
       structuredPayload: { type: "dynamic_tool", toolName, input } as never,
     });
-    expect(threadReadTargetId(payload("piedpiperapp.piedpiperapp_thread_wait", { threadId: "t" }))).toBeNull();
-    expect(threadReadTargetId(payload("piedpiperapp.piedpiperapp_thread_read", { threadId: "  " }))).toBeNull();
+    expect(
+      threadReadTargetId(payload("piedpiperapp.piedpiperapp_thread_wait", { threadId: "t" })),
+    ).toBeNull();
+    expect(
+      threadReadTargetId(payload("piedpiperapp.piedpiperapp_thread_read", { threadId: "  " })),
+    ).toBeNull();
     expect(threadReadTargetId(payload("piedpiperapp.piedpiperapp_thread_read", null))).toBeNull();
   });
 
   it("uses the active summary state for legacy tools without a lifecycle status", () => {
-    const browserEntry = { ...entry, toolTitle: "Pied Piper-code.preview_click" };
+    const browserEntry = { ...entry, toolTitle: "Pied Piper.preview_click" };
     expect(liveWorkEntryLabel(browserEntry, undefined, true)).toBe(
       "Clicking in the preview browser",
     );
@@ -212,7 +216,7 @@ describe("work entry labels", () => {
   it("keeps the latest live activity in the present tense after the call completes", () => {
     const browserEntry = {
       ...entry,
-      toolTitle: "Pied Piper-code.preview_click",
+      toolTitle: "Pied Piper.preview_click",
       toolLifecycleStatus: "completed" as const,
     };
     expect(liveWorkEntryLabel(browserEntry, undefined, true)).toBe(
@@ -824,7 +828,7 @@ describe("deriveMessagesTimelineRows", () => {
         id: TurnItemId.make("list"),
         status: "completed",
         title: "Custom provider title",
-        toolName: "Pied Piper-code.piedpiperapp_project_list",
+        toolName: "Pied Piper.piedpiperapp_project_list",
         input: {},
         output: { projects: [] },
       },

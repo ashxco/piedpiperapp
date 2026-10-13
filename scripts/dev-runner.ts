@@ -5,7 +5,7 @@ import * as NodeOS from "node:os";
 import * as NodeRuntime from "@effect/platform-node/NodeRuntime";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import * as NetService from "@piedpiperapp/shared/Net";
-import { resolveGitWorktreePath, resolveWorktreeT3Home } from "@piedpiperapp/shared/devHome";
+import { resolveGitWorktreePath, resolveWorktreePiedPiperHome } from "@piedpiperapp/shared/devHome";
 import * as HostProcess from "@piedpiperapp/shared/HostProcess";
 import { resolveSpawnCommand } from "@piedpiperapp/shared/shell";
 import * as Config from "effect/Config";
@@ -667,11 +667,11 @@ export function runDevRunnerWithInput(input: DevRunnerCliInput) {
     // A dev server started inside a worktree defaults to that worktree's own
     // (gitignored) `.piedpiperapp` — see @piedpiperapp/shared/devHome for why this must
     // outrank an ambient PIEDPIPER_HOME. `--home-dir` still wins.
-    const worktreeHome = yield* resolveWorktreeT3Home(yield* HostProcess.WorkingDirectory);
+    const worktreeHome = yield* resolveWorktreePiedPiperHome(yield* HostProcess.WorkingDirectory);
     // Trim before choosing: `--home-dir ""` is not a selection, and treating it
     // as one would skip the worktree default and land on the shared home —
     // exactly the outcome this precedence exists to prevent.
-    const resolvedT3Home =
+    const resolvedPiedPiperHome =
       (input.piedPiperHome?.trim() || undefined) ??
       worktreeHome ??
       (hostEnvironment.PIEDPIPER_HOME?.trim() || undefined);
@@ -680,7 +680,7 @@ export function runDevRunnerWithInput(input: DevRunnerCliInput) {
       baseEnv: hostEnvironment,
       serverOffset,
       webOffset,
-      piedPiperHome: resolvedT3Home,
+      piedPiperHome: resolvedPiedPiperHome,
       browser: input.browser,
       autoBootstrapProjectFromCwd: input.autoBootstrapProjectFromCwd,
       logWebSocketEvents: input.logWebSocketEvents,

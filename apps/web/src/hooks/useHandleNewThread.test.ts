@@ -148,7 +148,7 @@ vi.mock("../lib/chatThreadActions", async (importOriginal) => ({
   resolveNewThreadModelSelectionOverride: () => null,
 }));
 vi.mock("../lib/piedPiperProjectFileDefaults", () => ({
-  readT3ProjectFile: () => testState.projectFileRead,
+  readPiedPiperProjectFile: () => testState.projectFileRead,
 }));
 vi.mock("../lib/utils", () => ({
   newDraftId: () => "draft-delayed",

@@ -5,7 +5,11 @@ import * as NodeFS from "node:fs";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
-import { ProviderDriverKind, ProviderInstanceId, type ServerProvider } from "@piedpiperapp/contracts";
+import {
+  ProviderDriverKind,
+  ProviderInstanceId,
+  type ServerProvider,
+} from "@piedpiperapp/contracts";
 import * as HostProcess from "@piedpiperapp/shared/HostProcess";
 import * as Crypto from "effect/Crypto";
 import * as Deferred from "effect/Deferred";
@@ -312,10 +316,9 @@ it.layer(NodeServices.layer)("providerMaintenance", (it) => {
   // even though the visible path does not.
   it.effect("recognizes a Windows standalone install through its junctioned bin dir", () =>
     Effect.gen(function* () {
-      const visiblePath =
-        "C:\\Users\\Theo\\AppData\\Local\\Programs\\OpenAI\\Codex\\bin\\codex.exe";
+      const visiblePath = "C:\\Users\\Ash\\AppData\\Local\\Programs\\OpenAI\\Codex\\bin\\codex.exe";
       const realPath =
-        "C:\\Users\\Theo\\.codex\\packages\\standalone\\releases\\0.120.0-x86_64\\bin\\codex.exe";
+        "C:\\Users\\Ash\\.codex\\packages\\standalone\\releases\\0.120.0-x86_64\\bin\\codex.exe";
       const capabilities = yield* resolvePackageManagedProviderMaintenance(
         {
           provider: driver("codex"),
@@ -830,7 +833,10 @@ it.layer(NodeServices.layer)("providerMaintenance", (it) => {
     "updates Volta installs only when Volta has the package",
     () =>
       Effect.gen(function* () {
-        const voltaHome = NodePath.join(yield* makeTempDir("piedpiperapp-volta-capabilities"), ".volta");
+        const voltaHome = NodePath.join(
+          yield* makeTempDir("piedpiperapp-volta-capabilities"),
+          ".volta",
+        );
         const shim = NodePath.join(voltaHome, "bin", "volta-shim");
         writeExecutable(shim);
         const link = NodePath.join(voltaHome, "bin", "package-tool");

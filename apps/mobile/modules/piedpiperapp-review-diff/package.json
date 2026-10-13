@@ -10,7 +10,7 @@
     },
     "android": {
       "modules": [
-        "expo.modules.t3reviewdiff.PiedPiperReviewDiffModule"
+        "expo.modules.piedpiperappreviewdiff.PiedPiperReviewDiffModule"
       ]
     }
   }

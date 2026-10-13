@@ -344,19 +344,23 @@ describe("resolveWorkEntryToolPresentation", () => {
     ["piedpiperapp_project_create", "Registering a project", "Registered a project"],
     ["piedpiperapp_thread_launch", "Launching a project thread", "Launched a project thread"],
     ["piedpiperapp_queue_edit", "Editing a queued message", "Edited a queued message"],
-    ["piedpiperapp_pending_request_respond", "Answering pending questions", "Answered pending questions"],
+    [
+      "piedpiperapp_pending_request_respond",
+      "Answering pending questions",
+      "Answered pending questions",
+    ],
     ["piedpiperapp_thread_configure", "Setting thread model", "Set thread model"],
     ["piedpiperapp_thread_fork", "Forking this thread", "Requested a fork of this thread"],
     ["piedpiperapp_thread_send_attachments", "Sending attachments", "Sent attachments"],
     ["run_scheduled_task_now", "Running a scheduled task", "Requested a run of a scheduled task"],
     ["piedpiperapp_workflow_stop", "Stopping a workflow", "Requested a stop for a workflow"],
   ])("labels %s through its lifecycle", (tool, running, completed) => {
-    expect(resolveWorkEntryToolPresentation({ label: `Pied Piper-code.${tool}` })?.displayName).toBe(
+    expect(resolveWorkEntryToolPresentation({ label: `Pied Piper.${tool}` })?.displayName).toBe(
       running,
     );
     expect(
       resolveWorkEntryToolPresentation({
-        label: `Pied Piper-code.${tool}`,
+        label: `Pied Piper.${tool}`,
         toolLifecycleStatus: "completed",
       })?.displayName,
     ).toBe(completed);
@@ -418,14 +422,17 @@ describe("resolveWorkEntryToolPresentation", () => {
         result: { cwd: "/tmp/repo" },
       },
     };
-    const list = { ...entry, toolData: { server: "piedpiperapp", tool: "piedpiperapp_project_list" } };
+    const list = {
+      ...entry,
+      toolData: { server: "piedpiperapp", tool: "piedpiperapp_project_list" },
+    };
     expect(summarizeToolGroup([list, entry])).toEqual({
       summary: "Listed projects 1 time and cloned 1 repository",
       hasFailure: false,
     });
     const failed = {
       ...entry,
-      toolData: { toolName: "Pied Piper-code.piedpiperapp_project_clone", rawOutput: { isError: true } },
+      toolData: { toolName: "Pied Piper.piedpiperapp_project_clone", rawOutput: { isError: true } },
     };
     expect(summarizeToolGroup([entry, failed])).toEqual({
       summary: "Cloned 1 repository",
@@ -450,7 +457,7 @@ describe("resolveWorkEntryToolPresentation", () => {
       id: "clone",
       createdAt: "2026-09-19T00:00:00.000Z",
       tone: "tool",
-      label: "Pied Piper-code.piedpiperapp_project_clone",
+      label: "Pied Piper.piedpiperapp_project_clone",
       toolLifecycleStatus: "inProgress",
       itemType: "dynamic_tool",
       toolData: { output: { isError: true } },
@@ -462,7 +469,7 @@ describe("resolveWorkEntryToolPresentation", () => {
     expect(workEntryIndicatesToolSuccess(entry)).toBe(false);
     const childFailure = {
       ...entry,
-      label: "Pied Piper-code.task_status",
+      label: "Pied Piper.task_status",
       toolLifecycleStatus: "completed" as const,
       toolData: { output: { taskId: "child", status: "failed", summary: "command not found" } },
     };
@@ -473,7 +480,7 @@ describe("resolveWorkEntryToolPresentation", () => {
     "mcp__piedpiperapp__preview_click",
     "mcp__piedpiperapp_code__preview_click",
     "mcp__piedpiperapp__preview_click",
-    "Pied Piper-code.preview_click",
+    "Pied Piper.preview_click",
     "piedpiperapp · preview_click completed",
     "piedpiperapp_code/preview_click",
     "preview_click",
@@ -491,10 +498,12 @@ describe("resolveWorkEntryToolPresentation", () => {
         toolLifecycleStatus: "completed",
       }),
     ).toEqual({ displayName: "Opened a device in the Device panel", icon: "device" });
-    expect(resolveWorkEntryToolPresentation({ label: "piedpiperapp · device_screenshot" })).toEqual({
-      displayName: "Taking a screenshot of the device",
-      icon: "device",
-    });
+    expect(resolveWorkEntryToolPresentation({ label: "piedpiperapp · device_screenshot" })).toEqual(
+      {
+        displayName: "Taking a screenshot of the device",
+        icon: "device",
+      },
+    );
   });
 
   it("uses structured MCP identity when the provider supplies a custom title", () => {
@@ -502,7 +511,11 @@ describe("resolveWorkEntryToolPresentation", () => {
       resolveWorkEntryToolPresentation({
         label: "Tool call complete",
         toolTitle: "Inspect the current page",
-        toolData: { server: "piedpiperapp", tool: "preview_snapshot", result: { title: "Example" } },
+        toolData: {
+          server: "piedpiperapp",
+          tool: "preview_snapshot",
+          result: { title: "Example" },
+        },
       }),
     ).toEqual({ displayName: "Taking a snapshot of the preview page", icon: "browser" });
   });
@@ -517,14 +530,14 @@ describe("resolveWorkEntryToolPresentation", () => {
   ] as const)("describes the tool's own %s state", (toolLifecycleStatus, displayName) => {
     expect(
       resolveWorkEntryToolPresentation({
-        label: "Pied Piper-code.preview_click",
+        label: "Pied Piper.preview_click",
         toolLifecycleStatus: toolLifecycleStatus as WorkLogToolLifecycleStatus,
       }),
     ).toEqual({ displayName, icon: "browser" });
   });
 
   it("uses the summary's state only when the provider omitted a lifecycle status", () => {
-    const entry = { label: "Pied Piper-code.preview_click" };
+    const entry = { label: "Pied Piper.preview_click" };
     expect(resolveWorkEntryToolPresentation(entry, "inProgress")?.displayName).toBe(
       "Clicking in the preview browser",
     );
@@ -875,7 +888,8 @@ describe("resolveViewedImageAsset", () => {
   const threadId = ThreadId.make("thread-1");
 
   it("serves piedpiperapp attachment paths in place like any other host path", () => {
-    const path = "/Users/demo/.piedpiperapp/dev/attachments/11111111-1111-4111-8111-111111111111.png";
+    const path =
+      "/Users/demo/.piedpiperapp/dev/attachments/11111111-1111-4111-8111-111111111111.png";
     expect(resolveViewedImageAsset(path, { threadId, workspaceRoot: "/workspace" })).toEqual({
       resource: { _tag: "media-file", threadId, path },
       alt: "11111111-1111-4111-8111-111111111111.png",
@@ -906,7 +920,7 @@ describe("pull request tool presentation", () => {
   it.each([
     "mcp__piedpiperapp__link_pull_request",
     "mcp__piedpiperapp_code__link_pull_request",
-    "Pied Piper-code · link_pull_request",
+    "Pied Piper · link_pull_request",
     "piedpiperapp/link_pull_request",
     "link_pull_request",
   ])("recognizes the native linking tool: %s", (label) => {
@@ -962,7 +976,7 @@ describe("pull request tool presentation", () => {
     const link: WorkLogPresentationEntry = {
       id: "link",
       createdAt: "2026-09-10T00:00:00.000Z",
-      label: "Pied Piper-code · link_pull_request",
+      label: "Pied Piper · link_pull_request",
       tone: "tool",
       itemType: "dynamic_tool",
       toolLifecycleStatus: "completed",
@@ -970,14 +984,14 @@ describe("pull request tool presentation", () => {
     };
     const list: WorkLogPresentationEntry = {
       ...link,
-      label: "Pied Piper-code · list_thread_pull_requests",
+      label: "Pied Piper · list_thread_pull_requests",
     };
     expect(summarizeToolGroup([link, link, list]).summary).toBe(
       "Linked 2 pull requests and checked linked pull requests",
     );
-    expect(summarizeToolGroup([{ ...link, label: "Pied Piper-code · unlink_pull_request" }]).summary).toBe(
-      "Unlinked 1 pull request",
-    );
+    expect(
+      summarizeToolGroup([{ ...link, label: "Pied Piper · unlink_pull_request" }]).summary,
+    ).toBe("Unlinked 1 pull request");
     expect(toolGroupSummaryKind([link, link, list])).toBe("pull-request");
     expect(summarizeToolGroup([list, list]).summary).toBe("Checked linked pull requests 2 times");
     expect(

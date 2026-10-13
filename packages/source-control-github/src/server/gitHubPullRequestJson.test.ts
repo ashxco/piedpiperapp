@@ -2070,17 +2070,17 @@ describe("pull request watch fingerprints", () => {
   it("asks for every pull request in one aliased read, and refuses an unsafe selector", () => {
     const document = buildPullRequestWatchFingerprintsGraphQlQuery([
       { repository: "ashxco/piedpiperapp", number: 7 },
-      { repository: "pingdotgg/lakebed", number: 8 },
+      { repository: "ashxco/lakebed", number: 8 },
     ]);
     expect(document?.query).toContain(
       "w0: repository(owner: $w0_owner, name: $w0_name) { pullRequest(number: $w0_number)",
     );
     expect(document?.query).toContain("w1: repository(owner: $w1_owner, name: $w1_name)");
     expect(document?.variables).toEqual({
-      w0_owner: "pingdotgg",
+      w0_owner: "ashxco",
       w0_name: "piedpiperapp",
       w0_number: 7,
-      w1_owner: "pingdotgg",
+      w1_owner: "ashxco",
       w1_name: "lakebed",
       w1_number: 8,
     });

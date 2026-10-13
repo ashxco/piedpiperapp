@@ -231,22 +231,22 @@ function withoutToolSelectionArgs(args: ReadonlyArray<string>): ReadonlyArray<st
   return filtered;
 }
 
-function piT3McpExtensionDestPath(cacheDir: string): string {
+function piPiedPiperMcpExtensionDestPath(cacheDir: string): string {
   return `${cacheDir.replace(/\\/g, "/")}/${PI_PIED_PIPER_MCP_EXTENSION_FILENAME}`;
 }
 
-export const materializePiT3McpExtension = Effect.fn("materializePiT3McpExtension")(function* (
-  cacheDir: string,
-) {
-  const fs = yield* FileSystem.FileSystem;
-  yield* fs.makeDirectory(cacheDir, { recursive: true });
-  const dest = piT3McpExtensionDestPath(cacheDir);
-  const existing = yield* fs.readFileString(dest).pipe(Effect.orElseSucceed(() => ""));
-  if (existing !== PI_PIED_PIPER_MCP_EXTENSION_SOURCE) {
-    yield* fs.writeFileString(dest, PI_PIED_PIPER_MCP_EXTENSION_SOURCE);
-  }
-  return dest;
-});
+export const materializePiPiedPiperMcpExtension = Effect.fn("materializePiPiedPiperMcpExtension")(
+  function* (cacheDir: string) {
+    const fs = yield* FileSystem.FileSystem;
+    yield* fs.makeDirectory(cacheDir, { recursive: true });
+    const dest = piPiedPiperMcpExtensionDestPath(cacheDir);
+    const existing = yield* fs.readFileString(dest).pipe(Effect.orElseSucceed(() => ""));
+    if (existing !== PI_PIED_PIPER_MCP_EXTENSION_SOURCE) {
+      yield* fs.writeFileString(dest, PI_PIED_PIPER_MCP_EXTENSION_SOURCE);
+    }
+    return dest;
+  },
+);
 
 export function buildPiRpcLaunch(input: {
   readonly launchArgs: ReadonlyArray<string>;
@@ -260,10 +260,11 @@ export function buildPiRpcLaunch(input: {
 }): {
   readonly args: ReadonlyArray<string>;
   readonly env: NodeJS.ProcessEnv;
-  readonly hasT3Mcp: boolean;
+  readonly hasPiedPiperMcp: boolean;
 } {
-  const hasT3Extension = input.disableExtensions !== true && input.extensionPath !== undefined;
-  const hasT3Mcp = hasT3Extension && input.mcpSession !== undefined;
+  const hasPiedPiperExtension =
+    input.disableExtensions !== true && input.extensionPath !== undefined;
+  const hasPiedPiperMcp = hasPiedPiperExtension && input.mcpSession !== undefined;
   const extensionSafeArgs =
     input.disableExtensions === true
       ? withoutExplicitExtensions(input.launchArgs)
@@ -281,7 +282,7 @@ export function buildPiRpcLaunch(input: {
     ...(input.disableTools === true ? ["--no-tools"] : []),
   ];
   if (
-    hasT3Extension &&
+    hasPiedPiperExtension &&
     input.extensionPath !== undefined &&
     !hasExplicitExtension(args, input.extensionPath)
   ) {
@@ -298,16 +299,16 @@ export function buildPiRpcLaunch(input: {
     args,
     env: {
       ...environment,
-      ...(hasT3Extension && input.extensionPath !== undefined
+      ...(hasPiedPiperExtension && input.extensionPath !== undefined
         ? { [PIED_PIPER_PI_MCP_EXTENSION_PATH_ENV]: input.extensionPath }
         : {}),
-      ...(hasT3Extension && input.runtimeMode !== undefined
+      ...(hasPiedPiperExtension && input.runtimeMode !== undefined
         ? {
             [PIED_PIPER_PI_RUNTIME_MODE_ENV]:
               input.runtimeMode === "auto" ? "approval-required" : input.runtimeMode,
           }
         : {}),
-      ...(hasT3Mcp && input.mcpSession !== undefined
+      ...(hasPiedPiperMcp && input.mcpSession !== undefined
         ? {
             [PIED_PIPER_MCP_URL_ENV]: input.mcpSession.endpoint,
             [PIED_PIPER_MCP_BEARER_ENV]: bearerTokenFromAuthorizationHeader(
@@ -316,6 +317,6 @@ export function buildPiRpcLaunch(input: {
           }
         : {}),
     },
-    hasT3Mcp,
+    hasPiedPiperMcp,
   };
 }

@@ -62,8 +62,14 @@ describe("DesktopEnvironment", () => {
       assert.equal(environment.appDataDirectory, "/Users/alice/Library/Application Support");
       assert.equal(environment.baseDir, "/tmp/piedpiperapp");
       assert.equal(environment.stateDir, "/tmp/piedpiperapp/userdata");
-      assert.equal(environment.desktopSettingsPath, "/tmp/piedpiperapp/userdata/desktop-settings.json");
-      assert.equal(environment.clientSettingsPath, "/tmp/piedpiperapp/userdata/client-settings.json");
+      assert.equal(
+        environment.desktopSettingsPath,
+        "/tmp/piedpiperapp/userdata/desktop-settings.json",
+      );
+      assert.equal(
+        environment.clientSettingsPath,
+        "/tmp/piedpiperapp/userdata/client-settings.json",
+      );
       assert.equal(
         environment.savedEnvironmentRegistryPath,
         "/tmp/piedpiperapp/userdata/saved-environments.json",
@@ -78,26 +84,26 @@ describe("DesktopEnvironment", () => {
       assert.equal(environment.backendCwd, "/repo");
       assert.equal(environment.appUserModelId, "com.piedpiperapp.piedpiperapp.dev");
       assert.equal(environment.linuxWmClass, "piedpiperapp-dev");
-      assert.equal(environment.linuxDesktopEntryName, "com.piedpiperapp.PiedPiper.Development.desktop");
+      assert.equal(
+        environment.linuxDesktopEntryName,
+        "com.piedpiperapp.PiedPiper.Development.desktop",
+      );
       assert.deepEqual(
         Option.map(environment.devServerUrl, (url) => url.href),
         Option.some("http://localhost:5173/"),
       );
-      assert.deepEqual(environment.devRemoteT3ServerEntryPath, Option.some("/remote/server.mjs"));
+      assert.deepEqual(
+        environment.devRemotePiedPiperServerEntryPath,
+        Option.some("/remote/server.mjs"),
+      );
       assert.deepEqual(environment.configuredBackendPort, Option.some(4949));
       assert.deepEqual(environment.commitHashOverride, Option.some("0123456789abcdef"));
-      assert.deepEqual(environment.otlpTracesUrl, Option.some("http://127.0.0.1:4318/v1/traces"));
-      assert.deepEqual(environment.otlpMetricsUrl, Option.some("http://127.0.0.1:4318/v1/metrics"));
-      assert.deepEqual(environment.otlpLogsUrl, Option.some("http://127.0.0.1:4318/v1/logs"));
-      assert.equal(environment.otlpExportIntervalMs, 2500);
-      assert.deepEqual(
-        environment.otlpHeaders,
-        Option.some({
-          authorization: "Basic abc==",
-          "x-tenant": "piedpiperapp",
-        }),
-      );
-      assert.equal(environment.otlpProtocol, "http/protobuf");
+      assert.deepEqual(environment.otlpTracesUrl, Option.none());
+      assert.deepEqual(environment.otlpMetricsUrl, Option.none());
+      assert.deepEqual(environment.otlpLogsUrl, Option.none());
+      assert.equal(environment.otlpExportIntervalMs, 10_000);
+      assert.deepEqual(environment.otlpHeaders, Option.none());
+      assert.equal(environment.otlpProtocol, "http/json");
     }),
   );
 

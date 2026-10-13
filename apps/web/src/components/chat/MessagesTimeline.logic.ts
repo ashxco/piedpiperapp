@@ -56,12 +56,15 @@ import {
 } from "@piedpiperapp/contracts";
 import type { ThreadRunSummary } from "@piedpiperapp/client-runtime/state/shell";
 import {
-  resolveT3McpToolDefinition,
-  resolveT3McpToolPresentation,
+  resolvePiedPiperMcpToolDefinition,
+  resolvePiedPiperMcpToolPresentation,
   type PiedPiperMcpToolPresentation,
 } from "@piedpiperapp/shared/piedPiperMcpToolPresentation";
 import { compactDynamicToolOutput } from "@piedpiperapp/shared/toolOutput";
-import { htmlRenderReferencesEqual, type HtmlRenderReference } from "@piedpiperapp/shared/htmlRender";
+import {
+  htmlRenderReferencesEqual,
+  type HtmlRenderReference,
+} from "@piedpiperapp/shared/htmlRender";
 import { mcpAppReferencesEqual, type McpAppReference } from "@piedpiperapp/shared/mcpApp";
 import { dynamicToolTitle } from "@piedpiperapp/shared/toolActivity";
 import { formatWorkspaceRelativePath } from "../../filePathDisplay";
@@ -185,7 +188,8 @@ export function workEntryDisplayLabel(entry: WorkLogEntry, workspaceRoot: string
 export function threadReadTargetId(entry: Pick<WorkLogEntry, "structuredPayload">) {
   const item = entry.structuredPayload;
   if (item?.type !== "dynamic_tool") return null;
-  if (resolveT3McpToolDefinition(item.toolName)?.summaryAction !== "thread-read") return null;
+  if (resolvePiedPiperMcpToolDefinition(item.toolName)?.summaryAction !== "thread-read")
+    return null;
   const input = item.input;
   const threadId =
     input !== null && typeof input === "object" && "threadId" in input ? input.threadId : null;
@@ -679,7 +683,7 @@ function workGroupId(timelineEntryId: string): string {
 }
 
 export type TimelineToolPresentation = PiedPiperMcpToolPresentation;
-export const resolveTimelineToolPresentation = resolveT3McpToolPresentation;
+export const resolveTimelineToolPresentation = resolvePiedPiperMcpToolPresentation;
 
 function expandedWorkGroupRow(
   groupId: string,
@@ -1318,7 +1322,7 @@ function withoutSubagentDelegationRows(entries: ReadonlyArray<TimelineEntry>) {
       item?.type !== "dynamic_tool" ||
       item.runId === null ||
       (item.status !== "running" && item.status !== "completed") ||
-      resolveT3McpToolDefinition(item.toolName)?.summaryAction !== "delegate"
+      resolvePiedPiperMcpToolDefinition(item.toolName)?.summaryAction !== "delegate"
     )
       return true;
     const output = compactDynamicToolOutput(item.output);

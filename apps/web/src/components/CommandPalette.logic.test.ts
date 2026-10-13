@@ -77,7 +77,7 @@ describe("buildCommandPaletteProjectMetadata", () => {
         {
           environmentId: localEnvironmentId,
           title: "Pied Piper",
-          workspaceRoot: "/Users/theo/Projects/piedpiperapp",
+          workspaceRoot: "/Users/ash/Projects/piedpiperapp",
         },
         {
           environmentId: remoteEnvironmentId,
@@ -90,7 +90,7 @@ describe("buildCommandPaletteProjectMetadata", () => {
 
     expect(metadata.searchTerms).toEqual([
       "Pied Piper",
-      "/Users/theo/Projects/piedpiperapp",
+      "/Users/ash/Projects/piedpiperapp",
       "Local",
       "piedpiperapp",
       "/srv/piedpiperapp",
@@ -346,10 +346,10 @@ function makeThread(overrides: Partial<Thread> = {}): Thread {
 
 describe("buildProjectActionItems", () => {
   it("shows the grouped display name but keeps the real title for icons", () => {
-    const project = makeProject({ title: "fleet", workspaceRoot: "/Users/theo/Code/p/fleet" });
+    const project = makeProject({ title: "fleet", workspaceRoot: "/Users/ash/Code/p/fleet" });
     const iconTitles: string[] = [];
     const [item] = buildProjectActionItems({
-      projects: [{ ...project, displayName: "t3dotgg/fleet" }],
+      projects: [{ ...project, displayName: "ashxco/fleet" }],
       valuePrefix: "project",
       icon: (candidate) => {
         iconTitles.push(candidate.title);
@@ -358,9 +358,9 @@ describe("buildProjectActionItems", () => {
       runProject: async () => undefined,
     });
 
-    expect(item?.title).toBe("t3dotgg/fleet");
+    expect(item?.title).toBe("ashxco/fleet");
     expect(item?.searchTerms).toEqual(
-      expect.arrayContaining(["t3dotgg/fleet", "fleet", "/Users/theo/Code/p/fleet"]),
+      expect.arrayContaining(["ashxco/fleet", "fleet", "/Users/ash/Code/p/fleet"]),
     );
     expect(iconTitles).toEqual(["fleet"]);
   });

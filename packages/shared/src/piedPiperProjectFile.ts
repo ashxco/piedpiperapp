@@ -11,15 +11,15 @@ import { fromLenientJson } from "./schemaJson.ts";
  */
 export const PiedPiperProjectFileFromJson = fromLenientJson(PiedPiperProjectFile);
 
-const decodeT3ProjectFile = Schema.decodeExit(PiedPiperProjectFileFromJson);
+const decodePiedPiperProjectFile = Schema.decodeExit(PiedPiperProjectFileFromJson);
 
 /**
  * Decode raw `piedpiperapp.json` contents, treating invalid or malformed files as
  * absent. Clients use this to read optional defaults (scripts, thread env
  * mode) without surfacing decode errors to the user.
  */
-export function parseT3ProjectFile(contents: string): PiedPiperProjectFile | null {
-  const decoded = decodeT3ProjectFile(contents);
+export function parsePiedPiperProjectFile(contents: string): PiedPiperProjectFile | null {
+  const decoded = decodePiedPiperProjectFile(contents);
   return Exit.isSuccess(decoded) ? decoded.value : null;
 }
 
@@ -29,7 +29,7 @@ export function parseT3ProjectFile(contents: string): PiedPiperProjectFile | nul
  * Served from the marketing site at {@link PIED_PIPER_PROJECT_FILE_SCHEMA_URL} so
  * editors get LSP support via a `$schema` reference.
  */
-export function buildT3ProjectFileJsonSchema(): Record<string, unknown> {
+export function buildPiedPiperProjectFileJsonSchema(): Record<string, unknown> {
   // Closed objects, as before effect rc.113 changed the generator default;
   // editors then flag unknown keys in piedpiperapp.json.
   const document = Schema.toJsonSchemaDocument(PiedPiperProjectFile, { onExcessProperty: "error" });

@@ -1,5 +1,5 @@
 import { PIED_PIPER_PROJECT_FILE_NAME, type PiedPiperProjectFile } from "@piedpiperapp/contracts";
-import { parseT3ProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
+import { parsePiedPiperProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
 import { useAtomValue } from "@effect/atom-react";
 import * as Option from "effect/Option";
 import { AsyncResult, Atom } from "effect/reactivity";
@@ -44,7 +44,7 @@ function useMemberProjectFiles(scope: ReturnType<typeof resolveSettingsScope>) {
               )?.data ?? Option.getOrNull(AsyncResult.value(result));
             files.set(
               member.physicalProjectKey,
-              data === null || data.truncated ? null : parseT3ProjectFile(data.contents),
+              data === null || data.truncated ? null : parsePiedPiperProjectFile(data.contents),
             );
           }
           return files;

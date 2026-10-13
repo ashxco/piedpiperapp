@@ -31,20 +31,20 @@ describe("parseWslUncPath", () => {
 describe("resolveWslProjectSelection", () => {
   it("routes a UNC path to the matching WSL backend", () => {
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\theo\\repo", [
+      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\ash\\repo", [
         { environmentId: "env-debian", backendId: "wsl:Debian", runningDistro: null },
         { environmentId: "env-ubuntu", backendId: "wsl:Ubuntu", runningDistro: null },
       ]),
     ).toEqual({
       distro: "Ubuntu",
       environmentId: "env-ubuntu",
-      linuxPath: "/home/theo/repo",
+      linuxPath: "/home/ash/repo",
     });
   });
 
   it("does not route to the only WSL backend when its distro is unknown", () => {
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\theo\\repo", [
+      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\ash\\repo", [
         { environmentId: "env-wsl", backendId: "wsl:default", runningDistro: null },
       ]),
     ).toBeNull();
@@ -52,7 +52,7 @@ describe("resolveWslProjectSelection", () => {
 
   it("does not route to a sole WSL backend for a different distro", () => {
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Debian\\home\\theo\\repo", [
+      resolveWslProjectSelection("\\\\wsl.localhost\\Debian\\home\\ash\\repo", [
         { environmentId: "env-ubuntu", backendId: "wsl:Ubuntu", runningDistro: null },
       ]),
     ).toBeNull();
@@ -60,7 +60,7 @@ describe("resolveWslProjectSelection", () => {
 
   it("does not guess when multiple WSL backends fail to match", () => {
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Fedora\\home\\theo\\repo", [
+      resolveWslProjectSelection("\\\\wsl.localhost\\Fedora\\home\\ash\\repo", [
         { environmentId: "env-debian", backendId: "wsl:Debian", runningDistro: null },
         { environmentId: "env-ubuntu", backendId: "wsl:Ubuntu", runningDistro: null },
       ]),
@@ -73,14 +73,14 @@ describe("resolveWslProjectSelection", () => {
     ];
 
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Debian\\home\\theo\\repo", candidates),
+      resolveWslProjectSelection("\\\\wsl.localhost\\Debian\\home\\ash\\repo", candidates),
     ).toEqual({
       distro: "Debian",
       environmentId: "env-wsl",
-      linuxPath: "/home/theo/repo",
+      linuxPath: "/home/ash/repo",
     });
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\theo\\repo", candidates),
+      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\ash\\repo", candidates),
     ).toBeNull();
   });
 });
@@ -120,14 +120,14 @@ describe("applyWslEnvironmentConfiguration", () => {
     );
 
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\theo\\repo", candidates),
+      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\ash\\repo", candidates),
     ).toBeNull();
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Debian\\home\\theo\\repo", candidates),
+      resolveWslProjectSelection("\\\\wsl.localhost\\Debian\\home\\ash\\repo", candidates),
     ).toEqual({
       distro: "Debian",
       environmentId: "env-wsl",
-      linuxPath: "/home/theo/repo",
+      linuxPath: "/home/ash/repo",
     });
   });
 
@@ -166,11 +166,11 @@ describe("applyWslEnvironmentConfiguration", () => {
       { environmentId: "env-primary", backendId: "wsl:default", runningDistro: "Ubuntu" },
     ]);
     expect(
-      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\theo\\repo", candidates),
+      resolveWslProjectSelection("\\\\wsl.localhost\\Ubuntu\\home\\ash\\repo", candidates),
     ).toEqual({
       distro: "Ubuntu",
       environmentId: "env-primary",
-      linuxPath: "/home/theo/repo",
+      linuxPath: "/home/ash/repo",
     });
   });
 

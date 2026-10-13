@@ -6,7 +6,7 @@ You can think of Pied Piper as an open source "bring-your-own-subscription" alte
 
 ## What makes Pied Piper special?
 
-Pied Piper is an independent fork of T3 Code. Preserve the upstream strengths described below while keeping this fork free of telemetry.
+Keep the product focused, responsive, and free of telemetry.
 
 ### 1. Open at the core
 
@@ -28,11 +28,11 @@ Pied Piper has 3 key app surfaces: **web**, **desktop**, and **mobile**.
 
 **Desktop** is the main surface most users install first. It's a full Electron app that bundles the server runner as well. The desktop app can also be used as the host server, allowing remote connections from app.piedpiperapp.com or the mobile app.
 
-**Mobile** is a React Native app for both iOS and Android, available on the App Store and Google Play. The mobile app allows for connecting to any Pied Piper server to control work remotely.
+**Mobile** is a React Native app for both iOS and Android, built locally from this repository. The mobile app allows for connecting to any Pied Piper server to control work remotely.
 
-## A note from Theo
+## Design principles
 
-I like ambitious ideas, simple systems, and software that feels obvious. Do not preserve complexity just because it already exists. Do not introduce machinery because it looks architecturally impressive. Understand the real constraint, then fight for the smallest model that makes the correct behavior unsurprising.
+Prefer ambitious ideas, simple systems, and software that feels obvious. Do not preserve complexity just because it already exists. Do not introduce machinery because it looks architecturally impressive. Understand the real constraint, then fight for the smallest model that makes the correct behavior unsurprising.
 
 Channel both "measure twice, cut once" and "yagni". Fight scope creep. Try to honor the dev's intent in both a minimal and realistic fashion.
 

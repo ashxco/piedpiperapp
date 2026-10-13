@@ -28,12 +28,15 @@ import {
   type ReviewDiffPreviewSource,
   type VcsRef,
 } from "@piedpiperapp/contracts";
-import { dedupeRemoteBranchesWithLocalMatches, normalizeGitRemoteUrl } from "@piedpiperapp/shared/git";
+import {
+  dedupeRemoteBranchesWithLocalMatches,
+  normalizeGitRemoteUrl,
+} from "@piedpiperapp/shared/git";
 import * as HostProcess from "@piedpiperapp/shared/HostProcess";
 import { compactTraceAttributes } from "@piedpiperapp/shared/observability";
 import { decodeJsonResult } from "@piedpiperapp/shared/schemaJson";
 import { resolveSpawnCommand } from "@piedpiperapp/shared/shell";
-import { parseT3ProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
+import { parsePiedPiperProjectFile } from "@piedpiperapp/shared/piedPiperProjectFile";
 import { resolveProjectFileBackedSetting } from "@piedpiperapp/shared/projectSettings";
 import { gitCommandDuration, gitCommandsTotal, withMetrics } from "../observability/Metrics.ts";
 import * as GitVcsDriver from "./GitVcsDriver.ts";
@@ -3507,17 +3510,22 @@ export const makeGitVcsDriverCore = Effect.fn("makeGitVcsDriverCore")(function* 
           options?.submodules ?? null,
           options?.submodules != null
             ? null
-            : yield* fileSystem.readFileString(path.join(worktreePath, PIED_PIPER_PROJECT_FILE_NAME)).pipe(
-                Effect.flatMap((contents) => {
-                  const file = parseT3ProjectFile(contents);
-                  return file === null
-                    ? Effect.logWarning("piedpiperapp.json is invalid; initializing submodules recursively", {
-                        worktreePath,
-                      }).pipe(Effect.as(null))
-                    : Effect.succeed(file);
-                }),
-                Effect.orElseSucceed(() => null),
-              ),
+            : yield* fileSystem
+                .readFileString(path.join(worktreePath, PIED_PIPER_PROJECT_FILE_NAME))
+                .pipe(
+                  Effect.flatMap((contents) => {
+                    const file = parsePiedPiperProjectFile(contents);
+                    return file === null
+                      ? Effect.logWarning(
+                          "piedpiperapp.json is invalid; initializing submodules recursively",
+                          {
+                            worktreePath,
+                          },
+                        ).pipe(Effect.as(null))
+                      : Effect.succeed(file);
+                  }),
+                  Effect.orElseSucceed(() => null),
+                ),
         );
     if (hasSubmodules && submoduleMode.value === "none" && progress?.onSubmodulesDisabled) {
       yield* progress.onSubmodulesDisabled({

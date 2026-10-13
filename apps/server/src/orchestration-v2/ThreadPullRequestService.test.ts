@@ -56,7 +56,7 @@ describe("ThreadPullRequestServiceV2 project guard", () => {
               },
               provider: "github" as const,
               displayName: "ashxco/piedpiperapp",
-              owner: "pingdotgg",
+              owner: "ashxco",
               name: "piedpiperapp",
             });
           },
@@ -64,7 +64,9 @@ describe("ThreadPullRequestServiceV2 project guard", () => {
       );
       expect(resolvedRoot).toBe("/workspace/project");
       expect(result.repository).toBe("ashxco/piedpiperapp");
-      expect(result.project.repositoryIdentity?.canonicalKey).toBe("github.com/ashxco/piedpiperapp");
+      expect(result.project.repositoryIdentity?.canonicalKey).toBe(
+        "github.com/ashxco/piedpiperapp",
+      );
     }),
   );
 

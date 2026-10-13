@@ -93,7 +93,7 @@ import {
 } from "./rpc.ts";
 import {
   buildPiRpcLaunch,
-  materializePiT3McpExtension,
+  materializePiPiedPiperMcpExtension,
   resolvePiLaunchArgs,
 } from "./mcpInjection.ts";
 import { PI_FILE_CHANGE_TOOLS } from "./mcpExtensionSource.ts";
@@ -534,7 +534,7 @@ export const makePiAdapterV2 = Effect.fn("makePiAdapterV2")(function* (
       // hook. Materialize it even when this session has no MCP credential so
       // Supervised never silently degrades to unrestricted tool execution.
       const extensionPath = yield* provideCacheFs(
-        materializePiT3McpExtension(host.paths.providerStatusCacheDir),
+        materializePiPiedPiperMcpExtension(host.paths.providerStatusCacheDir),
       );
       const resolvedLaunchArgs = resolvePiLaunchArgs(options.settings.launchArgs);
       if (!resolvedLaunchArgs.ok) {
@@ -2734,7 +2734,9 @@ export const makePiAdapterV2 = Effect.fn("makePiAdapterV2")(function* (
                 yield* finalizeTurn(state);
               }
               if (outOfTurnExtensionErrors.length > 0) {
-                yield* Queue.offer(connection.events, { type: "piedpiperapp.flush_extension_errors" });
+                yield* Queue.offer(connection.events, {
+                  type: "piedpiperapp.flush_extension_errors",
+                });
               }
             }).pipe(
               sessionEventPermit.withPermits(1),

@@ -46,7 +46,7 @@ describe("parseNewThreadLink", () => {
       value: {
         kind: "new",
         prompt: { text: "Rate me", hiddenCharacters: 0 },
-        repository: { owner: "pingdotgg", name: "piedpiperapp" },
+        repository: { owner: "ashxco", name: "piedpiperapp" },
         provider: "codex",
         model: "gpt-5",
       },
@@ -63,7 +63,7 @@ describe("parseNewThreadLink", () => {
         ok: true,
         value: {
           kind: "pull-request",
-          pullRequest: { owner: "pingdotgg", name: "piedpiperapp", number: 42 },
+          pullRequest: { owner: "ashxco", name: "piedpiperapp", number: 42 },
           prompt: null,
         },
       });
@@ -94,7 +94,7 @@ describe("link round trips", () => {
   it("builds a link that parses back to the same prompt", () => {
     const link = buildNewThreadLink({
       prompt: "Swear count & rating?",
-      repository: { owner: "pingdotgg", name: "piedpiperapp" },
+      repository: { owner: "ashxco", name: "piedpiperapp" },
       provider: "claudeAgent",
       model: "opus",
     });

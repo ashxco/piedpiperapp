@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vite-plus/test";
-import { ProviderDriverKind, ProviderInstanceId, type ModelCapabilities } from "@piedpiperapp/contracts";
+import {
+  ProviderDriverKind,
+  ProviderInstanceId,
+  type ModelCapabilities,
+} from "@piedpiperapp/contracts";
 
 import {
   applyClaudePromptEffortPrefix,
@@ -248,8 +252,8 @@ describe("applyClaudePromptEffortPrefix", () => {
     expect(applyClaudePromptEffortPrefix("Investigate this failure", "ultrathink")).toBe(
       "Ultrathink:\nInvestigate this failure",
     );
-    expect(applyClaudePromptEffortPrefix("/home/theo/app.ts crashed on load", "ultrathink")).toBe(
-      "Ultrathink:\n/home/theo/app.ts crashed on load",
+    expect(applyClaudePromptEffortPrefix("/home/ash/app.ts crashed on load", "ultrathink")).toBe(
+      "Ultrathink:\n/home/ash/app.ts crashed on load",
     );
   });
 });

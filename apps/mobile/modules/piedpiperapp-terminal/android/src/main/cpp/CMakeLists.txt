@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(t3terminal LANGUAGES CXX)
+project(piedpiperappterminal LANGUAGES CXX)
 
 add_library(ghostty-vt SHARED IMPORTED)
 set_target_properties(
@@ -9,15 +9,15 @@ set_target_properties(
              "${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libghostty-vt.so"
 )
 
-add_library(t3terminal SHARED piedpiperapp_terminal_jni.cpp)
+add_library(piedpiperappterminal SHARED piedpiperapp_terminal_jni.cpp)
 
 target_include_directories(
-  t3terminal
+  piedpiperappterminal
   PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../../../native/libghostty-vt/include"
 )
 
 target_link_options(
-  t3terminal PRIVATE "-Wl,-z,common-page-size=16384" "-Wl,-z,max-page-size=16384"
+  piedpiperappterminal PRIVATE "-Wl,-z,common-page-size=16384" "-Wl,-z,max-page-size=16384"
 )
 
-target_link_libraries(t3terminal PRIVATE ghostty-vt log)
+target_link_libraries(piedpiperappterminal PRIVATE ghostty-vt log)

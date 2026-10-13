@@ -43,7 +43,7 @@ const bitbucketPullRequest = {
     branch: { name: "main" },
     repository: {
       full_name: "ashxco/piedpiperapp",
-      workspace: { slug: "pingdotgg" },
+      workspace: { slug: "ashxco" },
     },
   },
 };
@@ -405,7 +405,10 @@ it.effect("prefers an explicit repository and uses context when the repository i
       remoteName: "origin",
       remoteUrl: "git@bitbucket.org:another/context.git",
     };
-    for (const repository of ["ashxco/piedpiperapp", "https://bitbucket.org/ashxco/piedpiperapp.git"]) {
+    for (const repository of [
+      "ashxco/piedpiperapp",
+      "https://bitbucket.org/ashxco/piedpiperapp.git",
+    ]) {
       yield* bitbucket.getRepositoryCloneUrls({ cwd: "/repo", context, repository });
     }
     yield* bitbucket.getDefaultBranch({ cwd: "/repo", context });
@@ -841,7 +844,7 @@ it.effect("checks out same-repository pull requests with the existing Bitbucket 
           branch: { name: "feature/source-control" },
           repository: {
             full_name: "ashxco/piedpiperapp",
-            workspace: { slug: "pingdotgg" },
+            workspace: { slug: "ashxco" },
           },
         },
       }),
@@ -899,7 +902,7 @@ it.effect("preserves Git checkout failures without deriving the domain message f
           branch: { name: "feature/source-control" },
           repository: {
             full_name: "ashxco/piedpiperapp",
-            workspace: { slug: "pingdotgg" },
+            workspace: { slug: "ashxco" },
           },
         },
       }),
