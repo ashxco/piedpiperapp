@@ -1954,6 +1954,12 @@ it.layer(layerTest)("GitVcsDriver core integration", (it) => {
         }
         yield* git(cwd, ["add", "."]);
         yield* git(cwd, ["update-index", "--chmod=+x", "mode-only.sh"]);
+        if ((yield* HostProcess.Platform) !== "win32") {
+          // The preview compares against the worktree, so its mode must match the index.
+          const path = yield* Path.Path;
+          const fileSystem = yield* FileSystem.FileSystem;
+          yield* fileSystem.chmod(path.join(cwd, "mode-only.sh"), 0o755);
+        }
         yield* git(cwd, ["commit", "-m", "rename and add files"]);
         const preview = yield* driver.getReviewDiffPreview({
           cwd,
