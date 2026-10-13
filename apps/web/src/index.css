@@ -3123,20 +3123,17 @@ body:has([data-native-glass="true"]),
   }
 }
 
-/* Collapsed desktop navigation keeps the title bar and rail in one glass frame. */
+/* Desktop navigation keeps the title bar and rail in one glass frame in both states. */
 @media (min-width: 768px) {
-  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
+  [data-pied-piper-shell][data-desktop-shell="true"]
     > [data-slot="sidebar-inset"]:has([data-chat-header]),
-  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
+  [data-pied-piper-shell][data-desktop-shell="true"]
     > [data-slot="sidebar-inset"]:has([data-chat-header])
     > div,
-  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
-    [data-chat-header] {
+  [data-pied-piper-shell][data-desktop-shell="true"] [data-chat-header] {
     background: transparent;
   }
-  [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
-    [data-chat-header]
-    + div {
+  [data-pied-piper-shell][data-desktop-shell="true"] [data-chat-header] + div {
     overflow: hidden;
     border-top-left-radius: 14px;
     background: var(--background);
