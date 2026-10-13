@@ -2421,7 +2421,7 @@ code {
 }
 [data-app-sidebar] > [data-slot="sidebar-inner"] {
   background: color-mix(in srgb, var(--pp-pane) calc(var(--pp-pane-alpha) * 100%), transparent);
-  border-right: 1px solid var(--pp-hairline);
+  border-right: 0;
   box-shadow: inset 0 1px 0 var(--pp-hairline);
   color: var(--foreground);
 }
@@ -2636,6 +2636,7 @@ code {
   [data-pied-piper-shell] [data-app-sidebar] {
     left: var(--pp-rail-w);
     width: var(--sidebar-width);
+    border-right: 0;
     top: var(--pp-shell-top);
     height: calc(100% - var(--pp-shell-top));
     font-size: 13px;
