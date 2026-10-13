@@ -447,7 +447,8 @@ const makeSplashScenario = (createOutcomes: readonly (Electron.BrowserWindow | n
           Layer.mock(PreviewManager.PreviewManager)({
             getBrowserSession: () => Effect.succeed({} as Electron.Session),
             setMainWindow: () => Effect.void,
-            isBrowserPartition: (partition) => partition.startsWith("persist:piedpiperapp-preview-"),
+            isBrowserPartition: (partition) =>
+              partition.startsWith("persist:piedpiperapp-preview-"),
             getBrowserPartition: () => Effect.succeed("persist:piedpiperapp-preview-test"),
           }),
         ),
@@ -661,6 +662,10 @@ describe("DesktopWindow", () => {
         assert.isUndefined(createdWindowOptions[0]?.x);
         assert.isUndefined(createdWindowOptions[0]?.y);
         assert.isTrue(createdWindowOptions[0]?.disableAutoHideCursor);
+        assert.isTrue(createdWindowOptions[0]?.transparent);
+        assert.equal(createdWindowOptions[0]?.vibrancy, "under-window");
+        assert.equal(createdWindowOptions[0]?.visualEffectState, "followWindow");
+        assert.equal(createdWindowOptions[0]?.backgroundColor, "#00000000");
         assert.isFalse(createdWindowOptions[0]?.webPreferences?.backgroundThrottling);
         assert.deepEqual(fakeWindow.setAutoHideCursor.mock.calls, [[false]]);
         assert.deepEqual(fakeWindow.loadURL.mock.calls[0], ["piedpiperapp-dev://app/"]);

@@ -2693,3 +2693,34 @@ code {
     display: none;
   }
 }
+
+/* Expose macOS's behind-window vibrancy through the sidebar, while content
+   panels keep their own opaque canvas. Web and other desktops retain the
+   translucent in-app fallback above. */
+html:has([data-native-glass="true"]),
+body:has([data-native-glass="true"]),
+#root:has([data-native-glass="true"]) {
+  background: transparent !important;
+}
+[data-native-glass="true"] {
+  --pp-pane-alpha: 0.18;
+  --pp-rail-alpha: 0.16;
+  background: transparent;
+}
+[data-native-glass="true"] .app-navigation-rail,
+[data-native-glass="true"] [data-app-sidebar] > [data-slot="sidebar-inner"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+[data-native-glass="true"]::before {
+  background: color-mix(in srgb, var(--pp-frame) 18%, transparent);
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-native-glass="true"] {
+    --pp-pane-alpha: 1;
+    --pp-rail-alpha: 1;
+  }
+  [data-native-glass="true"]::before {
+    background: var(--pp-frame);
+  }
+}

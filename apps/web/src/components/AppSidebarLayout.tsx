@@ -314,6 +314,7 @@ export function AppSidebarLayout({ children }: { children: ReactNode }) {
         className="h-dvh! min-h-0!"
         data-pied-piper-shell=""
         data-desktop-shell={isElectron ? "true" : "false"}
+        data-native-glass={isMacosDesktop ? "true" : undefined}
         data-panel-animations={routePanelAnimationsActive ? "true" : "false"}
         defaultOpen
         style={sidebarProviderStyle}
