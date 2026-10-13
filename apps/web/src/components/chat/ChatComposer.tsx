@@ -248,7 +248,10 @@ import { THREAD_CONTEXT_DROP_EVENT, threadContextDropTargetProps } from "./threa
 import { readThreadShell, useThreadShells } from "~/state/entities";
 import { requestConfirmDialog } from "~/confirmDialog";
 import { encodeComposerContextFragment } from "@piedpiperapp/shared/composerContextClipboard";
-import type { ComposerContextClipboardFragment, ComposerContextRecord } from "@piedpiperapp/contracts";
+import type {
+  ComposerContextClipboardFragment,
+  ComposerContextRecord,
+} from "@piedpiperapp/contracts";
 import { resolveAssetUrl } from "~/assets/assetUrls";
 import { assetEnvironment } from "~/state/assets";
 import { readPreparedConnection } from "~/state/session";
@@ -290,6 +293,7 @@ import {
   searchSlashCommandItems,
   slashCommandItemsForPromptPosition,
 } from "./composerSlashCommandSearch";
+import { getCompactTraitsLabel, getCompactTraitsSpeed } from "./TraitsPicker";
 import {
   getComposerPromptInjectionState,
   getComposerProviderState,
@@ -5481,7 +5485,7 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
     hidden: composerControlsHidden || restingHiddenBlockCount > 1,
   });
   const restingBlockDefs = [
-    ...(providerTraitsPicker
+    ...(providerTraitsPicker && multipleModelSelections !== null
       ? [
           {
             id: "traits",
@@ -5540,6 +5544,18 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
         />
       ) : null}
       <ProviderModelPicker
+        {...(providerTraitsPicker
+          ? {
+              configurationPanel: (modelControl: React.ReactNode) =>
+                renderProviderTraitsMenuContent({
+                  ...providerTraitsPickerInput,
+                  compact: true,
+                  modelControl,
+                }),
+              configurationLabel: getCompactTraitsLabel(providerTraitsPickerInput),
+              configurationSpeed: getCompactTraitsSpeed(providerTraitsPickerInput),
+            }
+          : {})}
         environmentId={environmentId}
         compact={false}
         isComposerOwned
@@ -5602,7 +5618,9 @@ export const ChatComposer = memo(function ChatComposer(props: ChatComposerProps)
                 !showInlineRestingControls &&
                   "@max-[640px]/composer-surface:[&_[data-chat-provider-model-picker-label]]:w-0 @max-[640px]/composer-surface:[&_[data-chat-provider-model-picker-label]]:flex-none",
               )
-            : "-ms-2.5 min-w-13"
+            : providerTraitsPicker
+              ? "min-w-13"
+              : "-ms-2.5 min-w-13"
         }
         terminalOpen={terminalOpen}
         open={isComposerModelPickerOpen}

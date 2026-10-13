@@ -47,6 +47,7 @@ function PopoverPopup({
   collisionAvoidance,
   tooltipStyle = false,
   keepMounted = false,
+  sizeToContent = false,
   anchor,
   ...props
 }: PopoverPrimitive.Popup.Props & {
@@ -59,6 +60,8 @@ function PopoverPopup({
   collisionAvoidance?: PopoverPrimitive.Positioner.Props["collisionAvoidance"];
   tooltipStyle?: boolean;
   keepMounted?: PopoverPrimitive.Portal.Props["keepMounted"];
+  /** Measure live form content instead of cached Viewport transition dimensions. */
+  sizeToContent?: boolean;
   anchor?: PopoverPrimitive.Positioner.Props["anchor"];
   width?: keyof typeof popoverPopupWidthClassName;
 }) {
@@ -76,6 +79,7 @@ function PopoverPopup({
         collisionPadding={variant === "panel" ? 0 : undefined}
         className={cn(
           "h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-transform data-instant:transition-none",
+          sizeToContent && "h-auto w-auto",
           variant === "panel"
             ? // The card inside is the panel width, or the anchor less 12px per side; the viewport
               // pads it by --spacing(2) per side. Panels slide when their offset changes, e.g. to make
@@ -90,6 +94,7 @@ function PopoverPopup({
         <PopoverPrimitive.Popup
           className={cn(
             "relative flex h-(--popup-height,auto) w-(--popup-width,auto) origin-(--transform-origin) rounded-lg text-popover-foreground outline-none transition-[width,height,scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] has-data-[slot=calendar]:rounded-xl has-data-[slot=calendar]:before:rounded-[calc(var(--radius-xl)-1px)] data-ending-style:scale-98 data-starting-style:scale-98 data-ending-style:opacity-0 data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            sizeToContent && "h-auto",
             variant !== "panel" && "dropdown-glass",
             tooltipStyle &&
               "w-fit text-balance rounded-md text-xs shadow-md/5 before:rounded-[calc(var(--radius-md)-1px)]",

@@ -16,8 +16,8 @@ import {
   isClaudeUltrathinkPrompt,
   normalizeModelSlug,
 } from "@piedpiperapp/shared/model";
-import { memo, useCallback } from "react";
-import { BrainIcon } from "lucide-react";
+import { memo, useCallback, type ReactNode } from "react";
+import { BrainIcon, RotateCcwIcon, ZapIcon } from "lucide-react";
 import {
   Menu,
   MenuGroup,
@@ -268,6 +268,32 @@ export function shouldRenderTraitsControls(input: {
   return getTraitsSectionVisibility(input).hasAnyControls;
 }
 
+export function getCompactTraitsLabel(
+  input: Parameters<typeof getTraitsSectionVisibility>[0],
+): string | undefined {
+  const selected = getTraitsSectionVisibility(input);
+  const reasoning = selected.selectDescriptors.find((descriptor) =>
+    ["reasoningEffort", "reasoning", "effort", "variant"].includes(descriptor.id),
+  );
+  return selected.ultrathinkPromptControlled
+    ? "Ultrathink"
+    : reasoning
+      ? (getProviderOptionCurrentLabel(reasoning) ?? undefined)
+      : undefined;
+}
+
+export function getCompactTraitsSpeed(
+  input: Parameters<typeof getTraitsSectionVisibility>[0],
+): string | undefined {
+  const selected = getTraitsSectionVisibility(input);
+  const tier = selected.selectDescriptors.find((descriptor) => descriptor.id === "serviceTier");
+  return tier
+    ? getProviderOptionCurrentLabel(tier)?.toLowerCase()
+    : selected.fastModeDescriptor?.currentValue === true
+      ? "fast"
+      : undefined;
+}
+
 export interface TraitsMenuContentProps {
   provider: ProviderDriverKind;
   instanceId?: ProviderInstanceId;
@@ -281,6 +307,8 @@ export interface TraitsMenuContentProps {
   planModeEnabled: boolean;
   triggerClassName?: string;
   isComposerOwned?: boolean;
+  compact?: boolean | undefined;
+  modelControl?: ReactNode;
 }
 
 export const TraitsMenuContent = memo(function TraitsMenuContentImpl({
@@ -294,6 +322,8 @@ export const TraitsMenuContent = memo(function TraitsMenuContentImpl({
   reportedModelSelection,
   allowPromptInjectedEffort = true,
   planModeEnabled,
+  compact = false,
+  modelControl,
   ...persistence
 }: TraitsMenuContentProps & TraitsPersistence) {
   const modelSelection =
@@ -364,6 +394,15 @@ export const TraitsMenuContent = memo(function TraitsMenuContentImpl({
     return null;
   }
 
+  if (compact && modelIsUnavailable) {
+    return (
+      <div className="model-config-panel">
+        {modelControl}
+        <p className="model-config-note">Settings for this model are currently unavailable.</p>
+      </div>
+    );
+  }
+
   if (modelIsUnavailable) {
     return (
       <>
@@ -387,6 +426,163 @@ export const TraitsMenuContent = memo(function TraitsMenuContentImpl({
           );
         })}
       </>
+    );
+  }
+
+  if (compact) {
+    const reasoning = selectDescriptors.find((descriptor) =>
+      ["reasoningEffort", "reasoning", "effort", "variant"].includes(descriptor.id),
+    );
+    const currentValue = reasoning
+      ? ultrathinkPromptControlled
+        ? "ultrathink"
+        : getDescriptorStringValue(reasoning, modelSelection, reportedModelSelection)
+      : null;
+    const selectedIndex = Math.max(
+      0,
+      reasoning?.options.findIndex((option) => option.id === currentValue) ?? 0,
+    );
+    const reasoningLabel = reasoning?.options[selectedIndex]?.label ?? "Model settings";
+    const otherSelects = selectDescriptors.filter((descriptor) => descriptor !== reasoning);
+    return (
+      <div className="model-config-panel">
+        <div className="model-config-heading">
+          <div className="model-config-options">
+            {otherSelects.map((descriptor) => (
+              <Menu key={descriptor.id}>
+                <MenuTrigger
+                  render={
+                    <button
+                      type="button"
+                      className="model-config-icon"
+                      aria-label={descriptor.label}
+                      data-speed={descriptor.options
+                        .find(
+                          (option) =>
+                            option.id ===
+                            getDescriptorStringValue(
+                              descriptor,
+                              modelSelection,
+                              reportedModelSelection,
+                            ),
+                        )
+                        ?.label.toLowerCase()}
+                    />
+                  }
+                >
+                  {descriptor.id === "serviceTier" ? (
+                    <ZapIcon size={15} />
+                  ) : (
+                    <span>{descriptor.label}</span>
+                  )}
+                </MenuTrigger>
+                <MenuPopup align="start">
+                  <MenuRadioGroup
+                    value={
+                      getDescriptorStringValue(
+                        descriptor,
+                        modelSelection,
+                        reportedModelSelection,
+                      ) ?? ""
+                    }
+                    onValueChange={(value) => handleSelectChange(descriptor, value)}
+                  >
+                    {descriptor.options.map((option) => (
+                      <MenuRadioItem key={option.id} value={option.id} closeOnClick>
+                        <span className="model-config-option-copy">
+                          <span>{option.label}</span>
+                          {option.description ? <small>{option.description}</small> : null}
+                        </span>
+                      </MenuRadioItem>
+                    ))}
+                  </MenuRadioGroup>
+                </MenuPopup>
+              </Menu>
+            ))}
+            {booleanDescriptors.map((descriptor) => (
+              <button
+                key={descriptor.id}
+                type="button"
+                className="model-config-icon"
+                aria-label={descriptor.label}
+                aria-pressed={descriptor.currentValue === true}
+                onClick={() =>
+                  updateDescriptors(
+                    replaceDescriptorCurrentValue(
+                      descriptors,
+                      descriptor.id,
+                      descriptor.currentValue !== true,
+                    ),
+                  )
+                }
+              >
+                {descriptor.id === "fastMode" ? (
+                  <ZapIcon size={15} />
+                ) : (
+                  <span>{descriptor.label}</span>
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="model-config-summary">
+            <span className="model-config-effort" aria-live="polite">
+              {reasoningLabel}
+            </span>
+            {modelControl}
+          </div>
+          {reasoning ? (
+            <button
+              type="button"
+              className="model-config-icon"
+              aria-label="Reset reasoning to default"
+              disabled={ultrathinkInBodyText}
+              onClick={() => {
+                const option =
+                  reasoning.options.find((option) => option.isDefault) ?? reasoning.options[0];
+                if (option) handleSelectChange(reasoning, option.id);
+              }}
+            >
+              <RotateCcwIcon size={14} />
+            </button>
+          ) : (
+            <span />
+          )}
+        </div>
+        {reasoning ? (
+          <div className="model-config-range-wrap">
+            <input
+              className="model-config-range"
+              type="range"
+              aria-label={reasoning.label}
+              aria-valuetext={reasoningLabel}
+              min={0}
+              max={Math.max(0, reasoning.options.length - 1)}
+              step={1}
+              value={selectedIndex}
+              disabled={reasoning.options.length < 2 || ultrathinkInBodyText}
+              style={
+                {
+                  "--model-range-progress": `${reasoning.options.length > 1 ? (selectedIndex / (reasoning.options.length - 1)) * 100 : 0}%`,
+                } as React.CSSProperties
+              }
+              onChange={(event) => {
+                const option = reasoning.options[Number(event.currentTarget.value)];
+                if (option) handleSelectChange(reasoning, option.id);
+              }}
+            />
+            <div className="model-config-ticks" aria-hidden="true">
+              {reasoning.options.map((option) => (
+                <span key={option.id} />
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {ultrathinkInBodyText ? (
+          <p className="model-config-note">
+            Remove “ultrathink” from the prompt to change reasoning.
+          </p>
+        ) : null}
+      </div>
     );
   }
 

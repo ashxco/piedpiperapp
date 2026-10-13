@@ -4,7 +4,12 @@ import {
   ProviderDriverKind,
   type ProviderOptionDescriptor,
 } from "@piedpiperapp/contracts";
-import { buildTraitsTriggerDisplay, buildUnavailableModelOptionDescriptors } from "./TraitsPicker";
+import {
+  buildTraitsTriggerDisplay,
+  buildUnavailableModelOptionDescriptors,
+  getCompactTraitsLabel,
+  getCompactTraitsSpeed,
+} from "./TraitsPicker";
 
 function selectDescriptor(
   id: string,
@@ -316,4 +321,39 @@ it("shows Unknown until a matching provider report provides Default", () => {
       reportedModelSelection: { ...selection, options: [{ id: "variant", value: "default" }] },
     }).label,
   ).toBe("Default");
+});
+
+describe("compact model configuration summary", () => {
+  const options = (descriptors: ReadonlyArray<ProviderOptionDescriptor>) => ({
+    provider: CODEX,
+    model: "test-model",
+    models: [
+      {
+        slug: "test-model",
+        name: "Test",
+        isCustom: false,
+        capabilities: { optionDescriptors: descriptors },
+      },
+    ],
+    prompt: "",
+    modelOptions: [],
+    planModeEnabled: true,
+  });
+  it("finds reasoning even when speed is listed first", () => {
+    expect(getCompactTraitsLabel(options([serviceTierDescriptor("priority"), EFFORT]))).toBe(
+      "High",
+    );
+  });
+  it.each(["default", "priority", "ultrafast"] as const)(
+    "reflects the provider's %s speed label",
+    (value) => {
+      expect(getCompactTraitsSpeed(options([serviceTierDescriptor(value), EFFORT]))).toBe(
+        { default: "standard", priority: "fast", ultrafast: "ultrafast" }[value],
+      );
+    },
+  );
+  it("does not invent reasoning or speed for a model without those controls", () => {
+    expect(getCompactTraitsLabel(options([]))).toBeUndefined();
+    expect(getCompactTraitsSpeed(options([]))).toBeUndefined();
+  });
 });

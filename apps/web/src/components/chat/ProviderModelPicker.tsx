@@ -5,7 +5,8 @@ import {
   type ProviderDriverKind,
   type ResolvedKeybindingsConfig,
 } from "@piedpiperapp/contracts";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState, type ReactNode } from "react";
+import { ArrowLeftIcon, ChevronRightIcon, ZapIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Popover, PopoverPopup, PopoverTrigger } from "../ui/popover";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "../ui/tooltip";
@@ -29,6 +30,9 @@ import { shortcutLabelForCommand } from "../../keybindings";
 
 export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
   environmentId: EnvironmentId | null;
+  configurationPanel?: (modelControl: ReactNode) => ReactNode;
+  configurationLabel?: string | undefined;
+  configurationSpeed?: string | undefined;
   /**
    * The instance currently selected in the composer. Drives the trigger
    * icon, label and the default-highlighted combobox row.
@@ -60,6 +64,7 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
   getModelDisabledReason?: (instanceId: ProviderInstanceId, model: string) => string | null;
   onInstanceModelChange: (instanceId: ProviderInstanceId, model: string) => void;
 }) {
+  const [showModelList, setShowModelList] = useState(false);
   const composerFloatingLayerProps = useComposerMenuProps();
   const [uncontrolledIsMenuOpen, setUncontrolledIsMenuOpen] = useState(false);
   const isMenuOpen = props.open ?? uncontrolledIsMenuOpen;
@@ -98,6 +103,7 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
     activeEntry !== null && shouldShowInstanceBadge(activeEntry, props.instanceEntries);
 
   const setIsMenuOpen = (open: boolean) => {
+    if (!open) setShowModelList(false);
     props.onOpenChange?.(open);
     if (props.open === undefined) {
       setUncontrolledIsMenuOpen(open);
@@ -210,8 +216,13 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
             aria-label={props.triggerAriaLabel ?? allModelNames}
             size={size}
             data-chat-provider-model-picker="true"
+            data-composer-shortcut={
+              props.configurationPanel && props.isComposerOwned ? "composer.effort" : undefined
+            }
+            data-speed={props.configurationSpeed}
             className={cn(
               "min-w-0 shrink justify-between whitespace-nowrap",
+              props.configurationPanel && "model-control-pill",
               props.compact
                 ? "max-w-42 shrink-0"
                 : !props.isComposerOwned && "max-w-48 sm:max-w-56",
@@ -246,6 +257,12 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
                 </span>
               ) : null}
             </span>
+          ) : props.configurationSpeed === "ultrafast" || props.configurationSpeed === "fast" ? (
+            <ZapIcon
+              data-model-speed-icon=""
+              className="size-4 fill-current"
+              aria-label={`${props.configurationSpeed} speed`}
+            />
           ) : activeEntry && props.triggerLabel === undefined ? (
             <ProviderInstanceIcon
               driverKind={activeEntry.driverKind}
@@ -282,44 +299,101 @@ export const ProviderModelPicker = memo(function ProviderModelPicker(props: {
             </Badge>
           ) : null}
         </span>
+        {props.configurationLabel && props.selectedModels === undefined ? (
+          <span className="model-control-effort">{props.configurationLabel}</span>
+        ) : null}
         <span aria-hidden="true" className="flex items-center">
           <ComposerControlChevron size={size} />
         </span>
       </PopoverTrigger>
       <PopoverPopup
+        keepMounted={Boolean(props.configurationPanel)}
+        sizeToContent={Boolean(props.configurationPanel)}
+        style={
+          props.configurationPanel
+            ? ({
+                "--popup-width":
+                  props.selectedModels === undefined &&
+                  !selectedModel?.isUnavailable &&
+                  !showModelList
+                    ? "268px"
+                    : "340px",
+              } as React.CSSProperties)
+            : undefined
+        }
         {...(props.isComposerOwned ? composerFloatingLayerProps : {})}
         align="start"
+        side={props.isComposerOwned ? "top" : "bottom"}
         className="before:hidden"
         padding="none"
       >
-        <ModelPickerContent
-          environmentId={props.environmentId}
-          activeInstanceId={activeInstanceId}
-          model={props.model}
-          {...(props.selectedModels !== undefined ? { selectedModels: props.selectedModels } : {})}
-          {...(props.onToggleModel
-            ? {
-                onToggleModel: (instanceId: ProviderInstanceId, model: string) => {
-                  if (!props.disabled) props.onToggleModel?.(instanceId, model);
-                },
-              }
-            : {})}
-          lockedProvider={props.lockedProvider}
-          lockedContinuationGroupKey={props.lockedContinuationGroupKey ?? null}
-          instanceEntries={props.instanceEntries}
-          {...(props.keybindings ? { keybindings: props.keybindings } : {})}
-          modelOptionsByInstance={props.modelOptionsByInstance}
-          terminalOpen={props.terminalOpen ?? false}
-          onRequestClose={() => setIsMenuOpen(false)}
-          {...(props.onOpenProviderSetup ? { onOpenProviderSetup: props.onOpenProviderSetup } : {})}
-          {...(props.getModelDisabledReason
-            ? { getModelDisabledReason: props.getModelDisabledReason }
-            : {})}
-          onInstanceModelChange={handleInstanceModelChange}
-        />
-        {props.selectedModels === undefined ? (
-          <ChatGptSharingControl provider={activeEntry?.snapshot ?? null} />
-        ) : null}
+        <div className={props.configurationPanel ? "model-control-popup" : undefined}>
+          {props.configurationPanel &&
+          props.selectedModels === undefined &&
+          !selectedModel?.isUnavailable &&
+          !showModelList ? (
+            props.configurationPanel(
+              <button
+                type="button"
+                className="model-config-model"
+                onClick={() => setShowModelList(true)}
+              >
+                {triggerTitle}
+                <ChevronRightIcon size={12} />
+              </button>,
+            )
+          ) : (
+            <>
+              {props.configurationPanel &&
+              props.selectedModels === undefined &&
+              showModelList &&
+              !selectedModel?.isUnavailable ? (
+                <button
+                  type="button"
+                  className="model-config-back"
+                  onClick={() => setShowModelList(false)}
+                >
+                  <ArrowLeftIcon size={14} />
+                  Model settings
+                </button>
+              ) : null}
+              {!props.configurationPanel || isMenuOpen ? (
+                <ModelPickerContent
+                  environmentId={props.environmentId}
+                  activeInstanceId={activeInstanceId}
+                  model={props.model}
+                  {...(props.selectedModels !== undefined
+                    ? { selectedModels: props.selectedModels }
+                    : {})}
+                  {...(props.onToggleModel
+                    ? {
+                        onToggleModel: (instanceId: ProviderInstanceId, model: string) => {
+                          if (!props.disabled) props.onToggleModel?.(instanceId, model);
+                        },
+                      }
+                    : {})}
+                  lockedProvider={props.lockedProvider}
+                  lockedContinuationGroupKey={props.lockedContinuationGroupKey ?? null}
+                  instanceEntries={props.instanceEntries}
+                  {...(props.keybindings ? { keybindings: props.keybindings } : {})}
+                  modelOptionsByInstance={props.modelOptionsByInstance}
+                  terminalOpen={props.terminalOpen ?? false}
+                  onRequestClose={() => setIsMenuOpen(false)}
+                  {...(props.onOpenProviderSetup
+                    ? { onOpenProviderSetup: props.onOpenProviderSetup }
+                    : {})}
+                  {...(props.getModelDisabledReason
+                    ? { getModelDisabledReason: props.getModelDisabledReason }
+                    : {})}
+                  onInstanceModelChange={handleInstanceModelChange}
+                />
+              ) : null}
+            </>
+          )}
+          {props.selectedModels === undefined && (!props.configurationPanel || showModelList) ? (
+            <ChatGptSharingControl provider={activeEntry?.snapshot ?? null} />
+          ) : null}
+        </div>
       </PopoverPopup>
     </Popover>
   );

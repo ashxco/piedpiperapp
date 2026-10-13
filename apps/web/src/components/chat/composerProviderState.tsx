@@ -57,6 +57,8 @@ type TraitsRenderInput = {
   hidden?: boolean;
   triggerClassName?: string;
   isComposerOwned?: boolean;
+  compact?: boolean;
+  modelControl?: ReactNode;
 };
 
 export function getComposerPromptInjectionState(prompt: string): ComposerPromptInjectionState {
@@ -205,6 +207,8 @@ function renderTraitsControl(
   return (
     <Component
       provider={provider}
+      compact={input.compact}
+      modelControl={input.modelControl}
       {...(instanceId ? { instanceId } : {})}
       models={models}
       {...(threadRef ? { threadRef } : {})}
