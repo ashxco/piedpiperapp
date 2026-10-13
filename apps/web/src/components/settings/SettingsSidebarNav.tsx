@@ -104,6 +104,32 @@ const SETTINGS_NAV_ITEMS: ReadonlyArray<{
     icon: SETTINGS_SECTION_ICONS[to],
   }));
 
+const SETTINGS_NAV_GROUPS: ReadonlyArray<{ label: string; paths: readonly SettingsPath[] }> = [
+  {
+    label: "Personal",
+    paths: [
+      "/settings/general",
+      "/settings/appearance",
+      "/settings/keybindings",
+      "/settings/storage",
+      "/settings/archived",
+    ],
+  },
+  {
+    label: "Integrations",
+    paths: ["/settings/providers", "/settings/integrations", "/settings/connections"],
+  },
+  {
+    label: "Workspace",
+    paths: [
+      "/settings/projects",
+      "/settings/snap-shot",
+      "/settings/scheduled-tasks",
+      "/settings/source-control",
+    ],
+  },
+];
+
 function SettingsSectionIcon({ to }: { to: SettingsPath }) {
   const Icon = SETTINGS_SECTION_ICONS[to];
   return <Icon className="mt-0.5 size-3.5 shrink-0 text-sidebar-muted-foreground/60" />;
@@ -249,10 +275,10 @@ export function SettingsSidebarNav({ pathname }: { pathname: string }) {
   );
   return (
     <>
-      <SidebarContent className="overflow-x-hidden">
+      <SidebarContent className="overflow-x-hidden" data-settings-navigation="">
         <SidebarGroup>
           <div className="flex flex-col gap-2">
-            <div className="flex h-8 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-sidebar-muted-foreground hover:bg-sidebar-row-hover hover:text-sidebar-foreground">
+            <div className="settings-sidebar-search">
               <SearchIcon className="size-4 shrink-0 text-sidebar-muted-foreground/80" />
               <SidebarInput
                 ref={searchInputRef}
@@ -336,29 +362,42 @@ export function SettingsSidebarNav({ pathname }: { pathname: string }) {
                 ))}
               </SidebarMenu>
             ) : (
-              <SidebarMenu>
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  const isGeneralDetailPage =
-                    item.to === "/settings/general" &&
-                    pathname === "/settings/open-source-licenses";
-                  const isActive =
-                    isGeneralDetailPage ||
-                    pathname === item.to ||
-                    pathname.startsWith(`${item.to}/`);
+              <div className="settings-sidebar-groups">
+                {SETTINGS_NAV_GROUPS.map((group) => {
+                  const items = group.paths.flatMap((path) =>
+                    navItems.filter((item) => item.to === path),
+                  );
+                  if (!items.length) return null;
                   return (
-                    <SidebarMenuItem key={item.to}>
-                      <SidebarMenuButton
-                        isActive={isActive}
-                        onClick={() => handleSectionClick(item.to)}
-                      >
-                        <Icon />
-                        <span className="truncate">{item.label}</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <section key={group.label} aria-label={group.label}>
+                      <h2 className="settings-sidebar-group-label">{group.label}</h2>
+                      <SidebarMenu>
+                        {items.map((item) => {
+                          const Icon = item.icon;
+                          const isGeneralDetailPage =
+                            item.to === "/settings/general" &&
+                            pathname === "/settings/open-source-licenses";
+                          const isActive =
+                            isGeneralDetailPage ||
+                            pathname === item.to ||
+                            pathname.startsWith(`${item.to}/`);
+                          return (
+                            <SidebarMenuItem key={item.to}>
+                              <SidebarMenuButton
+                                isActive={isActive}
+                                onClick={() => handleSectionClick(item.to)}
+                              >
+                                <Icon />
+                                <span className="truncate">{item.label}</span>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          );
+                        })}
+                      </SidebarMenu>
+                    </section>
                   );
                 })}
-              </SidebarMenu>
+              </div>
             )}
           </div>
         </SidebarGroup>

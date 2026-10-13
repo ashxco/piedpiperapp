@@ -32,8 +32,10 @@ import { observeResize } from "~/lib/observeResize";
 
 export const SidebarChromeHeader = memo(function SidebarChromeHeader({
   isElectron,
+  title,
 }: {
   isElectron: boolean;
+  title?: string;
 }) {
   const stageLabel = useEnvironmentStageLabel();
   const environmentIdentificationMode = useEnvironmentIdentificationMode();
@@ -61,7 +63,7 @@ export const SidebarChromeHeader = memo(function SidebarChromeHeader({
       {/* One visible line: the pill wraps onto the clipped second line once it no longer fits.
           The padding keeps the brand's focus ring inside the clip. */}
       <div className="relative z-10 flex h-7 min-w-0 flex-1 flex-wrap content-start items-center gap-x-2 overflow-hidden py-0.5">
-        <SidebarBrand />
+        {title ? <h1 className="text-base font-semibold">{title}</h1> : <SidebarBrand />}
         {pillLabel ? (
           <div className="ml-1 flex h-7 items-center">
             <Badge data-environment-identification="pill" size="sm" variant="secondary">
@@ -70,20 +72,22 @@ export const SidebarChromeHeader = memo(function SidebarChromeHeader({
           </div>
         ) : null}
       </div>
-      <div className="relative z-10 hidden shrink-0 md:block [-webkit-app-region:no-drag]">
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <CommandDialogTrigger
-                render={<Button size="icon-sm" variant="ghost-muted" aria-label="Search chats" />}
-              />
-            }
-          >
-            <SearchIcon />
-          </TooltipTrigger>
-          <TooltipPopup side="bottom">Search chats</TooltipPopup>
-        </Tooltip>
-      </div>
+      {!title ? (
+        <div className="relative z-10 hidden shrink-0 md:block [-webkit-app-region:no-drag]">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <CommandDialogTrigger
+                  render={<Button size="icon-sm" variant="ghost-muted" aria-label="Search chats" />}
+                />
+              }
+            >
+              <SearchIcon />
+            </TooltipTrigger>
+            <TooltipPopup side="bottom">Search chats</TooltipPopup>
+          </Tooltip>
+        </div>
+      ) : null}
     </div>
   );
 });
