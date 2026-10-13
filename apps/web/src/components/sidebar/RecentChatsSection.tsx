@@ -30,7 +30,7 @@ export function RecentChatsSection() {
 
   return (
     <SidebarGroup data-recent-chats="">
-      <h2 className="px-2 pb-2 text-xs font-medium text-sidebar-muted-foreground">Recents</h2>
+      <h2 data-sidebar-section-heading="">Recents</h2>
       <SidebarMenu>
         {recent.map((thread) => {
           const ref = scopeThreadRef(thread.environmentId, thread.id);

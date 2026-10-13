@@ -2346,21 +2346,24 @@ code {
   }
 }
 
-/* Neutral application frame with a quiet, inset navigation pane. */
+/* Periwinkle glass frame with consistent navigation spacing. */
 /* ---------- tokens ---------- */
 [data-pied-piper-shell] {
   --pp-rail-w: 48px;
   --pp-shell-top: 0px;
-  --pp-glass-blur: 20px;
-  --pp-pane-alpha: 0.96;
-  --pp-frame: #302e2c;
-  --pp-pane: #242323;
-  --pp-rail-alpha: 0.96;
-  --pp-hairline: rgb(255 255 255 / 0.09);
-  --pp-hover: color-mix(in srgb, var(--foreground) 4%, transparent);
-  --pp-selected: color-mix(in srgb, var(--foreground) 7%, transparent);
-  --pp-pressed: color-mix(in srgb, var(--foreground) 9%, transparent);
-  --pp-rail-selected: rgb(255 255 255 / 0.1);
+  --pp-glass-blur: 28px;
+  --pp-pane-alpha: 0.72;
+  --pp-frame: #232133;
+  --pp-pane: #28263c;
+  --pp-rail-alpha: 0.8;
+  --pp-hairline: rgb(190 187 238 / 0.14);
+  --pp-accent: #b8b6f2;
+  --pp-muted: #a8a5be;
+  --sidebar-content-inset: 8px;
+  --pp-hover: color-mix(in srgb, var(--pp-accent) 8%, transparent);
+  --pp-selected: color-mix(in srgb, var(--pp-accent) 14%, transparent);
+  --pp-pressed: color-mix(in srgb, var(--pp-accent) 19%, transparent);
+  --pp-rail-selected: color-mix(in srgb, var(--pp-accent) 17%, transparent);
   --pp-radius-row: 8px;
   --pp-radius-btn: 10px;
   position: relative;
@@ -2369,13 +2372,15 @@ code {
 }
 .light [data-pied-piper-shell],
 :root:not(.dark) [data-pied-piper-shell] {
-  --pp-pane-alpha: 0.96;
-  --pp-frame: #e7e5e2;
-  --pp-pane: #f3f2f0;
-  --pp-hairline: rgb(0 0 0 / 0.1);
-  --pp-rail-selected: rgb(0 0 0 / 0.08);
-  --pp-rail-alpha: 0.9;
-  --pp-selected: color-mix(in srgb, var(--foreground) 6%, transparent);
+  --pp-pane-alpha: 0.68;
+  --pp-frame: #e5e4f2;
+  --pp-pane: #f1f0fa;
+  --pp-accent: #6963b0;
+  --pp-muted: #77738f;
+  --pp-hairline: rgb(105 99 176 / 0.16);
+  --pp-rail-selected: color-mix(in srgb, var(--pp-accent) 12%, transparent);
+  --pp-rail-alpha: 0.76;
+  --pp-selected: color-mix(in srgb, var(--pp-accent) 12%, transparent);
 }
 [data-pied-piper-shell][data-desktop-shell="true"] {
   --pp-shell-top: var(--workspace-topbar-height, 52px);
@@ -2385,12 +2390,12 @@ code {
   background: var(--pp-frame);
 }
 
-/* A single neutral surface joins the native titlebar and navigation rail. */
+/* The titlebar joins the rail; the pane remains translucent over the app canvas. */
 [data-pied-piper-shell]::before {
   content: "";
   position: fixed;
-  inset: 0 auto 0 0;
-  width: calc(var(--pp-rail-w) + var(--sidebar-width));
+  inset: 0 0 auto;
+  height: var(--pp-shell-top);
   z-index: -1;
   pointer-events: none;
   background: var(--pp-frame);
@@ -2399,8 +2404,8 @@ code {
 /* ---------- glass surfaces ---------- */
 .app-navigation-rail,
 [data-app-sidebar] > [data-slot="sidebar-inner"] {
-  -webkit-backdrop-filter: blur(var(--pp-glass-blur));
-  backdrop-filter: blur(var(--pp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--pp-glass-blur)) saturate(115%);
+  backdrop-filter: blur(var(--pp-glass-blur)) saturate(115%);
 }
 @utility app-navigation-rail {
   position: relative;
@@ -2417,6 +2422,7 @@ code {
 [data-app-sidebar] > [data-slot="sidebar-inner"] {
   background: color-mix(in srgb, var(--pp-pane) calc(var(--pp-pane-alpha) * 100%), transparent);
   border-right: 1px solid var(--pp-hairline);
+  box-shadow: inset 0 1px 0 var(--pp-hairline);
   color: var(--foreground);
 }
 
@@ -2458,7 +2464,7 @@ code {
   display: grid;
   place-items: center;
   border-radius: var(--pp-radius-btn);
-  color: var(--sidebar-muted-foreground);
+  color: var(--pp-muted);
   background: transparent;
   transition:
     background-color 120ms ease,
@@ -2476,7 +2482,7 @@ code {
   background: var(--pp-pressed);
 }
 .app-rail-button[aria-pressed="true"] {
-  color: var(--foreground);
+  color: var(--pp-accent);
   background: var(--pp-rail-selected);
 }
 .app-rail-button:focus-visible,
@@ -2488,8 +2494,8 @@ code {
 
 /* ---------- pane header ---------- */
 @utility app-pane-header {
-  height: 44px;
-  padding: 0 12px;
+  height: 48px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -2518,8 +2524,8 @@ code {
   transition: background-color 100ms ease;
 }
 [data-app-sidebar] [data-sidebar="menu-button"] {
-  height: 34px;
-  font-size: 13.5px;
+  height: 36px;
+  font-size: 13px;
   font-weight: 500;
 }
 [data-app-sidebar] [data-sidebar="menu-button"] > svg {
@@ -2528,10 +2534,10 @@ code {
   color: var(--sidebar-muted-foreground);
 }
 [data-app-sidebar] [data-sidebar="menu-sub-button"] {
-  height: 30px;
+  height: 32px;
   font-size: 13px;
   font-weight: 400;
-  padding-left: 24px;
+  padding-left: 56px;
   color: color-mix(in srgb, var(--foreground) 90%, transparent);
 }
 [data-app-sidebar] [data-sidebar="menu-button"]:hover,
@@ -2557,9 +2563,44 @@ code {
   white-space: nowrap;
 }
 
+/* Shared gutters keep headings, icons, project names and chat rows aligned. */
+[data-app-sidebar] [data-sidebar-section-heading] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  margin: 4px 0;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--pp-muted);
+}
+[data-app-sidebar] [data-sidebar="menu"] {
+  gap: 2px;
+}
+[data-app-sidebar] .group\/project-header [data-sidebar="menu-button"] {
+  gap: 6px;
+}
+[data-app-sidebar] .group\/project-header [data-sidebar="menu-button"] > svg {
+  margin-left: 0;
+  flex: 0 0 16px;
+}
+[data-app-sidebar] [data-sidebar="menu-button"] > svg {
+  flex-shrink: 0;
+  color: var(--pp-muted);
+}
+[data-app-sidebar] [data-sidebar="menu-sub-button"][data-active="true"] {
+  color: var(--foreground);
+}
+[data-app-sidebar] [data-recent-chats] {
+  margin-top: 12px;
+}
+
 /* drag handle */
 @utility project-chat-drag-handle {
-  flex: 0 0 16px;
+  position: absolute;
+  left: 32px;
   width: 16px;
   height: 16px;
   display: grid;
@@ -2611,34 +2652,36 @@ code {
     left: calc(var(--pp-rail-w) - var(--sidebar-width));
   }
   [data-pied-piper-shell] [data-app-sidebar] .app-pane-header {
-    height: 44px;
-    padding-right: 12px;
-    padding-left: 12px;
+    height: 48px;
+    padding-right: 20px;
+    padding-left: 20px;
   }
   [data-pied-piper-shell] [data-sidebar-brand-probe] {
-    --workspace-titlebar-content-left: 12px;
+    --workspace-titlebar-content-left: 20px;
   }
   [data-pied-piper-shell] [data-sidebar-utility-menu] {
     display: none;
   }
   [data-pied-piper-shell][data-desktop-shell="false"] [data-sidebar-control] {
     left: 56px;
-    height: 44px;
+    height: 48px;
   }
   [data-pied-piper-shell][data-desktop-shell="false"] [data-app-sidebar] {
-    --workspace-titlebar-content-left: 32px;
+    --workspace-titlebar-content-left: 24px;
   }
   [data-app-sidebar] [data-sidebar="menu-sub"] {
     border-left: 0;
     padding-left: 0;
+    margin-inline: 0;
+    gap: 2px;
   }
   [data-app-sidebar] [data-recent-chats] [data-sidebar="menu-button"] {
-    height: 30px;
+    height: 32px;
     font-size: 13px;
     font-weight: 400;
   }
   [data-app-sidebar] [data-sidebar="content"] {
-    padding-inline: 2px;
+    padding-inline: 0;
   }
 }
 
