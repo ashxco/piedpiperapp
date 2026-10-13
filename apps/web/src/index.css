@@ -2638,11 +2638,6 @@ code {
   }
 }
 
-/* collapsed pane: rail remains with a defined edge */
-[data-collapsible="offcanvas"] .app-navigation-rail {
-  border-right-color: var(--pp-hairline);
-}
-
 @media (prefers-reduced-motion: reduce) {
   [data-pied-piper-shell] *,
   [data-pied-piper-shell] *::before {
@@ -2667,7 +2662,10 @@ code {
     overflow: hidden;
   }
   [data-pied-piper-shell] [data-collapsible="offcanvas"] [data-app-sidebar] {
-    left: calc(var(--pp-rail-w) - var(--sidebar-width));
+    /* Clear the window entirely so the glass rail cannot reveal hidden rows. */
+    left: calc(-1 * var(--sidebar-width));
+    visibility: hidden;
+    pointer-events: none;
   }
   [data-pied-piper-shell] [data-app-sidebar] .app-pane-header {
     height: 48px;
