@@ -1,10 +1,10 @@
-import { AuthDiagnosticsReadScope } from "@t3tools/contracts";
-import { AuthEnvironmentMaintainScope } from "@t3tools/contracts";
+import { AuthDiagnosticsReadScope } from "@piedpiperapp/contracts";
+import { AuthEnvironmentMaintainScope } from "@piedpiperapp/contracts";
 import type {
   EnvironmentId,
   ResourceTelemetryHistoryInput,
   ResourceTelemetrySnapshot,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import * as Cause from "effect/Cause";
 import { useCallback } from "react";
 

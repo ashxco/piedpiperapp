@@ -1,6 +1,6 @@
-import { scopeThreadRef } from "@t3tools/client-runtime/environment";
-import type { EnvironmentShellStatus } from "@t3tools/client-runtime/state/shell";
-import type { EnvironmentId, ScopedThreadRef, ThreadId } from "@t3tools/contracts";
+import { scopeThreadRef } from "@piedpiperapp/client-runtime/environment";
+import type { EnvironmentShellStatus } from "@piedpiperapp/client-runtime/state/shell";
+import type { EnvironmentId, ScopedThreadRef, ThreadId } from "@piedpiperapp/contracts";
 import type { DraftId } from "./composerDraftStore";
 
 export type ThreadRouteTarget =

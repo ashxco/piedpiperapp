@@ -1,13 +1,13 @@
 import { useAtomValue } from "@effect/atom-react";
-import { scopeThreadRef } from "@t3tools/client-runtime/environment";
-import { resolveHandoffEndpoints } from "@t3tools/client-runtime/handoff";
-import { resolveProviderInstanceDisplayName } from "@t3tools/client-runtime/state/provider-instance-display";
+import { scopeThreadRef } from "@piedpiperapp/client-runtime/environment";
+import { resolveHandoffEndpoints } from "@piedpiperapp/client-runtime/handoff";
+import { resolveProviderInstanceDisplayName } from "@piedpiperapp/client-runtime/state/provider-instance-display";
 import type {
   EnvironmentId,
   OrchestrationV2ProjectedTurnItem,
   ProviderInstanceId,
   ServerProvider,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import { Atom } from "effect/reactivity";
 import { Fragment, useMemo } from "react";
 import { Alert, Pressable, View, type ColorValue } from "react-native";

@@ -1,0 +1,101 @@
+import { describe, expect, it } from "vite-plus/test";
+
+import { PIED_PIPER_MCP_TOOL_NAMES, resolveT3McpToolPresentation } from "./piedPiperMcpToolPresentation.ts";
+
+describe("resolveT3McpToolPresentation", () => {
+  it("recognizes every Pied Piper tool across provider prefixes and completion suffixes", () => {
+    for (const tool of PIED_PIPER_MCP_TOOL_NAMES) {
+      const presentation = resolveT3McpToolPresentation(tool);
+      for (const prefix of [
+        "mcp__piedpiperapp__",
+        "mcp__piedpiperapp_code__",
+        "mcp__piedpiperapp__",
+        "Pied Piper-code.",
+        "piedpiperapp_code/",
+        "piedpiperapp:",
+        "mcp_piedpiperapp_",
+        "Pied Piper ",
+        "piedpiperapp · ",
+      ]) {
+        expect(resolveT3McpToolPresentation(`${prefix}${tool} completed`), tool).toEqual(
+          presentation,
+        );
+      }
+      expect(resolveT3McpToolPresentation(`mcp__another-server__${tool}`), tool).toBeNull();
+    }
+  });
+  it("pretty prints Claude and Cursor Pied Piper MCP tool names", () => {
+    expect(resolveT3McpToolPresentation("mcp__piedpiperapp__piedpiperapp_thread_read")).toEqual({
+      displayName: "Read a Pied Piper thread",
+      logo: "piedpiperapp",
+    });
+  });
+
+  it("pretty prints Codex Pied Piper MCP tool names", () => {
+    expect(resolveT3McpToolPresentation("piedpiperapp.create_threads")).toEqual({
+      displayName: "Create Pied Piper threads",
+      logo: "piedpiperapp",
+    });
+  });
+
+  it("pretty prints thread metadata updates", () => {
+    expect(resolveT3McpToolPresentation("mcp__piedpiperapp__piedpiperapp_thread_update")).toEqual({
+      displayName: "Update Pied Piper thread metadata",
+      logo: "piedpiperapp",
+    });
+  });
+
+  it("pretty prints bare Pied Piper MCP toolkit names", () => {
+    expect(resolveT3McpToolPresentation("list_scheduled_tasks")).toEqual({
+      displayName: "List scheduled tasks",
+      logo: "piedpiperapp",
+    });
+  });
+
+  it("pretty prints worktree Pied Piper MCP tool names", () => {
+    expect(resolveT3McpToolPresentation("mcp__piedpiperapp__piedpiperapp_worktree_handoff")).toEqual({
+      displayName: "Hand off thread to a git worktree",
+      logo: "piedpiperapp",
+    });
+    expect(resolveT3McpToolPresentation("piedpiperapp.piedpiperapp_worktree_status")).toEqual({
+      displayName: "Get thread worktree status",
+      logo: "piedpiperapp",
+    });
+  });
+
+  it("pretty prints preview Pied Piper MCP tool names", () => {
+    expect(resolveT3McpToolPresentation("Pied Piper-code.preview_open")).toEqual({
+      displayName: "Open a page in the preview browser",
+      logo: "piedpiperapp",
+    });
+    expect(resolveT3McpToolPresentation("mcp__piedpiperapp__preview_status")).toEqual({
+      displayName: "Get preview browser status",
+      logo: "piedpiperapp",
+    });
+  });
+
+  it("matches the separator variants ACP registry agents emit", () => {
+    for (const name of [
+      "mcp_piedpiperapp_delegate_task",
+      "piedpiperapp_code:delegate_task",
+      "piedpiperapp/delegate_task",
+      "piedpiperapp delegate_task",
+      "Pied Piper delegate_task",
+      "piedpiperapp__delegate_task",
+    ]) {
+      expect(resolveT3McpToolPresentation(name)?.displayName).toBe("Delegate a child task");
+    }
+  });
+
+  it("matches OpenCode 2's per-thread server names, whose thread ids hold underscores", () => {
+    expect(
+      resolveT3McpToolPresentation("piedpiperapp-thread_opencode2-adapter_delegate_task")?.displayName,
+    ).toBe("Delegate a child task");
+    expect(resolveT3McpToolPresentation("piedpiperapp-thread_opencode2-adapter_not_a_tool")).toBeNull();
+  });
+
+  it("keeps unknown MCP tools on the generic renderer path", () => {
+    expect(resolveT3McpToolPresentation("mcp__github__search_issues")).toBeNull();
+    expect(resolveT3McpToolPresentation("piedpiperapp.not_a_real_tool")).toBeNull();
+  });
+});

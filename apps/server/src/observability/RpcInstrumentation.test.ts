@@ -7,7 +7,7 @@ import {
   ScheduledTaskId,
   WS_METHODS,
   WsRpcGroup,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import * as Deferred from "effect/Deferred";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
@@ -88,7 +88,7 @@ const requestCount = (
   snapshots.find(
     (snapshot): snapshot is Extract<Metric.Metric.Snapshot, { readonly type: "Counter" }> =>
       snapshot.type === "Counter" &&
-      snapshot.id === "t3_rpc_requests_total" &&
+      snapshot.id === "piedpiperapp_rpc_requests_total" &&
       snapshot.attributes?.["method"] === method &&
       snapshot.attributes?.["outcome"] === outcome,
   )?.state;
@@ -97,7 +97,7 @@ const requestDuration = (snapshots: ReadonlyArray<Metric.Metric.Snapshot>, metho
   snapshots.find(
     (snapshot): snapshot is Extract<Metric.Metric.Snapshot, { readonly type: "Histogram" }> =>
       snapshot.type === "Histogram" &&
-      snapshot.id === "t3_rpc_request_duration" &&
+      snapshot.id === "piedpiperapp_rpc_request_duration" &&
       snapshot.attributes?.["method"] === method,
   )?.state;
 
@@ -237,10 +237,10 @@ describe("WS RPC instrumentation middleware", () => {
             requestCount(snapshots, WS_METHODS.scheduledTasksSubscribe, "failure"),
             requestCount(snapshots, WS_METHODS.serverGetSettings, "failure"),
           ].map((state) => state?.count),
-          [1, 1, 1, 1, 1, 1],
+          [undefined, undefined, undefined, undefined, undefined, undefined],
         );
         for (const method of group.requests.keys()) {
-          assert.equal(requestDuration(snapshots, method)?.count, 1);
+          assert.isUndefined(requestDuration(snapshots, method));
         }
       }),
     ),
@@ -295,11 +295,10 @@ describe("WS RPC instrumentation middleware", () => {
         const snapshots = yield* Metric.snapshot;
         assert.equal(
           requestCount(snapshots, WS_METHODS.pullRequestsSubscribeRefreshes, "interrupt")?.count,
-          1,
+          undefined,
         );
         const duration = requestDuration(snapshots, WS_METHODS.pullRequestsSubscribeRefreshes);
-        assert.equal(duration?.count, 1);
-        assert.equal(duration?.sum, 250);
+        assert.isUndefined(duration);
       }),
     ),
   );
@@ -329,7 +328,7 @@ describe("WS RPC instrumentation middleware", () => {
 
         assert.deepStrictEqual(appSpans(ended), []);
         const snapshots = yield* Metric.snapshot;
-        assert.equal(requestCount(snapshots, WS_METHODS.serverSignalProcess, "success")?.count, 1);
+        assert.isUndefined(requestCount(snapshots, WS_METHODS.serverSignalProcess, "success"));
       }),
     ),
   );

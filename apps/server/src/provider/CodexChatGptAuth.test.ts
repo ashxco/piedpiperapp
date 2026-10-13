@@ -3,7 +3,7 @@ import * as NodeHttp from "node:http";
 import * as NodeCrypto from "node:crypto";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { assert, it } from "@effect/vitest";
-import { EnvironmentId, ProviderInstanceId } from "@t3tools/contracts";
+import { EnvironmentId, ProviderInstanceId } from "@piedpiperapp/contracts";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
@@ -619,7 +619,7 @@ it.effect(
           "state",
         ]);
         assert.strictEqual(first.searchParams.get("client_id"), "dynamic_agent_client");
-        assert.strictEqual(first.searchParams.get("agent_name_hint"), "T3 Code");
+        assert.strictEqual(first.searchParams.get("agent_name_hint"), "Pied Piper");
         assert.strictEqual(first.searchParams.get("response_type"), "code");
         assert.strictEqual(
           first.searchParams.get("scope"),
@@ -1000,16 +1000,16 @@ it.effect("returns successful desktop sign-in to the original Welcome step", () 
   provision(
     Effect.gen(function* () {
       const h = yield* makeHarness;
-      h.setReturnUrl("t3code-dev://app/welcome#agents:test-environment");
+      h.setReturnUrl("piedpiperapp-dev://app/welcome#agents:test-environment");
       yield* h.signIn;
       yield* h.phase("succeeded");
       assert.include(
         h.callbackResponses[0]!.body,
-        'content="1;url=t3code-dev://app/welcome#agents:test-environment"',
+        'content="1;url=piedpiperapp-dev://app/welcome#agents:test-environment"',
       );
       assert.include(
         h.callbackResponses[0]!.body,
-        'href="t3code-dev://app/welcome#agents:test-environment"',
+        'href="piedpiperapp-dev://app/welcome#agents:test-environment"',
       );
     }),
   ),
@@ -1700,24 +1700,7 @@ it.effect("primary completes OAuth and destination imports and owns the refresh 
       );
       assert.isTrue(stopped);
       assert.strictEqual(imported.phase, "succeeded");
-      assert.deepStrictEqual(
-        h.analyticsEvents.map(({ event }) => event),
-        [
-          "chatgpt.auth.started",
-          "chatgpt.auth.completed",
-          "chatgpt.transfer.started",
-          "chatgpt.transfer.completed",
-        ],
-      );
-      assert.isTrue(
-        h.analyticsEvents.every(({ properties }) => properties?.flow === "primary_handoff"),
-      );
-      assert.strictEqual(h.analyticsEvents[1]?.properties?.outcome, "succeeded");
-      assert.strictEqual(h.analyticsEvents[3]?.properties?.outcome, "succeeded");
-      assert.notProperty(h.analyticsEvents[1]?.properties ?? {}, "connectedAccountCount");
-      assert.strictEqual(h.analyticsEvents[1]?.properties?.intent, "different_account");
-      assert.strictEqual(h.analyticsEvents[3]?.properties?.connectedAccountCount, 1);
-      assert.strictEqual(h.analyticsEvents[3]?.properties?.savedConnectionCount, 1);
+      assert.isEmpty(h.analyticsEvents);
       const saved = Option.getOrThrow(yield* destination.auth.read);
       assert.strictEqual(saved.clientId, result.profile.registration.clientId);
       assert.strictEqual(saved.refreshToken, "initial-refresh");
@@ -1839,66 +1822,6 @@ it.effect(
     ),
 );
 
-it.effect("records one anonymous auth outcome per success, failure, or cancellation", () =>
-  provision(
-    Effect.gen(function* () {
-      const h = yield* makeHarness;
-      yield* h.signIn;
-      yield* h.phase("succeeded");
-      h.setInvalidNonce();
-      yield* h.signIn;
-      yield* h.phase("failed");
-      const { waiting } = yield* h.startRemote();
-      yield* h.auth.controller.cancel("owner", waiting.flowId!);
-      yield* h.phase("cancelled");
-      const completed = h.analyticsEvents.filter(({ event }) => event === "chatgpt.auth.completed");
-      assert.deepStrictEqual(
-        completed.map(({ properties }) => properties?.outcome),
-        ["succeeded", "failed", "cancelled"],
-      );
-      assert.strictEqual(
-        h.analyticsEvents.filter(({ event }) => event === "chatgpt.auth.started").length,
-        3,
-      );
-      assert.strictEqual(completed[1]?.properties?.failureStage, "verify");
-      for (const { properties } of completed) {
-        assert.isNumber(properties?.durationMs);
-        assert.strictEqual(properties?.flow, "direct");
-        assert.deepStrictEqual(
-          Object.keys(properties!).sort(),
-          [
-            ...(properties?.outcome === "succeeded"
-              ? [
-                  "accountCountScope",
-                  "connectedAccountCount",
-                  "connectedConnectionCount",
-                  "savedConnectionCount",
-                  "unidentifiedConnectedConnectionCount",
-                ]
-              : []),
-            "callbackMode",
-            "durationMs",
-            ...(properties?.failureStage ? ["failureStage"] : []),
-            "flow",
-            "intent",
-            "outcome",
-          ].sort(),
-        );
-      }
-      const serialized = JSON.stringify(h.analyticsEvents);
-      for (const secret of [
-        "hidden@example.test",
-        "oaiapp_test",
-        "user-test",
-        "access_token",
-        "refresh_token",
-      ]) {
-        assert.notInclude(serialized, secret);
-      }
-    }),
-  ),
-);
-
 it.effect("telemetry failures do not fail a verified ChatGPT sign-in", () =>
   provision(
     Effect.gen(function* () {
@@ -1907,146 +1830,6 @@ it.effect("telemetry failures do not fail a verified ChatGPT sign-in", () =>
       const state = yield* h.phase("succeeded");
       assert.strictEqual(state.phase, "succeeded");
       assert.isTrue(Option.isSome(yield* h.auth.read));
-    }),
-  ),
-);
-
-it.effect("counts accounts separately from saved connections across additions and reconnects", () =>
-  provision(
-    Effect.gen(function* () {
-      const h = yield* makeHarness;
-      yield* h.signIn;
-      yield* h.phase("succeeded");
-      yield* h.signIn;
-      yield* h.phase("succeeded");
-      h.setCallbackClientId("oaiapp_same_account");
-      h.setIdentity("another-client-subject", "HIDDEN@example.test");
-      yield* h.changeAccount;
-      yield* h.phase("succeeded");
-      h.setCallbackClientId("oaiapp_other_account");
-      h.setIdentity("other-user", "other@example.test");
-      yield* h.changeAccount;
-      yield* h.phase("succeeded");
-      yield* h.auth.controller.logout(Effect.void);
-      h.setCallbackClientId("oaiapp_test");
-      h.setIdentity("user-test", "hidden@example.test");
-      yield* h.reconnectProfile("oaiapp_test");
-      yield* h.phase("succeeded");
-      const completed = h.analyticsEvents.filter(({ event }) => event === "chatgpt.auth.completed");
-      assert.deepStrictEqual(
-        completed.map(({ properties }) => [
-          properties?.connectedAccountCount,
-          properties?.connectedConnectionCount,
-          properties?.savedConnectionCount,
-        ]),
-        [
-          [1, 1, 1],
-          [1, 1, 1],
-          [1, 2, 2],
-          [2, 3, 3],
-          [1, 2, 3],
-        ],
-      );
-      assert.isTrue(
-        completed.every(({ properties }) => properties?.unidentifiedConnectedConnectionCount === 0),
-      );
-      assert.notInclude(JSON.stringify(h.analyticsEvents), "example.test");
-    }),
-  ),
-);
-
-it.effect("includes accounts from other Codex instances in the environment", () =>
-  provision(
-    Effect.gen(function* () {
-      const bytes = new Map<string, Uint8Array>();
-      const personal = yield* makeHarnessFor(instanceId, bytes);
-      const work = yield* makeHarnessFor(ProviderInstanceId.make("managed-work"), bytes);
-      yield* personal.signIn;
-      yield* personal.phase("succeeded");
-      work.setCallbackClientId("oaiapp_work");
-      work.setIdentity("work-user", "work@example.test");
-      yield* work.signIn;
-      yield* work.phase("succeeded");
-      const completed = work.analyticsEvents.find(
-        ({ event }) => event === "chatgpt.auth.completed",
-      );
-      assert.strictEqual(completed?.properties?.accountCountScope, "environment");
-      assert.strictEqual(completed?.properties?.connectedAccountCount, 2);
-      assert.strictEqual(completed?.properties?.connectedConnectionCount, 2);
-      assert.strictEqual(completed?.properties?.savedConnectionCount, 2);
-    }).pipe(
-      Effect.provide(
-        ServerSettings.layerTest({
-          providerInstances: {
-            [instanceId]: { driver: "codex", enabled: true },
-            [ProviderInstanceId.make("managed-work")]: { driver: "codex", enabled: true },
-          },
-        }),
-      ),
-    ),
-  ),
-);
-
-it.effect("an unreadable unrelated profile omits counts without failing sign-in", () =>
-  provision(
-    Effect.gen(function* () {
-      const h = yield* makeHarness;
-      const unrelated = yield* ProviderCredentialStore.make("codex-chatgpt", "codex").pipe(
-        Effect.provideService(ServerSecretStore.ServerSecretStore, h.secrets),
-      );
-      // The harness owns its store; seed the corresponding binding in that store.
-      h.bytes.set(unrelated.binding.key, new TextEncoder().encode("invalid"));
-      yield* h.signIn;
-      yield* h.phase("succeeded");
-      const completed = h.analyticsEvents.find(({ event }) => event === "chatgpt.auth.completed");
-      assert.strictEqual(completed?.properties?.outcome, "succeeded");
-      assert.notProperty(completed?.properties ?? {}, "connectedAccountCount");
-    }).pipe(Effect.provide(ServerSettings.layerTest())),
-  ),
-);
-
-it.effect("reports connections without an email separately from identifiable accounts", () =>
-  provision(
-    Effect.gen(function* () {
-      const h = yield* makeHarness;
-      yield* h.signIn;
-      yield* h.phase("succeeded");
-      const store = yield* ProviderCredentialStore.make("codex-chatgpt", instanceId).pipe(
-        Effect.provideService(ServerSecretStore.ServerSecretStore, h.secrets),
-      );
-      yield* store.set(
-        new TextEncoder().encode(
-          JSON.stringify({
-            activeClientId: "oaiapp_test",
-            sessions: [{ ...Option.getOrThrow(yield* h.auth.read), email: null }],
-          }),
-        ),
-      );
-      h.setCallbackClientId("oaiapp_other_account");
-      h.setIdentity("other-user", "other@example.test");
-      yield* h.changeAccount;
-      yield* h.phase("succeeded");
-      const completed = h.analyticsEvents.findLast(
-        ({ event }) => event === "chatgpt.auth.completed",
-      );
-      assert.strictEqual(completed?.properties?.connectedAccountCount, 1);
-      assert.strictEqual(completed?.properties?.connectedConnectionCount, 2);
-      assert.strictEqual(completed?.properties?.unidentifiedConnectedConnectionCount, 1);
-    }),
-  ),
-);
-
-it.effect("records an expired auth outcome when sign-in reaches its deadline", () =>
-  provision(
-    Effect.gen(function* () {
-      const h = yield* makeHarness;
-      yield* h.startRemote();
-      yield* TestClock.adjust(300_001);
-      assert.include((yield* h.phase("failed")).message ?? "", "expired");
-      const completed = h.analyticsEvents.filter(({ event }) => event === "chatgpt.auth.completed");
-      assert.strictEqual(completed.length, 1);
-      assert.strictEqual(completed[0]?.properties?.outcome, "expired");
-      assert.isAtLeast(completed[0]?.properties?.durationMs as number, 300_000);
     }),
   ),
 );

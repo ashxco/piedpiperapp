@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["PiedPiperComposerEditorModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.t3composereditor.PiedPiperComposerEditorModule"]
+  }
+}

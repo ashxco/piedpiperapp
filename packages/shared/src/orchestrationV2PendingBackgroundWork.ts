@@ -5,8 +5,8 @@ import type {
   OrchestrationV2TurnItem,
   ThreadId,
   ThreadPullRequestLink,
-} from "@t3tools/contracts";
-import { isOrchestrationV2WorkActive } from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
+import { isOrchestrationV2WorkActive } from "@piedpiperapp/contracts";
 
 import { threadPullRequestKeyOf } from "./threadPullRequests.ts";
 

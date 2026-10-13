@@ -1,5 +1,5 @@
-import { type ModelCapabilities, type ProviderOptionChoice } from "@t3tools/contracts";
-import { createModelCapabilities } from "@t3tools/shared/model";
+import { type ModelCapabilities, type ProviderOptionChoice } from "@piedpiperapp/contracts";
+import { createModelCapabilities } from "@piedpiperapp/shared/model";
 import * as Predicate from "effect/Predicate";
 
 /**

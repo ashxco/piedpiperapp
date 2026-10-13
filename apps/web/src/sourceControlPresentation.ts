@@ -1,10 +1,10 @@
 import type { ElementType } from "react";
-import type { SourceControlProviderInfo } from "@t3tools/contracts";
-import { sourceControlClients } from "@t3tools/client-runtime/source-control-clients";
+import type { SourceControlProviderInfo } from "@piedpiperapp/contracts";
+import { sourceControlClients } from "@piedpiperapp/client-runtime/source-control-clients";
 import type {
   ChangeRequestTerminology,
   SourceControlClientDefinition,
-} from "@t3tools/client-runtime/source-control-clients";
+} from "@piedpiperapp/client-runtime/source-control-clients";
 import {
   AzureDevOpsIcon,
   BitbucketIcon,
@@ -15,7 +15,7 @@ import {
 } from "./components/Icons";
 import { PullRequestGlyph } from "~/components/pullRequest/pullRequestIcons";
 
-export type { ChangeRequestTerminology } from "@t3tools/client-runtime/source-control-clients";
+export type { ChangeRequestTerminology } from "@piedpiperapp/client-runtime/source-control-clients";
 
 type SourceControlIcon = ElementType<{ className?: string }>;
 

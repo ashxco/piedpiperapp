@@ -1,5 +1,5 @@
 {
-  "name": "@t3tools/client-runtime",
+  "name": "@piedpiperapp/client-runtime",
   "private": true,
   "type": "module",
   "exports": {
@@ -111,9 +111,9 @@
       "types": "./src/voice-input/index.ts",
       "default": "./src/voice-input/index.ts"
     },
-    "./t3ToolSummary": {
-      "types": "./src/t3ToolSummary.ts",
-      "default": "./src/t3ToolSummary.ts"
+    "./piedPiperToolSummary": {
+      "types": "./src/piedPiperToolSummary.ts",
+      "default": "./src/piedPiperToolSummary.ts"
     },
     "./relay": {
       "types": "./src/relay/index.ts",
@@ -422,15 +422,15 @@
   },
   "dependencies": {
     "@pierre/diffs": "catalog:",
-    "@t3tools/contracts": "workspace:*",
-    "@t3tools/shared": "workspace:*",
-    "@t3tools/source-control-azure-devops": "workspace:*",
-    "@t3tools/source-control-bitbucket": "workspace:*",
-    "@t3tools/source-control-core": "workspace:*",
-    "@t3tools/source-control-forgejo": "workspace:*",
-    "@t3tools/source-control-gitcafe": "workspace:*",
-    "@t3tools/source-control-github": "workspace:*",
-    "@t3tools/source-control-gitlab": "workspace:*",
+    "@piedpiperapp/contracts": "workspace:*",
+    "@piedpiperapp/shared": "workspace:*",
+    "@piedpiperapp/source-control-azure-devops": "workspace:*",
+    "@piedpiperapp/source-control-bitbucket": "workspace:*",
+    "@piedpiperapp/source-control-core": "workspace:*",
+    "@piedpiperapp/source-control-forgejo": "workspace:*",
+    "@piedpiperapp/source-control-gitcafe": "workspace:*",
+    "@piedpiperapp/source-control-github": "workspace:*",
+    "@piedpiperapp/source-control-gitlab": "workspace:*",
     "effect": "catalog:",
     "three": "0.180.0"
   },

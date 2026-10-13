@@ -1,15 +1,15 @@
-import { SourceControlProviderKind } from "@t3tools/contracts";
+import { SourceControlProviderKind } from "@piedpiperapp/contracts";
 import { assert, it } from "@effect/vitest";
 
-import * as AzureDevOpsCli from "@t3tools/source-control-azure-devops/server/AzureDevOpsCli";
-import * as BitbucketApi from "@t3tools/source-control-bitbucket/server/BitbucketApi";
-import * as GitHubApi from "@t3tools/source-control-github/server/GitHubApi";
-import * as SourceControlRateLimit from "@t3tools/source-control-core/server/SourceControlRateLimit";
-import * as GitLabCli from "@t3tools/source-control-gitlab/server/GitLabCli";
-import { azureDevOpsProviderFailure } from "@t3tools/source-control-azure-devops/server/AzureDevOpsPullRequestProvider";
-import { bitbucketProviderFailure } from "@t3tools/source-control-bitbucket/server/BitbucketPullRequestProvider";
-import { gitHubProviderFailure } from "@t3tools/source-control-github/server/GitHubPullRequestProvider";
-import { gitLabProviderFailure } from "@t3tools/source-control-gitlab/server/GitLabPullRequestProvider";
+import * as AzureDevOpsCli from "@piedpiperapp/source-control-azure-devops/server/AzureDevOpsCli";
+import * as BitbucketApi from "@piedpiperapp/source-control-bitbucket/server/BitbucketApi";
+import * as GitHubApi from "@piedpiperapp/source-control-github/server/GitHubApi";
+import * as SourceControlRateLimit from "@piedpiperapp/source-control-core/server/SourceControlRateLimit";
+import * as GitLabCli from "@piedpiperapp/source-control-gitlab/server/GitLabCli";
+import { azureDevOpsProviderFailure } from "@piedpiperapp/source-control-azure-devops/server/AzureDevOpsPullRequestProvider";
+import { bitbucketProviderFailure } from "@piedpiperapp/source-control-bitbucket/server/BitbucketPullRequestProvider";
+import { gitHubProviderFailure } from "@piedpiperapp/source-control-github/server/GitHubPullRequestProvider";
+import { gitLabProviderFailure } from "@piedpiperapp/source-control-gitlab/server/GitLabPullRequestProvider";
 
 const cause = new Error("redacted provider failure");
 

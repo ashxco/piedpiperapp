@@ -1,0 +1,17 @@
+{
+  "name": "@piedpiperapp/mobile-terminal-native",
+  "version": "0.0.0",
+  "private": true,
+  "expo-module": {
+    "ios": {
+      "modules": [
+        "PiedPiperTerminalModule"
+      ]
+    },
+    "android": {
+      "modules": [
+        "expo.modules.t3terminal.PiedPiperTerminalModule"
+      ]
+    }
+  }
+}

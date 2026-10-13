@@ -1,5 +1,4 @@
 import * as Alchemy from "alchemy";
-import * as Axiom from "alchemy/Axiom";
 import * as Cloudflare from "alchemy/Cloudflare";
 import * as Drizzle from "alchemy/Drizzle/Postgres";
 import * as Config from "effect/Config";
@@ -18,7 +17,7 @@ import * as HttpRouter from "effect/http/HttpRouter";
 import * as HttpApiBuilder from "effect/http-api/HttpApiBuilder";
 import * as HttpApiScalar from "effect/http-api/HttpApiScalar";
 
-import { RelayApi } from "@t3tools/contracts/relay";
+import { RelayApi } from "@piedpiperapp/contracts/relay";
 
 import {
   RELAY_HTTP_ROUTER_CONFIG,
@@ -27,7 +26,6 @@ import {
 } from "./http/Api.ts";
 import * as RelayHttpApi from "./http/Api.ts";
 import { ManagedEndpointZone, RelayApiZone, RelayDeploymentConfig } from "./zone.ts";
-import { RelayObservability } from "./observability.ts";
 import * as Observability from "./observability.ts";
 import * as DeliveryAttempts from "./agentActivity/DeliveryAttempts.ts";
 import * as AgentActivityRows from "./agentActivity/AgentActivityRows.ts";
@@ -118,6 +116,12 @@ export const layer = Api.make(
         flags: ["nodejs_compat"],
       },
       domain: relayPublicDomain,
+      logpush: false,
+      observability: {
+        enabled: false,
+        logs: { enabled: false, invocationLogs: false },
+        traces: { enabled: false },
+      },
     })),
     Effect.orDie,
   ),
@@ -134,7 +138,6 @@ export const layer = Api.make(
     const relayApiZone = yield* RelayApiZone;
     const managedEndpointZone = yield* ManagedEndpointZone;
     const randomApnsDeliveryJobSigningSecret = yield* ApnsDeliveryJobSigningSecret;
-    yield* RelayObservability;
 
     //
     // 2. Create bindings
@@ -477,19 +480,6 @@ export const layer = Api.make(
         // are built into it.
         Layer.provideMerge(
           Alchemy.Telemetry.layer(Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true)),
-        ),
-        // The Worker's only trace exporter: every event (fetch, queue, cron,
-        // HookInboxObject calls and alarms) exports through it to Axiom.
-        Layer.provideMerge(
-          Layer.unwrap(
-            Effect.map(RelayObservability, (observability) =>
-              Axiom.Telemetry({
-                serviceName: "t3code-relay",
-                token: observability.workerIngestToken,
-                traces: observability.traces,
-              }),
-            ),
-          ),
         ),
       ),
     ),

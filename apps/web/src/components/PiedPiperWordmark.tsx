@@ -1,0 +1,13 @@
+import type { SVGProps } from "react";
+
+export function PiedPiperWordmark(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...props} viewBox="0 0 42 34" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M4 28V5H12C23 5 23 19 12 19H10V28ZM10 11V13H12C15 13 15 11 12 11ZM23 28V5H31C42 5 42 19 31 19H29V28ZM29 11V13H31C34 13 34 11 31 11Z"
+        fillRule="evenodd"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}

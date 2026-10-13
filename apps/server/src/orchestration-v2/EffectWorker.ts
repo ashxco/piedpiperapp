@@ -1,4 +1,4 @@
-import { CommandId } from "@t3tools/contracts";
+import { CommandId } from "@piedpiperapp/contracts";
 import * as Cause from "effect/Cause";
 import * as Context from "effect/Context";
 import * as DateTime from "effect/DateTime";
@@ -6,16 +6,11 @@ import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Layer from "effect/Layer";
-import * as Metric from "effect/Metric";
+
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
 
-import {
-  increment,
-  metricAttributes,
-  orchestrationEffectClaimsTotal,
-  orchestrationEffectQueueWait,
-} from "../observability/Metrics.ts";
+import { increment, orchestrationEffectClaimsTotal } from "../observability/Metrics.ts";
 import * as RunFinalizationService from "./RunFinalizationService.ts";
 import * as ResourceCleanupService from "./ResourceCleanupService.ts";
 import * as EffectOutbox from "./EffectOutbox.ts";
@@ -76,7 +71,7 @@ export interface OrchestrationEffectExecutorV2Shape {
 export class OrchestrationEffectExecutorV2 extends Context.Service<
   OrchestrationEffectExecutorV2,
   OrchestrationEffectExecutorV2Shape
->()("t3/orchestration-v2/EffectWorker/OrchestrationEffectExecutorV2") {}
+>()("piedpiperapp/orchestration-v2/EffectWorker/OrchestrationEffectExecutorV2") {}
 
 export const layerExecutor: Layer.Layer<
   OrchestrationEffectExecutorV2,
@@ -573,7 +568,7 @@ export interface OrchestrationEffectWorkerV2Shape {
 export class OrchestrationEffectWorkerV2 extends Context.Service<
   OrchestrationEffectWorkerV2,
   OrchestrationEffectWorkerV2Shape
->()("t3/orchestration-v2/EffectWorker/OrchestrationEffectWorkerV2") {}
+>()("piedpiperapp/orchestration-v2/EffectWorker/OrchestrationEffectWorkerV2") {}
 
 export interface OrchestrationEffectWorkerOptions {
   readonly workerId?: string;
@@ -712,18 +707,6 @@ export const layerWithOptions = (
             .awaitCancellation(effect.id)
             .pipe(Effect.as("cancelled" as const));
           const cancelledBeforeExecution = yield* Effect.gen(function* () {
-            const claimedAt = DateTime.toEpochMillis(yield* DateTime.now);
-            const eligibleAt = Math.max(
-              DateTime.toEpochMillis(DateTime.makeUnsafe(effect.createdAt)),
-              DateTime.toEpochMillis(DateTime.makeUnsafe(effect.availableAt)),
-            );
-            yield* Metric.update(
-              Metric.withAttributes(
-                orchestrationEffectQueueWait,
-                metricAttributes({ effect_type: effect.request.type }),
-              ),
-              Duration.millis(Math.max(0, claimedAt - eligibleAt)),
-            );
             // Cancellation can commit after the durable claim but before the
             // process-local Deferred is registered. Re-read the authoritative row
             // once before starting external work; later cancellations use the
@@ -911,7 +894,3 @@ export const runDaemonWithOptions = (options: OrchestrationEffectDaemonOptions =
   );
 
 export const runDaemon = runDaemonWithOptions();
-
-const layerDaemon: Layer.Layer<never, never, OrchestrationEffectWorkerV2> = Layer.effectDiscard(
-  runDaemon.pipe(Effect.forkScoped),
-);

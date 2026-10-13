@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pied Piper App Testing"
+  short_description: "Test web and desktop in Pied Piper's Browser panel"
+  default_prompt: "Use $test-piedpiperapp-app to verify the affected web or desktop flow through Pied Piper's Browser panel."

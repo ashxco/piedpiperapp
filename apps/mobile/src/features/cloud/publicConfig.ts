@@ -1,12 +1,12 @@
 import Constants from "expo-constants";
-import { relayClerkTokenOptions } from "@t3tools/shared/relayAuth";
-import { normalizeSecureRelayUrl } from "@t3tools/shared/relayUrl";
+import { relayClerkTokenOptions } from "@piedpiperapp/shared/relayAuth";
+import { normalizeSecureRelayUrl } from "@piedpiperapp/shared/relayUrl";
 import * as Schema from "effect/Schema";
 
 export class CloudPublicConfigMissingError extends Schema.TaggedError<CloudPublicConfigMissingError>()(
   "CloudPublicConfigMissingError",
   {
-    key: Schema.Literal("T3CODE_CLERK_JWT_TEMPLATE"),
+    key: Schema.Literal("PIEDPIPER_CLERK_JWT_TEMPLATE"),
   },
 ) {
   override get message(): string {
@@ -43,19 +43,6 @@ function trimNonEmpty(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
-function normalizeSecureUrl(value: unknown): string | null {
-  const raw = trimNonEmpty(value);
-  if (raw === null) {
-    return null;
-  }
-  try {
-    const url = new URL(raw);
-    return url.protocol === "https:" ? url.toString() : null;
-  } catch {
-    return null;
-  }
-}
-
 export function resolveCloudPublicConfig(extra: ExpoExtra = Constants.expoConfig?.extra) {
   return {
     clerk: {
@@ -65,11 +52,7 @@ export function resolveCloudPublicConfig(extra: ExpoExtra = Constants.expoConfig
     relay: {
       url: normalizeSecureRelayUrl(trimNonEmpty(extra?.relay?.url) ?? ""),
     },
-    observability: {
-      tracesUrl: normalizeSecureUrl(extra?.observability?.tracesUrl),
-      tracesDataset: trimNonEmpty(extra?.observability?.tracesDataset),
-      tracesToken: trimNonEmpty(extra?.observability?.tracesToken),
-    },
+    observability: { tracesUrl: null, tracesDataset: null, tracesToken: null },
   } satisfies CloudPublicConfig;
 }
 
@@ -99,7 +82,7 @@ export function hasTracingPublicConfig(
 export function resolveRelayClerkTokenOptions() {
   const { jwtTemplate } = resolveCloudPublicConfig().clerk;
   if (!jwtTemplate) {
-    throw new CloudPublicConfigMissingError({ key: "T3CODE_CLERK_JWT_TEMPLATE" });
+    throw new CloudPublicConfigMissingError({ key: "PIEDPIPER_CLERK_JWT_TEMPLATE" });
   }
   return relayClerkTokenOptions(jwtTemplate);
 }

@@ -1,10 +1,10 @@
-import { scopeProjectRef, scopeThreadRef } from "@t3tools/client-runtime/environment";
+import { scopeProjectRef, scopeThreadRef } from "@piedpiperapp/client-runtime/environment";
 import {
   type DesktopPendingSnapShot,
   EnvironmentId,
   ProjectId,
   ThreadId,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { DraftId, useComposerDraftStore } from "../../composerDraftStore";

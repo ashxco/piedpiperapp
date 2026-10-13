@@ -1,7 +1,7 @@
-import { EnvironmentId, type ThreadPullRequestLink } from "@t3tools/contracts";
-import type { DesktopPreviewFavicon, PreviewSessionSnapshot } from "@t3tools/contracts";
+import { EnvironmentId, type ThreadPullRequestLink } from "@piedpiperapp/contracts";
+import type { DesktopPreviewFavicon, PreviewSessionSnapshot } from "@piedpiperapp/contracts";
 import { renderToStaticMarkup } from "react-dom/server";
-import { DEFAULT_RESOLVED_KEYBINDINGS } from "@t3tools/shared/keybindings";
+import { DEFAULT_RESOLVED_KEYBINDINGS } from "@piedpiperapp/shared/keybindings";
 import { describe, expect, it } from "vite-plus/test";
 
 import {

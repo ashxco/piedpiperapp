@@ -6,7 +6,7 @@
  *
  * @module provider/Drivers/CursorDriver
  */
-import { ProviderDriverKind, ProviderSetupError } from "@t3tools/contracts";
+import { ProviderDriverKind, ProviderSetupError } from "@piedpiperapp/contracts";
 import { CursorSettings } from "../settings.ts";
 import * as Effect from "effect/Effect";
 import * as Crypto from "effect/Crypto";
@@ -16,26 +16,26 @@ import * as Schema from "effect/Schema";
 import * as HttpClient from "effect/http/HttpClient";
 import { readCursorUsageLimits } from "./usageLimits.ts";
 
-import * as ProviderHost from "@t3tools/provider-core/server/ProviderHost";
+import * as ProviderHost from "@piedpiperapp/provider-core/server/ProviderHost";
 import { makeCursorTextGeneration } from "./textGeneration.ts";
 import { CursorAdapterV2Driver, type CursorAdapterV2DriverEnv } from "./adapter.ts";
-import { ProviderDriverError } from "@t3tools/provider-core/server/errors";
+import { ProviderDriverError } from "@piedpiperapp/provider-core/server/errors";
 import { buildInitialCursorProviderSnapshot, checkCursorProviderStatus } from "./status.ts";
 import * as CursorSdkCatalog from "./CursorSdkCatalog.ts";
-import { makeManagedServerProvider } from "@t3tools/provider-core/server/managedProvider";
+import { makeManagedServerProvider } from "@piedpiperapp/provider-core/server/managedProvider";
 import {
   defaultProviderContinuationIdentity,
   type ProviderDriver,
   type ProviderInstance,
-} from "@t3tools/provider-core/server/driver";
-import { withInstanceIdentity } from "@t3tools/provider-core/server/instanceIdentity";
-import { mergeProviderInstanceEnvironment } from "@t3tools/provider-core/server/instanceEnvironment";
-import { makeManualOnlyProviderMaintenanceCapabilities } from "@t3tools/provider-core/server/maintenanceResolver";
+} from "@piedpiperapp/provider-core/server/driver";
+import { withInstanceIdentity } from "@piedpiperapp/provider-core/server/instanceIdentity";
+import { mergeProviderInstanceEnvironment } from "@piedpiperapp/provider-core/server/instanceEnvironment";
+import { makeManualOnlyProviderMaintenanceCapabilities } from "@piedpiperapp/provider-core/server/maintenanceResolver";
 import {
   haveProviderSnapshotSettingsChanged,
   makeProviderSnapshotSettingsSource,
   type ProviderSnapshotSettings,
-} from "@t3tools/provider-core/server/snapshotSettings";
+} from "@piedpiperapp/provider-core/server/snapshotSettings";
 import { probeCursorSkills } from "./skills.ts";
 import { makeCursorAuth } from "./auth.ts";
 import * as CursorCredentialStore from "./credentialStore.ts";

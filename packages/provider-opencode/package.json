@@ -1,5 +1,5 @@
 {
-  "name": "@t3tools/provider-opencode",
+  "name": "@piedpiperapp/provider-opencode",
   "private": true,
   "type": "module",
   "exports": {
@@ -53,15 +53,15 @@
     "@opencode/client": "2.0.23",
     "@opencode/protocol": "2.0.23",
     "@opencode/schema": "2.0.23",
-    "@t3tools/contracts": "workspace:*",
-    "@t3tools/provider-core": "workspace:*",
-    "@t3tools/shared": "workspace:*",
+    "@piedpiperapp/contracts": "workspace:*",
+    "@piedpiperapp/provider-core": "workspace:*",
+    "@piedpiperapp/shared": "workspace:*",
     "effect": "catalog:"
   },
   "devDependencies": {
     "@effect/platform-node": "catalog:",
     "@effect/vitest": "catalog:",
-    "@t3tools/provider-testing": "workspace:*",
+    "@piedpiperapp/provider-testing": "workspace:*",
     "@types/node": "catalog:",
     "vite-plus": "catalog:"
   }

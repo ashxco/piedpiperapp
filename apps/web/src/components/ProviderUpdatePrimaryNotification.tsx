@@ -6,7 +6,7 @@ import {
   AuthProvidersManageScope,
   type ServerProvider,
   type ProviderInstanceId,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 
 import { primaryServerProvidersAtom, serverEnvironment } from "../state/server";
 import { usePrimaryEnvironment } from "../state/environments";

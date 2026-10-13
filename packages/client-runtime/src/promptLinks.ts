@@ -5,14 +5,14 @@ import {
   type ServerProvider,
   type ThreadLinkedPullRequest,
   type ThreadPullRequestLink,
-} from "@t3tools/contracts";
-import { resolveSelectableModel, type SelectableModelOption } from "@t3tools/shared/model";
-import type { PromptLinkPullRequest, PromptLinkRepository } from "@t3tools/shared/promptLinks";
+} from "@piedpiperapp/contracts";
+import { resolveSelectableModel, type SelectableModelOption } from "@piedpiperapp/shared/model";
+import type { PromptLinkPullRequest, PromptLinkRepository } from "@piedpiperapp/shared/promptLinks";
 import {
   threadPullRequestKeyOf,
   threadPullRequestsOf,
   visibleThreadPullRequests,
-} from "@t3tools/shared/threadPullRequests";
+} from "@piedpiperapp/shared/threadPullRequests";
 
 /**
  * How web and mobile resolve a prompt link against what this client knows. Both read the same

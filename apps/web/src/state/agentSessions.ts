@@ -1,8 +1,8 @@
-import { WS_METHODS } from "@t3tools/contracts";
+import { WS_METHODS } from "@piedpiperapp/contracts";
 import {
   createEnvironmentRpcCommand,
   createEnvironmentRpcQueryAtomFamily,
-} from "@t3tools/client-runtime/state/runtime";
+} from "@piedpiperapp/client-runtime/state/runtime";
 
 import { connectionAtomRuntime } from "../connection/runtime";
 

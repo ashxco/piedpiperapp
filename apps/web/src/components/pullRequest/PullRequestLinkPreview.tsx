@@ -1,6 +1,6 @@
 import type { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card";
-import { isAtomCommandInterrupted } from "@t3tools/client-runtime/state/runtime";
-import type { EnvironmentId, PullRequestRef } from "@t3tools/contracts";
+import { isAtomCommandInterrupted } from "@piedpiperapp/client-runtime/state/runtime";
+import type { EnvironmentId, PullRequestRef } from "@piedpiperapp/contracts";
 import {
   cloneElement,
   useRef,

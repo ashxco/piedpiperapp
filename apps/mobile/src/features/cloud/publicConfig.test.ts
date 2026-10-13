@@ -18,7 +18,7 @@ vi.mock("expo-constants", () => ({
 describe("resolveCloudPublicConfig", () => {
   it("reports the missing Clerk JWT template as structured configuration", () => {
     expect(() => resolveRelayClerkTokenOptions()).toThrowError(
-      new CloudPublicConfigMissingError({ key: "T3CODE_CLERK_JWT_TEMPLATE" }),
+      new CloudPublicConfigMissingError({ key: "PIEDPIPER_CLERK_JWT_TEMPLATE" }),
     );
   });
 
@@ -42,7 +42,7 @@ describe("resolveCloudPublicConfig", () => {
   it("normalizes statically injected cloud configuration", () => {
     expect(
       resolveCloudPublicConfig({
-        clerk: { publishableKey: "  pk_test_example  ", jwtTemplate: "  t3-relay  " },
+        clerk: { publishableKey: "  pk_test_example  ", jwtTemplate: "  piedpiperapp-relay  " },
         relay: { url: " https://relay.example.test/// " },
         observability: {
           tracesUrl: " https://api.axiom.co/v1/traces ",
@@ -53,15 +53,15 @@ describe("resolveCloudPublicConfig", () => {
     ).toEqual({
       clerk: {
         publishableKey: "pk_test_example",
-        jwtTemplate: "t3-relay",
+        jwtTemplate: "piedpiperapp-relay",
       },
       relay: {
         url: "https://relay.example.test",
       },
       observability: {
-        tracesUrl: "https://api.axiom.co/v1/traces",
-        tracesDataset: "mobile-traces",
-        tracesToken: "public-ingest-token",
+        tracesUrl: null,
+        tracesDataset: null,
+        tracesToken: null,
       },
     });
   });
@@ -69,13 +69,13 @@ describe("resolveCloudPublicConfig", () => {
   it("rejects an insecure relay URL", () => {
     expect(
       resolveCloudPublicConfig({
-        clerk: { publishableKey: "pk_test_example", jwtTemplate: "t3-relay" },
+        clerk: { publishableKey: "pk_test_example", jwtTemplate: "piedpiperapp-relay" },
         relay: { url: "http://relay.example.test" },
       }),
     ).toEqual({
       clerk: {
         publishableKey: "pk_test_example",
-        jwtTemplate: "t3-relay",
+        jwtTemplate: "piedpiperapp-relay",
       },
       relay: {
         url: null,
@@ -99,12 +99,12 @@ describe("resolveCloudPublicConfig", () => {
       }).observability,
     ).toEqual({
       tracesUrl: null,
-      tracesDataset: "mobile-traces",
-      tracesToken: "public-ingest-token",
+      tracesDataset: null,
+      tracesToken: null,
     });
   });
 
-  it("keeps tracing disabled unless every public tracing value is configured", () => {
+  it("keeps tracing disabled even when all public tracing values are configured", () => {
     expect(hasTracingPublicConfig(resolveCloudPublicConfig({}))).toBe(false);
     expect(
       hasTracingPublicConfig(
@@ -126,6 +126,6 @@ describe("resolveCloudPublicConfig", () => {
           },
         }),
       ),
-    ).toBe(true);
+    ).toBe(false);
   });
 });

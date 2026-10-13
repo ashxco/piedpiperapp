@@ -1,4 +1,4 @@
-import { EnvironmentId, ThreadId, type ThreadPullRequestLink } from "@t3tools/contracts";
+import { EnvironmentId, ThreadId, type ThreadPullRequestLink } from "@piedpiperapp/contracts";
 import { act } from "react";
 import { create, type ReactTestRenderer } from "react-test-renderer";
 import { afterEach, expect, it, vi } from "vite-plus/test";
@@ -38,9 +38,9 @@ function link(
 ): ThreadPullRequestLink {
   return {
     host: "github.com",
-    repository: "pingdotgg/t3code",
+    repository: "ashxco/piedpiperapp",
     number,
-    url: `https://github.com/pingdotgg/t3code/pull/${number}`,
+    url: `https://github.com/ashxco/piedpiperapp/pull/${number}`,
     source: "manual",
     linkedAt: updatedAt,
     snapshot: {
@@ -156,7 +156,7 @@ it("lets only watched pull requests stop their watch", () => {
     input: {
       threadId: ThreadId.make("thread"),
       host: "github.com",
-      repository: "pingdotgg/t3code",
+      repository: "ashxco/piedpiperapp",
       number: 1,
       watching: false,
     },

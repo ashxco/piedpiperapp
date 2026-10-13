@@ -8,11 +8,11 @@ import {
   type ServerLifecycleWelcomePayload,
   type ServerProvider,
   type ServerSettings,
-} from "@t3tools/contracts";
-import { createServerEnvironmentAtoms } from "@t3tools/client-runtime/state/server";
-import { createOutdatedServerUpdateCommand } from "@t3tools/client-runtime/state/outdatedServerUpdate";
-import { createEnvironmentServerConfigsAtom } from "@t3tools/client-runtime/state/shell";
-import { mergeWithDefaultKeybindings } from "@t3tools/shared/keybindings";
+} from "@piedpiperapp/contracts";
+import { createServerEnvironmentAtoms } from "@piedpiperapp/client-runtime/state/server";
+import { createOutdatedServerUpdateCommand } from "@piedpiperapp/client-runtime/state/outdatedServerUpdate";
+import { createEnvironmentServerConfigsAtom } from "@piedpiperapp/client-runtime/state/shell";
+import { mergeWithDefaultKeybindings } from "@piedpiperapp/shared/keybindings";
 import * as Option from "effect/Option";
 import { AsyncResult, Atom } from "effect/reactivity";
 

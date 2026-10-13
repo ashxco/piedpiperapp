@@ -1,8 +1,8 @@
 import {
   formatProviderSubagentStatus,
   type ProviderSubagentStatus,
-} from "@t3tools/client-runtime/state/thread-execution";
-import { isOrchestrationV2WorkActive } from "@t3tools/contracts";
+} from "@piedpiperapp/client-runtime/state/thread-execution";
+import { isOrchestrationV2WorkActive } from "@piedpiperapp/contracts";
 import { View } from "react-native";
 
 import { AppText as Text } from "../../components/AppText";
@@ -47,7 +47,7 @@ export function ProviderSubagentBar(props: {
               size={16}
             />
           ) : null}
-          <Text numberOfLines={1} className="min-w-0 shrink font-t3-bold text-sm text-foreground">
+          <Text numberOfLines={1} className="min-w-0 shrink font-piedpiperapp-bold text-sm text-foreground">
             {props.modelLabel}
           </Text>
           {props.effortLabel === null ? null : (

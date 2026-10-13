@@ -1,14 +1,14 @@
 included:
-  - ios/T3Code
-  - modules/t3-composer-editor/ios
-  - modules/t3-native-controls/ios
-  - modules/t3-terminal/ios
-  - modules/t3-review-diff/ios
+  - ios/PiedPiper
+  - modules/piedpiperapp-composer-editor/ios
+  - modules/piedpiperapp-native-controls/ios
+  - modules/piedpiperapp-terminal/ios
+  - modules/piedpiperapp-review-diff/ios
 
 excluded:
   - ios/Pods
   - ios/build
-  - modules/t3-terminal/Vendor
+  - modules/piedpiperapp-terminal/Vendor
 
 reporter: xcode
 

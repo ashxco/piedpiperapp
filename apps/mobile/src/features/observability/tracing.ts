@@ -1,7 +1,5 @@
 import Constants from "expo-constants";
-import * as RelayTracing from "@t3tools/shared/relayTracing";
-
-import { hasTracingPublicConfig, resolveCloudPublicConfig } from "../cloud/publicConfig";
+import * as RelayTracing from "@piedpiperapp/shared/relayTracing";
 
 export interface TracingConfig {
   readonly tracesUrl: string;
@@ -15,17 +13,12 @@ export interface TracingResource {
 }
 
 export function resolveTracingConfig(): TracingConfig | null {
-  const config = resolveCloudPublicConfig();
-  if (!hasTracingPublicConfig(config)) {
-    return null;
-  }
-  const { tracesUrl, tracesDataset, tracesToken } = config.observability;
-  return { tracesUrl, tracesDataset, tracesToken };
+  return null;
 }
 
 export function layerFromConfig(config: TracingConfig | null, resource: TracingResource) {
   return RelayTracing.layer(config, {
-    serviceName: "t3code-mobile",
+    serviceName: "piedpiperapp-mobile",
     serviceVersion: resource.serviceVersion,
     runtime: "react-native",
     client: `mobile-${resource.appVariant}`,

@@ -1,5 +1,5 @@
-import type { ScopedThreadRef } from "@t3tools/contracts";
-import { parseThreadLinkPrompt, withoutPromptLinkParams } from "@t3tools/shared/promptLinks";
+import type { ScopedThreadRef } from "@piedpiperapp/contracts";
+import { parseThreadLinkPrompt, withoutPromptLinkParams } from "@piedpiperapp/shared/promptLinks";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 

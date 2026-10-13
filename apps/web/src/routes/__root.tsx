@@ -1,6 +1,6 @@
 import { PermissionUpdateNotice } from "../components/PermissionUpdateNotice";
-import { type ServerLifecycleWelcomePayload } from "@t3tools/contracts";
-import { scopedProjectKey, scopeProjectRef } from "@t3tools/client-runtime/environment";
+import { type ServerLifecycleWelcomePayload } from "@piedpiperapp/contracts";
+import { scopedProjectKey, scopeProjectRef } from "@piedpiperapp/client-runtime/environment";
 import {
   Outlet,
   Link,

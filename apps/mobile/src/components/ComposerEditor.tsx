@@ -1,14 +1,14 @@
-import { ComposerContextId } from "@t3tools/contracts";
+import { ComposerContextId } from "@piedpiperapp/contracts";
 import { useAtomValue } from "@effect/atom-react";
 import { AsyncResult } from "effect/reactivity";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Alert } from "react-native";
-import type { EnvironmentId } from "@t3tools/contracts";
-import { encodeComposerContextFragment } from "@t3tools/shared/composerContextClipboard";
-import { collectComposerContextReferences } from "@t3tools/shared/composerContextReferences";
-import { ComposerEditor as NativeComposerEditor } from "../native/T3ComposerEditor";
-import type { ComposerEditorProps as NativeComposerEditorProps } from "../native/T3ComposerEditor";
+import type { EnvironmentId } from "@piedpiperapp/contracts";
+import { encodeComposerContextFragment } from "@piedpiperapp/shared/composerContextClipboard";
+import { collectComposerContextReferences } from "@piedpiperapp/shared/composerContextReferences";
+import { ComposerEditor as NativeComposerEditor } from "../native/PiedPiperComposerEditor";
+import type { ComposerEditorProps as NativeComposerEditorProps } from "../native/PiedPiperComposerEditor";
 import {
   appendComposerDraftAttachments,
   createComposerDraftContextHistory,
@@ -265,4 +265,4 @@ export type {
   ComposerEditorHandle,
   ComposerEditorSelection,
   ComposerTextPaste,
-} from "../native/T3ComposerEditor";
+} from "../native/PiedPiperComposerEditor";

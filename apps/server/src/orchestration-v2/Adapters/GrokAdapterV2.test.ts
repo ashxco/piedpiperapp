@@ -5,12 +5,12 @@ import {
   ProviderSessionId,
   type RuntimeMode,
   ThreadId,
-} from "@t3tools/contracts";
-import { GrokSettings } from "@t3tools/provider-grok/settings";
-import * as HostProcess from "@t3tools/shared/HostProcess";
-import { resolveSelfInvocation } from "@t3tools/shared/nodeRuntime";
+} from "@piedpiperapp/contracts";
+import { GrokSettings } from "@piedpiperapp/provider-grok/settings";
+import * as HostProcess from "@piedpiperapp/shared/HostProcess";
+import { resolveSelfInvocation } from "@piedpiperapp/shared/nodeRuntime";
 import * as EffectAcpErrors from "effect-acp/errors";
-import { xAiRateLimitedErrorCode } from "@t3tools/provider-grok/testing";
+import { xAiRateLimitedErrorCode } from "@piedpiperapp/provider-grok/testing";
 import { assert, describe, it } from "@effect/vitest";
 import * as DateTime from "effect/DateTime";
 import * as Effect from "effect/Effect";
@@ -20,27 +20,27 @@ import * as Schema from "effect/Schema";
 import * as ChildProcessSpawner from "effect/process/ChildProcessSpawner";
 import type * as EffectAcpSchema from "effect-acp/compat";
 
-import * as TestProviderHost from "@t3tools/provider-testing/TestProviderHost";
+import * as TestProviderHost from "@piedpiperapp/provider-testing/TestProviderHost";
 import * as ProjectStore from "../ProjectStore.ts";
-import { buildInitialGrokProviderSnapshot } from "@t3tools/provider-grok/testing";
-import type { ProviderInstance } from "@t3tools/provider-core/server/driver";
+import { buildInitialGrokProviderSnapshot } from "@piedpiperapp/provider-grok/testing";
+import type { ProviderInstance } from "@piedpiperapp/provider-core/server/driver";
 import * as ProviderInstanceRegistry from "../../provider/ProviderInstanceRegistry.ts";
-import * as IdAllocator from "@t3tools/provider-core/server/IdAllocator";
-import * as McpProviderSessions from "@t3tools/provider-core/server/McpProviderSessions";
-import * as ProviderAdapter from "@t3tools/provider-core/server/ProviderAdapter";
+import * as IdAllocator from "@piedpiperapp/provider-core/server/IdAllocator";
+import * as McpProviderSessions from "@piedpiperapp/provider-core/server/McpProviderSessions";
+import * as ProviderAdapter from "@piedpiperapp/provider-core/server/ProviderAdapter";
 import * as RuntimePolicy from "../RuntimePolicy.ts";
-import { acpPermissionDisposition } from "@t3tools/provider-acp/server/clientPolicy";
+import { acpPermissionDisposition } from "@piedpiperapp/provider-acp/server/clientPolicy";
 import {
   AcpProviderCapabilitiesV2,
   acpCompletedTurnShouldTerminalizeTool,
   acpSubagentStatusBlocksTurnSettlement,
   acpSupportsImagePrompts,
-} from "@t3tools/provider-acp/server/adapter";
+} from "@piedpiperapp/provider-acp/server/adapter";
 import {
   makeGrokAcpAdapterFlavor,
   makeGrokAdapterV2,
   GrokProviderCapabilitiesV2,
-} from "@t3tools/provider-grok/testing";
+} from "@piedpiperapp/provider-grok/testing";
 
 const LAUNCH_TEST_GROK_SETTINGS = Schema.decodeSync(GrokSettings)({
   binaryPath: "grok-launch-test",
@@ -301,7 +301,7 @@ describe("Grok permission prompts", () => {
   ).permissionDisposition;
 
   // grok_auto_blocked_command replays Auto end to end. When an explicit policy
-  // launches Grok asking instead, T3's policy still answers its prompts.
+  // launches Grok asking instead, Pied Piper's policy still answers its prompts.
   it("leaves Auto prompts to the user unless an explicit policy launched Grok asking", () => {
     assert.equal(
       disposition?.(runtimePolicy({ runtimeMode: "auto" }), permissionRequest("read")),

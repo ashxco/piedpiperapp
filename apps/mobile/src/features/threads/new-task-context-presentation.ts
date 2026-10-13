@@ -1,5 +1,5 @@
-import { sanitizeNewRefName } from "@t3tools/shared/git";
-import { parseChangeRequestUrl } from "@t3tools/shared/changeRequestUrl";
+import { sanitizeNewRefName } from "@piedpiperapp/shared/git";
+import { parseChangeRequestUrl } from "@piedpiperapp/shared/changeRequestUrl";
 
 type WorkspaceMode = "local" | "worktree";
 

@@ -1,6 +1,6 @@
-import { ProviderDriverKind } from "@t3tools/contracts";
+import { ProviderDriverKind } from "@piedpiperapp/contracts";
 import { MuseSettings } from "../settings.ts";
-import * as HostProcess from "@t3tools/shared/HostProcess";
+import * as HostProcess from "@piedpiperapp/shared/HostProcess";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as Path from "effect/Path";
@@ -8,36 +8,36 @@ import * as Schema from "effect/Schema";
 import * as HttpClient from "effect/http/HttpClient";
 import * as ChildProcessSpawner from "effect/process/ChildProcessSpawner";
 
-import * as ProviderLatestVersions from "@t3tools/provider-core/server/ProviderLatestVersions";
-import * as ProviderHost from "@t3tools/provider-core/server/ProviderHost";
-import * as McpProviderSessions from "@t3tools/provider-core/server/McpProviderSessions";
-import { expandHomePath } from "@t3tools/provider-core/server/pathExpansion";
+import * as ProviderLatestVersions from "@piedpiperapp/provider-core/server/ProviderLatestVersions";
+import * as ProviderHost from "@piedpiperapp/provider-core/server/ProviderHost";
+import * as McpProviderSessions from "@piedpiperapp/provider-core/server/McpProviderSessions";
+import { expandHomePath } from "@piedpiperapp/provider-core/server/pathExpansion";
 import { makeMuseTextGeneration } from "./textGeneration.ts";
-import { ProviderDriverError } from "@t3tools/provider-core/server/errors";
+import { ProviderDriverError } from "@piedpiperapp/provider-core/server/errors";
 import { makeMuseAdapterV2 } from "./adapter.ts";
-import * as IdAllocator from "@t3tools/provider-core/server/IdAllocator";
-import * as ProviderContinuationRequests from "@t3tools/provider-core/server/ProviderContinuationRequests";
+import * as IdAllocator from "@piedpiperapp/provider-core/server/IdAllocator";
+import * as ProviderContinuationRequests from "@piedpiperapp/provider-core/server/ProviderContinuationRequests";
 import { checkMuseProviderStatus, makePendingMuseProvider } from "./status.ts";
-import * as ProviderEventLoggers from "@t3tools/provider-core/server/ProviderEventLoggers";
-import { makeManagedServerProvider } from "@t3tools/provider-core/server/managedProvider";
+import * as ProviderEventLoggers from "@piedpiperapp/provider-core/server/ProviderEventLoggers";
+import { makeManagedServerProvider } from "@piedpiperapp/provider-core/server/managedProvider";
 import { enrichMuseSnapshot, latestMuseVersion, museMaintenance } from "./maintenance.ts";
 import { makeMuseEnvironment } from "./sdk.ts";
 import {
   defaultProviderContinuationIdentity,
   type ProviderDriver,
   type ProviderInstance,
-} from "@t3tools/provider-core/server/driver";
-import { mergeProviderInstanceEnvironment } from "@t3tools/provider-core/server/instanceEnvironment";
+} from "@piedpiperapp/provider-core/server/driver";
+import { mergeProviderInstanceEnvironment } from "@piedpiperapp/provider-core/server/instanceEnvironment";
 import {
   makeCachedProviderMaintenanceResolution,
   resolveProviderMaintenanceCapabilitiesEffect,
-} from "@t3tools/provider-core/server/maintenanceResolver";
+} from "@piedpiperapp/provider-core/server/maintenanceResolver";
 import {
   haveProviderSnapshotSettingsChanged,
   makeProviderSnapshotSettingsSource,
   type ProviderSnapshotSettings,
-} from "@t3tools/provider-core/server/snapshotSettings";
-import { withInstanceIdentity } from "@t3tools/provider-core/server/instanceIdentity";
+} from "@piedpiperapp/provider-core/server/snapshotSettings";
+import { withInstanceIdentity } from "@piedpiperapp/provider-core/server/instanceIdentity";
 
 const DRIVER_KIND = ProviderDriverKind.make("muse");
 const decodeMuseSettings = Schema.decodeSync(MuseSettings);

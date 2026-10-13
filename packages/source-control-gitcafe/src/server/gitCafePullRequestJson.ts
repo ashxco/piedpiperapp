@@ -4,7 +4,7 @@
  *
  * @module source-control-gitcafe/server/gitCafePullRequestJson
  */
-import { quoteGitPatchPath } from "@t3tools/shared/gitPatchPath";
+import { quoteGitPatchPath } from "@piedpiperapp/shared/gitPatchPath";
 import * as DateTime from "effect/DateTime";
 import * as Schema from "effect/Schema";
 import {
@@ -19,13 +19,13 @@ import {
   type PullRequestReactionContent,
   type PullRequestReviewThread,
   type PullRequestViewerPermissions,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import type {
   ProviderChangeRequest,
   ProviderChangeRequestActivity,
   ProviderChangeRequestStack,
   ProviderDiffSlice,
-} from "@t3tools/source-control-core/server/PullRequestProvider";
+} from "@piedpiperapp/source-control-core/server/PullRequestProvider";
 
 const Actor = Schema.Union([
   Schema.Struct({

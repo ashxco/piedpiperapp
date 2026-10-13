@@ -23,7 +23,7 @@ import {
   RunId,
   RuntimeRequestId,
   TurnItemId,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import * as DateTime from "effect/DateTime";
 import * as Deferred from "effect/Deferred";
 import * as Fiber from "effect/Fiber";
@@ -32,15 +32,15 @@ import * as Layer from "effect/Layer";
 import * as Stream from "effect/Stream";
 import * as TestClock from "effect/testing/TestClock";
 
-import { toolOutputImages } from "@t3tools/shared/toolOutput";
+import { toolOutputImages } from "@piedpiperapp/shared/toolOutput";
 import * as SqlitePersistence from "../persistence/Sqlite.ts";
 import * as EventSink from "./EventSink.ts";
 import * as EventStore from "./EventStore.ts";
-import * as IdAllocator from "@t3tools/provider-core/server/IdAllocator";
+import * as IdAllocator from "@piedpiperapp/provider-core/server/IdAllocator";
 import * as ProjectionStore from "./ProjectionStore.ts";
 import * as ProviderEventIngestor from "./ProviderEventIngestor.ts";
 import * as ThreadCommandExecutor from "./ThreadCommandExecutor.ts";
-import { makeProviderFailure } from "@t3tools/provider-core/server/failure";
+import { makeProviderFailure } from "@piedpiperapp/provider-core/server/failure";
 import {
   makeProviderEventRoutingState,
   type ProviderEventRouteIdentity,
@@ -141,7 +141,7 @@ function threadCreatedEvent(
 
 const layer = it.layer(layerTest);
 
-it.effect("records accepted billed turn usage once without billing the context window", () => {
+it.effect("does not collect analytics for accepted provider turns", () => {
   const recorded: Array<Readonly<Record<string, unknown>>> = [];
   const layerAnalytics = Layer.succeed(ProviderEventIngestor.ProviderTurnAnalytics, {
     record: (properties: Readonly<Record<string, unknown>>) =>
@@ -222,22 +222,7 @@ it.effect("records accepted billed turn usage once without billing the context w
       },
     });
     assert.isEmpty(ignored);
-    assert.lengthOf(recorded, 1);
-    assert.deepEqual(recorded[0], {
-      provider: CODEX_DRIVER,
-      terminalStatus: "completed",
-      usageStatus: "complete",
-      usageScope: "main_agent",
-      hasSubagents: false,
-      inputTokens: 40,
-      cachedInputTokens: 30,
-      outputTokens: 10,
-      model: modelSelection.model,
-      mixedModels: false,
-      runtimeMode: "full-access",
-      interactionMode: "default",
-      durationMs: 120,
-    });
+    assert.isEmpty(recorded);
   }).pipe(Effect.provide(layerTest.pipe(Layer.provide(layerAnalytics))));
 });
 
@@ -465,7 +450,9 @@ layer("ProviderEventIngestorV2", (it) => {
                     parentCheckpointId: null,
                     ordinalWithinScope: input.ordinal,
                     appRunOrdinal: input.ordinal,
-                    ref: CheckpointRef.make(`refs/t3/checkpoints/rewound/${input.ordinal}`),
+                    ref: CheckpointRef.make(
+                      `refs/piedpiperapp/checkpoints/rewound/${input.ordinal}`,
+                    ),
                     status: "ready" as const,
                     files: [],
                     capturedAt: now,
@@ -543,7 +530,7 @@ layer("ProviderEventIngestorV2", (it) => {
             createdAt: now,
             updatedAt: now,
           },
-          retainedNativeTurnIds: ["turn-started-outside-t3", "kept-turn"],
+          retainedNativeTurnIds: ["turn-started-outside-piedpiperapp", "kept-turn"],
         },
       });
 
@@ -1467,14 +1454,19 @@ layer("ProviderEventIngestorV2", (it) => {
         type: "image",
         file: { base64: readBase64, type: "image/png", originalSize: 30_000 },
       });
-      const screenshot = toolItem("turn-item:screenshot", 2, "mcp__t3-code__device_screenshot", {
-        content: [
-          {
-            type: "image",
-            source: { type: "base64", media_type: "image/png", data: screenshotBase64 },
-          },
-        ],
-      });
+      const screenshot = toolItem(
+        "turn-item:screenshot",
+        2,
+        "mcp__piedpiperapp__device_screenshot",
+        {
+          content: [
+            {
+              type: "image",
+              source: { type: "base64", media_type: "image/png", data: screenshotBase64 },
+            },
+          ],
+        },
+      );
 
       yield* eventSink.write({ events: [threadEvent] });
       for (const turnItem of [read, screenshot]) {

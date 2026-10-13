@@ -1,11 +1,11 @@
-import { scopeProjectRef } from "@t3tools/client-runtime/environment";
-import { availableScratchWorkspaceRoot } from "@t3tools/client-runtime/operations/projects";
+import { scopeProjectRef } from "@piedpiperapp/client-runtime/environment";
+import { availableScratchWorkspaceRoot } from "@piedpiperapp/client-runtime/operations/projects";
 import {
   isAtomCommandInterrupted,
   squashAtomCommandFailure,
-} from "@t3tools/client-runtime/state/runtime";
-import type { EnvironmentProject } from "@t3tools/client-runtime/state/shell";
-import type { EnvironmentId } from "@t3tools/contracts";
+} from "@piedpiperapp/client-runtime/state/runtime";
+import type { EnvironmentProject } from "@piedpiperapp/client-runtime/state/shell";
+import type { EnvironmentId } from "@piedpiperapp/contracts";
 import { useCallback } from "react";
 
 import { stackedThreadToast, toastManager } from "~/components/ui/toast";

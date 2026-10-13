@@ -1,29 +1,12 @@
 import * as Layer from "effect/Layer";
-import * as Tracer from "effect/Tracer";
+import * as References from "effect/References";
+import type * as Tracer from "effect/Tracer";
 
-let delegate: Tracer.Tracer | null = null;
-
-/**
- * Points the installed tracer at the exporter `configureClientTracing` just built,
- * or at nothing while no exporter is configured.
- */
-export function setDelegate(next: Tracer.Tracer | null): void {
-  delegate = next;
-}
-
+export function setDelegate(_next: Tracer.Tracer | null): void {}
 export function hasDelegate(): boolean {
-  return delegate !== null;
+  return false;
 }
-
-/**
- * Installed once when the client runtime is built, before any exporter exists, so
- * client spans keep flowing to whatever exporter is configured later on.
- */
-export const layer = Layer.succeed(
-  Tracer.Tracer,
-  Tracer.make({
-    span(options) {
-      return delegate?.span(options) ?? new Tracer.NativeSpan(options);
-    },
-  }),
+export const layer = Layer.mergeAll(
+  Layer.succeed(References.TracerEnabled, false),
+  Layer.succeed(References.TracerTimingEnabled, false),
 );

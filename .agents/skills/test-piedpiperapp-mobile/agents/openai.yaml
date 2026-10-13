@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Pied Piper Mobile"
+  short_description: "Test iOS and Android in Pied Piper's Device panel"
+  default_prompt: "Use $test-piedpiperapp-mobile to verify the affected native mobile flow through Pied Piper's Device panel and AgentDevice."

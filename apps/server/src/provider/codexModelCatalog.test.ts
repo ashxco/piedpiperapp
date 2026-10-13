@@ -1,6 +1,6 @@
 import { assert, describe, it } from "@effect/vitest";
-import type { ServerProviderModel } from "@t3tools/contracts";
-import type * as ModelCatalog from "@t3tools/provider-core/server/ModelCatalog";
+import type { ServerProviderModel } from "@piedpiperapp/contracts";
+import type * as ModelCatalog from "@piedpiperapp/provider-core/server/ModelCatalog";
 
 import { applyCodexModelCatalog } from "./codexModelCatalog.ts";
 

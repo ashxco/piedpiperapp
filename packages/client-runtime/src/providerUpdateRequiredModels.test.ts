@@ -1,4 +1,4 @@
-import { ProviderDriverKind } from "@t3tools/contracts";
+import { ProviderDriverKind } from "@piedpiperapp/contracts";
 import { describe, expect, it } from "vite-plus/test";
 
 import { formatProviderUpdateRequiredNotice } from "./providerUpdateRequiredModels.ts";

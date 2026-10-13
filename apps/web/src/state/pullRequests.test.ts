@@ -1,5 +1,5 @@
-import { SourceControlProviderKind } from "@t3tools/contracts";
-import { ProjectId, type PullRequestSummary } from "@t3tools/contracts";
+import { SourceControlProviderKind } from "@piedpiperapp/contracts";
+import { ProjectId, type PullRequestSummary } from "@piedpiperapp/contracts";
 import { describe, expect, it } from "vite-plus/test";
 
 import { newestPullRequestObservation, newestPullRequestSummary } from "./pullRequests";

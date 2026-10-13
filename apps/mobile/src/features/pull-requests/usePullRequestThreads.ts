@@ -1,15 +1,15 @@
 import { useNavigation, useNavigationState, useRoute } from "@react-navigation/native";
-import { threadPullRequestLinkMode } from "@t3tools/client-runtime/thread-pull-request-compatibility";
+import { threadPullRequestLinkMode } from "@piedpiperapp/client-runtime/thread-pull-request-compatibility";
 import {
   AuthOrchestrationOperateScope,
   AuthSourceControlWriteScope,
   ThreadId,
   type PullRequestDetail,
   type PullRequestLinkedThreadsResult,
-} from "@t3tools/contracts";
-import { formatComposerContextReference } from "@t3tools/shared/composerContextReferences";
-import { parseChangeRequestUrl } from "@t3tools/shared/changeRequestUrl";
-import { normalizeThreadPullRequestKey } from "@t3tools/shared/threadPullRequests";
+} from "@piedpiperapp/contracts";
+import { formatComposerContextReference } from "@piedpiperapp/shared/composerContextReferences";
+import { parseChangeRequestUrl } from "@piedpiperapp/shared/changeRequestUrl";
+import { normalizeThreadPullRequestKey } from "@piedpiperapp/shared/threadPullRequests";
 import { useRef, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { useAndroidWorkspaceSelection } from "../workspace/useAndroidWorkspaceSelection";

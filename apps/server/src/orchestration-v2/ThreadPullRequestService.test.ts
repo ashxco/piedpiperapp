@@ -6,7 +6,7 @@ import {
   type OrchestrationProjectShell,
   type OrchestrationV2DomainEvent,
   type OrchestrationV2ThreadShell,
-} from "@t3tools/contracts";
+} from "@piedpiperapp/contracts";
 import { describe, expect, it } from "@effect/vitest";
 import * as Crypto from "effect/Crypto";
 import * as DateTime from "effect/DateTime";
@@ -48,23 +48,23 @@ describe("ThreadPullRequestServiceV2 project guard", () => {
           resolve: (root) => {
             resolvedRoot = root;
             return Effect.succeed({
-              canonicalKey: "github.com/pingdotgg/t3code",
+              canonicalKey: "github.com/ashxco/piedpiperapp",
               locator: {
                 source: "git-remote" as const,
                 remoteName: "origin",
-                remoteUrl: "git@github.com:pingdotgg/t3code.git",
+                remoteUrl: "git@github.com:ashxco/piedpiperapp.git",
               },
               provider: "github" as const,
-              displayName: "pingdotgg/t3code",
+              displayName: "ashxco/piedpiperapp",
               owner: "pingdotgg",
-              name: "t3code",
+              name: "piedpiperapp",
             });
           },
         },
       );
       expect(resolvedRoot).toBe("/workspace/project");
-      expect(result.repository).toBe("pingdotgg/t3code");
-      expect(result.project.repositoryIdentity?.canonicalKey).toBe("github.com/pingdotgg/t3code");
+      expect(result.repository).toBe("ashxco/piedpiperapp");
+      expect(result.project.repositoryIdentity?.canonicalKey).toBe("github.com/ashxco/piedpiperapp");
     }),
   );
 

@@ -23,19 +23,19 @@
 import {
   AcpRegistryDriver,
   type AcpRegistryDriverEnv,
-} from "@t3tools/provider-acp-registry/server";
+} from "@piedpiperapp/provider-acp-registry/server";
 import { AntigravityDriver, type AntigravityDriverEnv } from "./Drivers/AntigravityDriver.ts";
 import { ClaudeDriver, type ClaudeDriverEnv } from "./Drivers/ClaudeDriver.ts";
 import { CodexDriver, type CodexDriverEnv } from "./Drivers/CodexDriver.ts";
-import { CursorDriver, type CursorDriverEnv } from "@t3tools/provider-cursor/server";
-import { GrokDriver, type GrokDriverEnv } from "@t3tools/provider-grok/server";
-import { OpenCodeDriver, type OpenCodeDriverEnv } from "@t3tools/provider-opencode/server";
-import { MuseDriver, type MuseDriverEnv } from "@t3tools/provider-muse/server";
-import { PiDriver, type PiDriverEnv } from "@t3tools/provider-pi/server";
+import { CursorDriver, type CursorDriverEnv } from "@piedpiperapp/provider-cursor/server";
+import { GrokDriver, type GrokDriverEnv } from "@piedpiperapp/provider-grok/server";
+import { OpenCodeDriver, type OpenCodeDriverEnv } from "@piedpiperapp/provider-opencode/server";
+import { MuseDriver, type MuseDriverEnv } from "@piedpiperapp/provider-muse/server";
+import { PiDriver, type PiDriverEnv } from "@piedpiperapp/provider-pi/server";
 import type {
   AnyProviderDriver,
   ProviderUsageReaderEnv,
-} from "@t3tools/provider-core/server/driver";
+} from "@piedpiperapp/provider-core/server/driver";
 
 /**
  * Union of infrastructure services required to construct any built-in

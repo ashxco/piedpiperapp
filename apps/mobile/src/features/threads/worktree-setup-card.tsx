@@ -2,9 +2,9 @@ import {
   worktreeSetupStageLabel,
   type WorktreeSetupSnapshot,
   type WorktreeSetupStage,
-} from "@t3tools/contracts";
-import { worktreeSetupAgentStarted } from "@t3tools/client-runtime/worktree-setup";
-import { formatDuration } from "@t3tools/shared/orchestrationTiming";
+} from "@piedpiperapp/contracts";
+import { worktreeSetupAgentStarted } from "@piedpiperapp/client-runtime/worktree-setup";
+import { formatDuration } from "@piedpiperapp/shared/orchestrationTiming";
 import { useEffect, useState } from "react";
 import { AppState, Platform, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

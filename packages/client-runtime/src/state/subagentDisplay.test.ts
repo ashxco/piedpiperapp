@@ -1,5 +1,5 @@
-import { ProjectId, ProviderDriverKind } from "@t3tools/contracts";
-import type { OrchestrationV2TurnItemStatus } from "@t3tools/contracts";
+import { ProjectId, ProviderDriverKind } from "@piedpiperapp/contracts";
+import type { OrchestrationV2TurnItemStatus } from "@piedpiperapp/contracts";
 import { describe, expect, it } from "vite-plus/test";
 import {
   subagentGroupSummary,
