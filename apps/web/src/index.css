@@ -2366,6 +2366,7 @@ code {
   --pp-selected: color-mix(in srgb, var(--pp-accent) 14%, transparent);
   --pp-pressed: color-mix(in srgb, var(--pp-accent) 19%, transparent);
   --pp-rail-selected: color-mix(in srgb, var(--pp-accent) 17%, transparent);
+  --pp-content-radius: 12px;
   --pp-radius-row: 8px;
   --pp-radius-btn: 10px;
   position: relative;
@@ -2658,7 +2659,7 @@ code {
   [data-pied-piper-shell][data-desktop-shell="true"]
     [data-app-sidebar]
     > [data-slot="sidebar-inner"] {
-    border-top-left-radius: 14px;
+    border-top-left-radius: var(--pp-content-radius);
     overflow: hidden;
   }
   [data-pied-piper-shell] [data-collapsible="offcanvas"] [data-app-sidebar] {
@@ -2741,8 +2742,8 @@ body:has([data-native-glass="true"]),
 }
 @media (min-width: 768px) {
   [data-native-glass="true"] [data-app-sidebar] {
-    border-top-left-radius: 14px;
-    clip-path: inset(0 -8px -8px 0 round 14px 0 0 0);
+    border-top-left-radius: var(--pp-content-radius);
+    clip-path: inset(0 -8px -8px 0 round var(--pp-content-radius) 0 0 0);
   }
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -3140,6 +3141,6 @@ body:has([data-native-glass="true"]),
   [data-pied-piper-shell][data-desktop-shell="true"][data-sidebar-state="collapsed"]
     [data-chat-header]
     + div {
-    border-top-left-radius: 14px;
+    border-top-left-radius: var(--pp-content-radius);
   }
 }
