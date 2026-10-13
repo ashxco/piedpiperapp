@@ -1,6 +1,6 @@
 import { Image, type ColorValue } from "react-native";
 
-/** Shared robot mark; the full brand name is typeset by each header. */
+/** Shared 3D flute mark; the full brand name is typeset by each header. */
 export function PiedPiperWordmark(props: {
   readonly height: number;
   readonly color?: ColorValue;
@@ -8,7 +8,7 @@ export function PiedPiperWordmark(props: {
 }) {
   return (
     <Image
-      source={require("../../../../assets/brand/pied-piper-robot.png")}
+      source={require("../../../../assets/brand/pied-piper-icon.png")}
       accessibilityLabel="Pied Piper"
       resizeMode="contain"
       style={{ height: props.height, width: props.height }}
