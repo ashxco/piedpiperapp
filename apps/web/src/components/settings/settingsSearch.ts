@@ -601,9 +601,9 @@ export const SETTINGS_SEARCH_ITEMS = [
   },
   {
     id: "legacy-sidebar",
-    title: "Sidebar (legacy)",
+    title: "Project sidebar on small screens",
     to: "/settings/general",
-    searchTerms: ["project thread tree old flat list"],
+    searchTerms: ["project thread chat tree mobile narrow flat list sidebar"],
   },
   {
     id: "keybindings",
@@ -891,7 +891,9 @@ export const SETTINGS_SEARCH_ITEMS = [
     id: "project-actions",
     title: "Actions",
     to: "/settings/projects",
-    searchTerms: ["commands scripts setup run dev server checkout worktree piedpiperapp.json import"],
+    searchTerms: [
+      "commands scripts setup run dev server checkout worktree piedpiperapp.json import",
+    ],
   },
   {
     id: "environment-icon",

@@ -51,7 +51,7 @@ export const SidebarChromeHeader = memo(function SidebarChromeHeader({
     // The titlebar row, not a padded SidebarHeader: it aligns to the window controls.
     <div
       className={cn(
-        "relative flex h-[var(--workspace-topbar-height)] shrink-0 flex-row items-center gap-2 pr-3",
+        "app-pane-header relative flex h-[var(--workspace-topbar-height)] shrink-0 flex-row items-center gap-2 pr-3",
         isElectron && "drag-region",
       )}
     >
@@ -100,6 +100,7 @@ export function SidebarBrandWidthProbe({
   return (
     <div
       aria-hidden="true"
+      data-sidebar-brand-probe=""
       className="pointer-events-none invisible fixed top-0 left-0 flex w-max border-r border-transparent pr-3"
       ref={observeWidth}
     >
@@ -116,7 +117,7 @@ function SidebarBrand({ onBackdrop }: { onBackdrop: boolean }) {
       aria-label="Go to threads"
       className={cn(
         "relative z-10 ml-[var(--workspace-titlebar-content-left)] hidden h-7 w-fit min-w-0 shrink-0 items-center overflow-hidden rounded-md outline-hidden ring-ring focus-visible:ring-2 focus-visible:ring-inset md:flex",
-        onBackdrop ? "text-white" : "text-foreground",
+        "text-foreground",
       )}
       to="/"
     >
@@ -129,12 +130,12 @@ function SidebarBrandMark({ onBackdrop }: { onBackdrop: boolean }) {
   return (
     // Center the visible capitals, without the font's ascender/descender space.
     // Padding keeps ascenders and round-letter overshoot inside the truncation clip.
-    <span className="inline-flex min-w-0 items-center gap-1.5 text-sm font-semibold tracking-tight">
-      <PiedPiperWordmark aria-label="Pied Piper" className="size-5 shrink-0" />
+    <span className="inline-flex min-w-0 items-center gap-2 font-semibold">
+      <PiedPiperWordmark aria-label="Pied Piper" className="app-icon shrink-0" />
       <span
         className={cn(
           "truncate [text-box:trim-both_cap_alphabetic] supports-[text-box:trim-both_cap_alphabetic]:py-1",
-          onBackdrop ? "text-white/70" : "text-muted-foreground",
+          onBackdrop ? "text-foreground" : "text-foreground/90",
         )}
       >
         Pied Piper
@@ -206,7 +207,7 @@ export const SidebarUtilityMenu = memo(function SidebarUtilityMenu() {
   }, [closeMobileSidebar, navigateToMainApp]);
 
   return (
-    <SidebarMenu className="flex-row items-center">
+    <SidebarMenu className="flex-row items-center" data-sidebar-utility-menu="">
       {isOnUtilityPage ? (
         <SidebarMenuItem className="min-w-0 flex-1">
           <SidebarMenuButton onClick={handleBackClick}>
@@ -246,6 +247,9 @@ export const SidebarChromeFooter = memo(function SidebarChromeFooter() {
       <SidebarThreadUndoNotice />
       <SidebarProviderUpdatePill />
       <SidebarUpdateArchitectureWarning />
+      <SidebarMenu className="hidden md:flex">
+        <SidebarUpdatePill />
+      </SidebarMenu>
       <SidebarUtilityMenu />
     </SidebarFooter>
   );

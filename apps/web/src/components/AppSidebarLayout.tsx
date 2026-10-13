@@ -39,6 +39,8 @@ import { SidebarBrandWidthProbe, SidebarChromeHeader } from "./sidebar/SidebarCh
 import { MainAppLocationTracker } from "./sidebar/mainAppLocation";
 import { useSidebarStageBackdropVariant } from "./SidebarStageBackdrop";
 import { useProjects } from "../state/entities";
+import { AppNavigationRail } from "./sidebar/AppNavigationRail";
+import { useProjectSidebarStore } from "../projectSidebarStore";
 import {
   clampThreadSidebarWidth,
   resolveInitialThreadSidebarWidth,
@@ -227,9 +229,19 @@ function ProjectProjectionRetention() {
   return null;
 }
 
+function MainSidebarContent() {
+  const { isMobile } = useSidebar();
+  const legacySidebarEnabled = useLegacySidebarEnabled();
+  const view = useProjectSidebarStore((state) => state.view);
+  return (isMobile ? legacySidebarEnabled : view === "projects") ? (
+    <LegacyThreadSidebar />
+  ) : (
+    <ThreadSidebar />
+  );
+}
+
 export function AppSidebarLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const legacySidebarEnabled = useLegacySidebarEnabled();
   const { active: panelAnimationsActive, durationMs: panelAnimationDurationMs } =
     usePanelAnimationSettings();
   // Settings routes show the settings nav in place of whichever thread
@@ -248,7 +260,10 @@ export function AppSidebarLayout({ children }: { children: ReactNode }) {
   const viewportWidth = useSyncExternalStore(subscribeToViewportWidth, readViewportWidth);
   const [brandWidth, setBrandWidth] = useState(0);
   const sidebarMinimumWidth = resolveThreadSidebarMinimumWidth(brandWidth);
-  const sidebarMaximumWidth = resolveThreadSidebarMaximumWidth(viewportWidth, sidebarMinimumWidth);
+  const sidebarMaximumWidth = resolveThreadSidebarMaximumWidth(
+    viewportWidth - 48,
+    sidebarMinimumWidth,
+  );
   const resetSidebarWidth = () => {
     try {
       removeLocalStorageItem(THREAD_SIDEBAR_WIDTH_STORAGE_KEY);
@@ -315,12 +330,15 @@ export function AppSidebarLayout({ children }: { children: ReactNode }) {
     <PanelAnimationSuppressionProvider value={panelAnimationsSuppressed}>
       <SidebarProvider
         className="h-dvh! min-h-0!"
+        data-pied-piper-shell=""
+        data-desktop-shell={isElectron ? "true" : "false"}
         data-panel-animations={routePanelAnimationsActive ? "true" : "false"}
         defaultOpen
         style={sidebarProviderStyle}
       >
         <SidebarBrandWidthProbe onWidthChange={setBrandWidth} />
         <ProjectProjectionRetention />
+        <AppNavigationRail />
         <Sidebar
           side="left"
           collapsible="offcanvas"
@@ -344,10 +362,8 @@ export function AppSidebarLayout({ children }: { children: ReactNode }) {
               <SidebarChromeHeader isElectron={isElectron} />
               <SettingsSidebarNav pathname={pathname} />
             </>
-          ) : legacySidebarEnabled ? (
-            <LegacyThreadSidebar />
           ) : (
-            <ThreadSidebar />
+            <MainSidebarContent />
           )}
           <SidebarRail onDoubleClick={resetSidebarWidth} />
         </Sidebar>

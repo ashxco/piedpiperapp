@@ -328,6 +328,7 @@ function Sidebar({
             className,
           )}
           data-slot="sidebar-container"
+          inert={state === "collapsed" && collapsible === "offcanvas"}
           {...props}
         >
           <div
