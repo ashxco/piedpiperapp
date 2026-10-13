@@ -1159,38 +1159,38 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
 
   @variant dark {
     color-scheme: dark;
-    --background: #13111c;
-    --app-chrome-background: #13111c;
-    --toolbar-background: #13111c;
-    --toolbar-foreground: #efecfa;
-    --toolbar-border: #302a42;
-    --toolbar-control: #1d192a;
-    --toolbar-control-foreground: #efecfa;
-    --toolbar-control-hover: #282239;
-    --surface-raised: #211c2f;
-    --foreground: #efecfa;
-    --card: #1b1726;
-    --card-foreground: #efecfa;
-    --popover: #211c2f;
-    --popover-foreground: #efecfa;
+    --background: #161616;
+    --app-chrome-background: #161616;
+    --toolbar-background: #161616;
+    --toolbar-foreground: #ededed;
+    --toolbar-border: #343434;
+    --toolbar-control: #242424;
+    --toolbar-control-foreground: #ededed;
+    --toolbar-control-hover: #303030;
+    --surface-raised: #242424;
+    --foreground: #ededed;
+    --card: #1e1e1e;
+    --card-foreground: #ededed;
+    --popover: #242424;
+    --popover-foreground: #ededed;
     --primary: #b4a7ff;
     --primary-foreground: #211936;
-    --secondary: #211c2f;
-    --secondary-foreground: #efecfa;
-    --muted: #211c2f;
-    --muted-foreground: #a59bb9;
-    --placeholder: #a59bb9;
-    --secondary-label: #a59bb9;
-    --icon-muted: #a59bb9;
-    --message-surface: #211c2f;
-    --message-foreground: #efecfa;
+    --secondary: #242424;
+    --secondary-foreground: #ededed;
+    --muted: #242424;
+    --muted-foreground: #a3a3a3;
+    --placeholder: #969696;
+    --secondary-label: #a3a3a3;
+    --icon-muted: #a3a3a3;
+    --message-surface: #242424;
+    --message-foreground: #ededed;
     --message-action: #b4a7ff;
     --message-action-foreground: #211936;
     --message-action-hover: #c5baff;
     --accent: #282239;
     --accent-foreground: #efecfa;
-    --border: #302a42;
-    --input: #423853;
+    --border: #343434;
+    --input: #404040;
     --ring: #b4a7ff;
     --update: #b4a7ff;
     --update-foreground: #c5baff;
@@ -1203,10 +1203,10 @@ html[data-mobile-composer-route-transition="true"]::view-transition-old(piedpipe
     --sidebar-row-active: #282239;
     --sidebar-row-selected: #302648;
     --sidebar-border: #302a42;
-    --code-background: #1b1726;
-    --code-foreground: #efecfa;
-    --terminal-background: #13111c;
-    --terminal-foreground: #efecfa;
+    --code-background: #1e1e1e;
+    --code-foreground: #ededed;
+    --terminal-background: #161616;
+    --terminal-foreground: #ededed;
     --terminal-cursor: #c5baff;
     --terminal-selection-background: #3d3359;
     --error: color-mix(in srgb, var(--color-red-500) 90%, var(--color-white));
@@ -2387,7 +2387,7 @@ code {
 }
 
 [data-pied-piper-shell][data-desktop-shell="true"] :is([data-chat-header], .app-workspace-header) {
-  background: var(--pp-frame);
+  background: var(--background);
 }
 
 /* The titlebar joins the rail; the pane remains translucent over the app canvas. */

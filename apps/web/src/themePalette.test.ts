@@ -165,15 +165,15 @@ describe("theme files", () => {
     },
   );
 
-  it("keeps stock dark controls in the indigo surface hierarchy", () => {
+  it("keeps stock dark controls in the neutral surface hierarchy", () => {
     expectThemeColors(getStandardThemeColors("dark"), {
-      canvas: "#13111c",
-      surface: "#1b1726",
-      surfaceRaised: "#211c2f",
-      surfaceOverlay: "#211c2f",
-      toolbarControl: "#1d192a",
-      secondary: "#211c2f",
-      muted: "#211c2f",
+      canvas: "#161616",
+      surface: "#1e1e1e",
+      surfaceRaised: "#242424",
+      surfaceOverlay: "#242424",
+      toolbarControl: "#242424",
+      secondary: "#242424",
+      muted: "#242424",
       accentSurface: "#282239",
     });
   });
@@ -186,10 +186,10 @@ describe("theme files", () => {
       messageSurface: "#eeebf8",
     });
     expectThemeColors(getStandardThemeColors("dark"), {
-      canvas: "#13111c",
+      canvas: "#161616",
       sidebar: "#090711",
       sidebarRowActive: "#282239",
-      messageSurface: "#211c2f",
+      messageSurface: "#242424",
     });
   });
 
