@@ -1,5 +1,7 @@
 # Brand icons
 
+The in-app robot mark is `brand/pied-piper-robot.png`. Web and mobile headers pair it with the text “Pied Piper”. Keep `apps/web/public/pied-piper-robot.png` identical to that source for the web splash screen.
+
 The three Icon Composer projects are the source of truth for full application icons:
 
 - `dev/app-icon.icon`

@@ -234,10 +234,10 @@ export function WelcomeWizard({
         <WizardHeader
           title="Set up Pied Piper"
           identity={
-            <div className="flex items-baseline gap-1.5" role="img" aria-label="Pied Piper">
-              <PiedPiperWordmark className="h-4 w-auto shrink-0" aria-hidden />
-              <span className="text-2xl font-medium tracking-tight text-muted-foreground">
-                Code
+            <div className="flex items-center gap-2.5" role="img" aria-label="Pied Piper">
+              <PiedPiperWordmark className="size-8 shrink-0" aria-hidden />
+              <span className="text-2xl font-semibold tracking-tight text-foreground">
+                Pied Piper
               </span>
             </div>
           }
